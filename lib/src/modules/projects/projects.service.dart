@@ -53,6 +53,11 @@ class ProjectsService {
 
   static Box<ProjectRef>? _box;
 
+  /// Whether [init] has completed successfully. The app gates its main UI on
+  /// this so a partially initialized database can't strand the user in the
+  /// shell with every project action throwing.
+  static bool get isInitialized => _box != null;
+
   /// Storage box
   static Box<ProjectRef> get box {
     final box = _box;

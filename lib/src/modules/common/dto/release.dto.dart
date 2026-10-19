@@ -10,6 +10,7 @@ abstract class ReleaseDto {
     required this.release,
     this.isChannel = false,
     this.isGlobal = false,
+    this.isOhosSdk = false,
   });
 
   /// Name
@@ -29,6 +30,13 @@ abstract class ReleaseDto {
 
   /// Is global
   bool isGlobal;
+
+  /// Whether this is an OpenHarmony Flutter fork SDK.
+  ///
+  /// Single source of truth for UI badges: set for fork-installed versions
+  /// (`ohos/<branch>`) and for top-level checkouts cloned from the
+  /// CPF-Flutter repository (detected via the git remote in `.git/config`).
+  bool isOhosSdk;
 
   /// Is releaes cached
   bool get isCached {

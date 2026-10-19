@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:hooks_riverpod/legacy.dart';
 import 'package:fvm/fvm.dart';
+import 'package:path/path.dart' as p;
 // ignore: implementation_imports
 import 'package:fvm/src/services/flutter_service.dart';
 // ignore: implementation_imports
@@ -19,6 +20,7 @@ import 'package:sidekick/src/modules/common/utils/helpers.dart';
 import '../../modules/common/dto/release.dto.dart';
 import '../../modules/common/utils/navigator_key.dart';
 import '../../modules/common/utils/notify.dart';
+import '../ohos/ohos.service.dart';
 import '../projects/project.dto.dart';
 import '../projects/projects.provider.dart';
 import '../settings/settings.dto.dart';
@@ -62,6 +64,9 @@ enum QueueAction {
   channelForceUpgrade,
   remove,
   setGlobal,
+
+  /// Fast-forwards an installed OHOS fork version to its remote branch head
+  ohosUpdate,
 }
 
 /// Releases Provider
@@ -114,6 +119,14 @@ class FvmQueueState extends StateNotifier<FvmQueue> {
     _addToQueue(context, version, action: QueueAction.channelForceUpgrade);
   }
 
+  /// Adds OHOS branch update action to queue.
+  ///
+  /// The version name must be fork-qualified (`ohos/<branch>`): the branch is
+  /// derived from the segment after the fork alias.
+  void ohosUpdate(BuildContext context, ReleaseDto version) {
+    _addToQueue(context, version, action: QueueAction.ohosUpdate);
+  }
+
   /// Adds remove action to queue
   void remove(BuildContext context, ReleaseDto version) {
     _addToQueue(context, version, action: QueueAction.remove);
@@ -146,7 +159,8 @@ class FvmQueueState extends StateNotifier<FvmQueue> {
       // Run through actions
       switch (item.action) {
         case QueueAction.install:
-          await _install(version);
+          final installed = await _install(version);
+          if (item.version.isOhosSdk) await _promoteOhos(installed);
           notify(
             i18next.t(
               'modules:fvm.versionItemversionnameHasBeenInstalled',
@@ -168,7 +182,11 @@ class FvmQueueState extends StateNotifier<FvmQueue> {
           );
           break;
         case QueueAction.installAndSetup:
-          await _setup(await _install(version));
+          var installed = await _install(version);
+          if (item.version.isOhosSdk) {
+            installed = await _promoteOhos(installed);
+          }
+          await _setup(installed);
           notify(
             i18next.t(
               'modules:fvm.versionItemversionnameHasBeenInstalled',
@@ -199,6 +217,21 @@ class FvmQueueState extends StateNotifier<FvmQueue> {
           notify(
             i18next.t(
               'modules:fvm.channelItemversionnameHasBeenUpgraded',
+              variables: {
+                'itemVersionName': item.version.name,
+              },
+            ),
+          );
+          break;
+        case QueueAction.ohosUpdate:
+          final cache = item.version.cache!;
+          // Name is fork-qualified ('ohos/<branch>'); the branch is the
+          // segment after the fork alias.
+          final branch = item.version.name.split('/').last;
+          await pullOhosBranch(directory: cache.directory, branch: branch);
+          notify(
+            i18next.t(
+              'modules:ohos.ohosUpdated',
               variables: {
                 'itemVersionName': item.version.name,
               },
@@ -293,6 +326,25 @@ class FvmQueueState extends StateNotifier<FvmQueue> {
 
   Future<CacheFlutterVersion> _install(FlutterVersion version) {
     return fvmContext.get<EnsureCacheWorkflow>()(version, shouldInstall: true);
+  }
+
+  /// Moves a freshly installed OHOS checkout from `versions/ohos/<branch>`
+  /// to `versions/<branch>` and reloads it from the new location.
+  ///
+  /// Throws when the top-level name is taken; the caller surfaces the error
+  /// and the install stays in the fork layout, fully usable.
+  Future<CacheFlutterVersion> _promoteOhos(
+    CacheFlutterVersion installed,
+  ) async {
+    final newPath = await promoteOhosInstallToTopLevel(installed.directory);
+    final reloaded = fvmContext
+        .get<CacheService>()
+        .getVersion(FlutterVersion.parse(p.basename(newPath)));
+    if (reloaded == null) {
+      throw Exception('Could not reload OHOS install at "$newPath"');
+    }
+
+    return reloaded;
   }
 
   Future<void> _setup(CacheFlutterVersion? version) async {

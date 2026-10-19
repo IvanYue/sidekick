@@ -8,6 +8,8 @@ import '../../../components/atoms/typography.dart';
 import '../../../components/molecules/version_install_button.dart';
 import '../../ide/components/open_in_ide_button.dart';
 import '../../navigation/navigation.provider.dart';
+import '../../ohos/components/ohos_badge.dart';
+import '../../ohos/ohos.constants.dart';
 import '../../releases/releases.provider.dart';
 import '../../sandbox/sandbox.screen.dart';
 import '../detail/project_detail.provider.dart';
@@ -36,7 +38,8 @@ class ProjectListItem extends ConsumerWidget {
 
     final cachedVersions = ref.watch(releasesStateProvider).all;
 
-    final version = ref.watch(getVersionProvider(project.pinnedVersion?.nameWithAlias));
+    final version =
+        ref.watch(getVersionProvider(project.pinnedVersion?.nameWithAlias));
 
     final needInstall = version != null && project.pinnedVersion != null;
 
@@ -89,7 +92,20 @@ class ProjectListItem extends ConsumerWidget {
                             }
                           }),
                 ),
-                title: Subheading(project.name),
+                title: Row(
+                  children: [
+                    Subheading(project.name),
+                    // Project pinned to an OHOS SDK: show a badge. Covers both
+                    // fork installs (pinnedVersion.fork) and manually cloned
+                    // top-level OHOS checkouts (dto.isOhosSdk).
+                    if (project.pinnedVersion?.fork == kOhosForkName ||
+                        version?.isOhosSdk == true)
+                      Padding(
+                        padding: const EdgeInsets.only(left: 6),
+                        child: const OhosBadge(),
+                      ),
+                  ],
+                ),
                 trailing: ProjectActions(project),
                 onTap: openDetail,
               ),

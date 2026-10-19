@@ -12,6 +12,7 @@ import 'package:oktoast/oktoast.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sidekick/i18n/language_manager.dart';
 import 'package:sidekick/src/modules/common/utils/migrate_files.dart';
+import 'package:sidekick/src/modules/ohos/ohos.service.dart';
 import 'package:window_manager/window_manager.dart';
 
 import 'src/modules/common/app_shell.dart';
@@ -54,6 +55,10 @@ void main() async {
     exit(0);
   }
 
+  // Registers the OHOS fork in FVM's app config before any fvmContext access:
+  // fvmContext is lazily created on first touch and reads the config once.
+  await ensureOhosForkRegistered();
+
   runApp(const ProviderScope(child: FvmApp()));
 
   const initialSize = Size(800, 500);
@@ -70,15 +75,43 @@ void main() async {
 }
 
 /// Fvm App
-class FvmApp extends StatelessWidget {
+class FvmApp extends StatefulWidget {
   const FvmApp({
     super.key,
   });
 
   @override
+  State<FvmApp> createState() => _FvmAppState();
+}
+
+class _FvmAppState extends State<FvmApp> {
+  Future<void> _retryOpeningDb() async {
+    // Boxes usually fail to open because another Sidekick instance (same
+    // bundle id shares the data directory) holds the lock. Retry lets the
+    // user close it and recover here instead of restarting the app.
+    // Each box retries independently so one still being locked doesn't
+    // block the other from recovering.
+    try {
+      await SettingsService.init();
+      // ignore: avoid_catches_without_on_clauses
+    } catch (_) {
+      // Still locked or otherwise failing: keep showing the error screen.
+    }
+    try {
+      await ProjectsService.init();
+      // ignore: avoid_catches_without_on_clauses
+    } catch (_) {
+      // Same as above: the screen condition re-checks both boxes.
+    }
+    if (mounted) setState(() {});
+  }
+
+  @override
   Widget build(BuildContext context) {
-    if (SettingsService.box == null) {
-      return const ErrorDBScreen();
+    // Gate on both boxes: entering the shell with only settings recovered
+    // left every project action throwing.
+    if (SettingsService.box == null || !ProjectsService.isInitialized) {
+      return ErrorDBScreen(onRetry: _retryOpeningDb);
     }
 
     return ValueListenableBuilder<Box<SidekickSettings>>(

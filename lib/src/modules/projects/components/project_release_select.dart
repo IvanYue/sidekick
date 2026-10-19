@@ -6,6 +6,8 @@ import 'package:sidekick/src/modules/common/utils/helpers.dart';
 import '../../../components/atoms/typography.dart';
 import '../../../modules/common/dto/release.dto.dart';
 import '../../fvm/fvm_queue.provider.dart';
+import '../../ohos/ohos.constants.dart';
+import '../../ohos/ohos.service.dart';
 import '../project.dto.dart';
 
 /// Select project release
@@ -22,6 +24,19 @@ class ProjectReleaseSelect extends ConsumerWidget {
 
   /// Releases
   final List<ReleaseDto> releases;
+
+  /// Caption for the currently pinned version: OHOS pins show their short
+  /// name instead of the raw branch name.
+  String _pinnedLabel(BuildContext context) {
+    final pinned = project.pinnedVersion;
+    if (pinned == null) {
+      return context.i18n('modules:projects.choose');
+    }
+
+    return ohosBranchPattern.hasMatch(pinned.nameWithAlias.split('/').last)
+        ? ohosDisplayName(pinned.nameWithAlias)
+        : pinned.nameWithAlias;
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -42,9 +57,30 @@ class ProjectReleaseSelect extends ConsumerWidget {
               .map(
                 (version) => PopupMenuItem(
                   value: version.name,
-                  child: Text(
-                    version.name,
-                    style: const TextStyle(fontSize: 12),
+                  child: Row(
+                    children: [
+                      Flexible(
+                        child: Text(
+                          version.isOhosSdk
+                              ? ohosDisplayName(version.name)
+                              : version.name,
+                          style: const TextStyle(fontSize: 12),
+                        ),
+                      ),
+                      // Distinguish OHOS SDKs in the picker
+                      if (version.isOhosSdk) ...[
+                        const SizedBox(width: 6),
+                        const Icon(Icons.phone_android, size: 12),
+                        const SizedBox(width: 2),
+                        Text(
+                          context.i18n('modules:ohos.ohosTag'),
+                          style: TextStyle(
+                            fontSize: 10,
+                            color: Theme.of(context).colorScheme.secondary,
+                          ),
+                        ),
+                      ],
+                    ],
                   ),
                 ),
               )
@@ -59,11 +95,7 @@ class ProjectReleaseSelect extends ConsumerWidget {
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              project.pinnedVersion != null
-                  ? Caption(project.pinnedVersion!.nameWithAlias)
-                  : Caption(
-                      context.i18n('modules:projects.choose'),
-                    ),
+              Caption(_pinnedLabel(context)),
               // const SizedBox(width: 20),
               Icon(MdiIcons.menuDown),
             ],

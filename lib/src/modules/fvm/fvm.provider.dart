@@ -15,6 +15,7 @@ import 'package:watcher/watcher.dart';
 import '../../modules/common/dto/release.dto.dart';
 import '../../modules/common/utils/debounce.dart';
 import '../../modules/common/utils/dir_stat.dart';
+import '../ohos/ohos.service.dart';
 import '../projects/projects.provider.dart';
 import '../releases/releases.provider.dart';
 
@@ -172,7 +173,8 @@ final unusedReleaseSizeProvider = FutureProvider((ref) {
   final unused = ref.watch(unusedVersionProvider);
   // Get all directories
   final directories = unused.map(
-    (version) => version.cache == null ? null : Directory(version.cache!.directory),
+    (version) =>
+        version.cache == null ? null : Directory(version.cache!.directory),
   );
   return getDirectoriesSize(directories.nonNulls);
 });
@@ -223,11 +225,17 @@ class FvmCacheProvider extends StateNotifier<List<CacheFlutterVersion>> {
   List<CacheFlutterVersion> all = [];
   String lastChangeHash = '';
 
+  /// Names of top-level cached versions (no fork metadata) whose checkout was
+  /// cloned from the OHOS fork. Fork-installed versions are detected via
+  /// `fork` instead and never appear here.
+  Set<String> topLevelOhosNames = {};
+
   late StreamSubscription<WatchEvent> directoryWatcher;
   final _debouncer = Debouncer(const Duration(seconds: 20));
 
   Future<void> _setTotalCacheSize() async {
-    final stat = await getDirectorySize(Directory(fvmContext.versionsCachePath));
+    final stat =
+        await getDirectorySize(Directory(fvmContext.versionsCachePath));
     ref.read(cacheSizeProvider.notifier).state = stat;
   }
 
@@ -240,6 +248,15 @@ class FvmCacheProvider extends StateNotifier<List<CacheFlutterVersion>> {
     channels = localVersions.where((item) => item.isChannel).toList();
     versions = localVersions.where((item) => item.isChannel == false).toList();
     all = [...channels, ...versions];
+
+    // Detect manually cloned OHOS checkouts among the top-level versions so
+    // badges also work for installs made outside the fork layout.
+    topLevelOhosNames = {
+      for (final version in versions)
+        if (version.fork == null && isOhosGitCheckout(version.directory))
+          version.name,
+    };
+
     await _setTotalCacheSize();
   }
 

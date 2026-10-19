@@ -6,6 +6,9 @@ import 'package:sidekick/src/modules/common/utils/helpers.dart';
 import '../../../components/atoms/typography.dart';
 import '../../../components/molecules/list_tile.dart';
 import '../../../modules/common/dto/release.dto.dart';
+import '../../common/utils/open_link.dart';
+import '../../ohos/components/ohos_badge.dart';
+import '../../ohos/ohos.service.dart';
 import '../../selected_detail/selected_detail.provider.dart';
 import '../dialogs/fvm_global_dialog.dart';
 import 'fvm_release_actions.dart';
@@ -30,7 +33,20 @@ class FvmReleaseListItem extends ConsumerWidget {
       title: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Subheading(release.name),
+          // OHOS versions show their short name; the badge next to them
+          // carries the OHOS meaning
+          Subheading(
+            release.isOhosSdk ? ohosDisplayName(release.name) : release.name,
+          ),
+          // OHOS SDKs: badge opens this version's CPF-Flutter release page
+          if (release.isOhosSdk)
+            Padding(
+              padding: const EdgeInsets.only(left: 6),
+              child: OhosBadge(
+                tooltip: context.i18n('modules:ohos.openOhosRelease'),
+                onPressed: () => openLink(ohosReleasePageUrl(release.cache)),
+              ),
+            ),
           const SizedBox(width: 20),
           release.isGlobal
               ? ActionChip(

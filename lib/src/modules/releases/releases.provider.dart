@@ -11,6 +11,7 @@ import '../../modules/common/dto/release.dto.dart';
 import '../../modules/common/dto/version.dto.dart';
 import '../common/constants.dart';
 import '../fvm/fvm.provider.dart';
+import '../ohos/ohos.service.dart';
 
 class AppReleasesState {
   bool fetching;
@@ -105,6 +106,43 @@ class AppReleasesState {
   void addMaster(MasterDto master) {
     _master = master;
   }
+
+  /// Merges locally cached versions that are not part of the official
+  /// releases list (e.g. third-party forks like OHOS).
+  ///
+  /// These versions have no [FlutterSdkRelease] metadata, so a VersionDto is
+  /// synthesized with a null release. They are only added to the installed
+  /// versions list (allMap/all), not to the official releases browse list
+  /// (versions), since they cannot be installed from the official archives.
+  void addUntrackedCachedVersions(
+    List<CacheFlutterVersion> cachedVersions,
+    String? globalVersion, {
+    Set<String> topLevelOhosNames = const {},
+  }) {
+    for (final cached in cachedVersions) {
+      // Use the alias-qualified name ('fork/version'): the queue re-parses it
+      // with FlutterVersion.parse and relies on the fork prefix to resolve
+      // the cache directory. CacheFlutterVersion.name drops the prefix.
+      final name = cached.nameWithAlias;
+
+      // Already covered by the official releases list
+      if (_allMap[name] != null) continue;
+
+      final version = VersionDto(
+        name: name,
+        release: null,
+        cache: cached,
+        needSetup: cached.isSetup != true,
+        isGlobal: globalVersion == name,
+        // Fork installs carry the alias; manually cloned top-level checkouts
+        // are detected via their git remote (FvmCacheProvider.reloadState).
+        isOhosSdk: isOhosCachedVersion(cached, topLevelOhosNames),
+      );
+
+      _allMap[name] = version;
+      _allCached.add(version);
+    }
+  }
 }
 
 final _fetchFlutterReleases = FutureProvider<FlutterReleasesResponse>(
@@ -135,6 +173,10 @@ final releasesStateProvider = Provider<AppReleasesState>((ref) {
   final globalVersion = fvmContext.get<CacheService>().getGlobalVersion();
   releasesState.hasGlobal = globalVersion != null;
 
+  // OHOS checkouts live in the cache, not in the official payload, so the
+  // flag has to be computed here and applied to every DTO below.
+  final topLevelOhosNames = installedVersions.topLevelOhosNames;
+
   //  MASTER: Set Master separetely because workflow is very different
   final masterCache = installedVersions.getChannel(kMasterChannel);
   final masterVersion = masterCache?.flutterSdkVersion;
@@ -145,6 +187,7 @@ final releasesStateProvider = Provider<AppReleasesState>((ref) {
     needSetup: masterCache?.isSetup != true,
     sdkVersion: masterVersion ?? '0.0.0',
     isGlobal: globalVersion == kMasterChannel,
+    isOhosSdk: isOhosCachedVersion(masterCache, topLevelOhosNames),
   ));
 
   // CHANNELS: Loop through available channels NOT including master
@@ -166,6 +209,7 @@ final releasesStateProvider = Provider<AppReleasesState>((ref) {
       currentRelease: currentRelease,
       release: latestRelease,
       isGlobal: globalVersion == name,
+      isOhosSdk: isOhosCachedVersion(channelCache, topLevelOhosNames),
     );
 
     releasesState.addChannel(channelDto);
@@ -181,12 +225,23 @@ final releasesStateProvider = Provider<AppReleasesState>((ref) {
       cache: cacheVersion,
       needSetup: cacheVersion?.isSetup != true,
       isGlobal: globalVersion == item.version,
+      // A published version number can still be an OHOS checkout when the
+      // user cloned the fork manually (e.g. `3.41.9`)
+      isOhosSdk: isOhosCachedVersion(cacheVersion, topLevelOhosNames),
     );
 
     releasesState.addVersion(version);
   }
 
   releasesState.generateMap();
+
+  // Merge locally cached versions that are not in the official releases list
+  // (e.g. third-party forks like OHOS), so they show up as installed versions
+  releasesState.addUntrackedCachedVersions(
+    installedVersions.versions,
+    globalVersion,
+    topLevelOhosNames: topLevelOhosNames,
+  );
 
   return releasesState;
 });

@@ -19,6 +19,7 @@ class ChannelDto extends ReleaseDto {
     required this.sdkVersion,
     required this.currentRelease,
     required super.isGlobal,
+    super.isOhosSdk,
   }) : super(
           isChannel: true,
         );

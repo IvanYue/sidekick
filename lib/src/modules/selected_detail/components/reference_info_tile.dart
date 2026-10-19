@@ -8,6 +8,8 @@ import '../../common/dto/release.dto.dart';
 import '../../common/utils/helpers.dart';
 import '../../common/utils/open_link.dart';
 import '../../fvm/components/fvm_setup_button.dart';
+import '../../ohos/ohos.constants.dart';
+import '../../ohos/ohos.service.dart';
 
 class ReferenceInfoTile extends StatelessWidget {
   final ReleaseDto version;
@@ -25,7 +27,13 @@ class ReferenceInfoTile extends StatelessWidget {
           SkListTile(
             title:
                 Text(context.i18n('modules:selectedDetail.components.channel')),
-            trailing: Chip(label: Text(version.release?.channelName ?? '')),
+            trailing: Chip(
+              label: Text(
+                version.isOhosSdk
+                    ? kOhosForkName
+                    : version.release?.channelName ?? '',
+              ),
+            ),
           ),
           const Divider(),
           SkListTile(
@@ -37,7 +45,12 @@ class ReferenceInfoTile extends StatelessWidget {
                 size: 20,
               ),
               onPressed: () async {
-                await openLink(kFlutterTagsUrl + version.name);
+                // OHOS SDKs are published as releases on the CPF-Flutter fork,
+                // under the tag the installed SDK reports
+                final url = version.isOhosSdk
+                    ? ohosReleasePageUrl(version.cache)
+                    : kFlutterTagsUrl + version.name;
+                await openLink(url);
               },
             ),
           ),

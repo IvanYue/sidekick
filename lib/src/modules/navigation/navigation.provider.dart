@@ -4,6 +4,9 @@ enum NavigationRoutes {
   homeScreen,
   projectsScreen,
   exploreScreen,
+
+  /// OHOS Flutter fork management screen
+  ohosScreen,
   settingsScreen,
   searchScreen,
 }

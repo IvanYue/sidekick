@@ -9,6 +9,7 @@ class MasterDto extends ChannelDto {
     required super.sdkVersion,
     required super.cache,
     required super.isGlobal,
+    super.isOhosSdk,
   }) : super(
           release: null,
           currentRelease: null,

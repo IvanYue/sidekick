@@ -249,5 +249,28 @@
       "ignore": "Ignorar",
       "installmissing": "Instalar compomnentes ausentes"
     }
+  },
+  "ohos": {
+    "navButtonOhos": "OHOS",
+    "title": "OHOS Flutter Versions",
+    "ohosDescription": "Browse and manage OpenHarmony Flutter fork versions (CPF-Flutter). Install tracks the oh-* release and dev branches; update fast-forwards to the latest branch commit.",
+    "branches": "Branches",
+    "release": "Release",
+    "dev": "Dev",
+    "all": "All",
+    "installedCount": "{{count}} installed",
+    "noBranches": "No OHOS branches found",
+    "noBranchesMessage": "No oh-* release or dev branches were found in the remote repository.",
+    "fetchFailed": "Could not fetch OHOS branches",
+    "fetchFailedMessage": "Failed to run git ls-remote. Check your network connection and try again.",
+    "retry": "Retry",
+    "installOhosVersion": "Install this OHOS branch",
+    "updateOhosVersion": "Update to the latest branch commit",
+    "updateAvailable": "Update available",
+    "ohosUpdated": "{{itemVersionName}} has been updated",
+    "orphanBranch": "Remote branch no longer exists",
+    "ohosTag": "OHOS",
+    "openOhosRepo": "Open the OHOS Flutter repository",
+    "openOhosRelease": "Open this version's OHOS release page"
   }
 }

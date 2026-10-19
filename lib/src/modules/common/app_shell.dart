@@ -21,6 +21,7 @@ import '../../modules/common/utils/layout_size.dart';
 import '../../theme.dart';
 import '../fvm/fvm.screen.dart';
 import '../navigation/navigation.provider.dart';
+import '../ohos/ohos.screen.dart';
 import '../projects/projects.screen.dart';
 import '../releases/releases.screen.dart';
 import '../selected_detail/selected_detail.provider.dart';
@@ -32,6 +33,7 @@ const pages = [
   FVMScreen(),
   ProjectsScreen(),
   ReleasesScreen(),
+  OhosScreen(),
 ];
 
 /// Main widget of the app
@@ -142,6 +144,11 @@ class AppShell extends HookConsumerWidget {
                   context,
                   context.i18n('modules:common.navButtonExplore'),
                   Icons.explore,
+                ),
+                renderNavButton(
+                  context,
+                  context.i18n('modules:ohos.navButtonOhos'),
+                  Icons.phone_android,
                 ),
               ],
             ),

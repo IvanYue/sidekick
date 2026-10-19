@@ -249,5 +249,28 @@
       "ignore": "忽视",
       "installmissing": "安装缺失"
     }
+  },
+  "ohos": {
+    "navButtonOhos": "OHOS",
+    "title": "OHOS Flutter 版本",
+    "ohosDescription": "浏览并管理 OpenHarmony Flutter fork（CPF-Flutter）版本。安装对应 oh-* release/dev 分支；更新即快进到分支最新提交。",
+    "branches": "分支",
+    "release": "Release",
+    "dev": "Dev",
+    "all": "全部",
+    "installedCount": "{{count}} 个已安装",
+    "noBranches": "未找到 OHOS 分支",
+    "noBranchesMessage": "远端仓库中未找到 oh-* release 或 dev 分支。",
+    "fetchFailed": "无法获取 OHOS 分支",
+    "fetchFailedMessage": "git ls-remote 执行失败，请检查网络连接后重试。",
+    "retry": "重试",
+    "installOhosVersion": "安装此 OHOS 分支",
+    "updateOhosVersion": "更新到分支最新提交",
+    "updateAvailable": "有可用更新",
+    "ohosUpdated": "{{itemVersionName}} 已更新",
+    "orphanBranch": "远端分支已不存在",
+    "ohosTag": "OHOS",
+    "openOhosRepo": "打开 OHOS Flutter 仓库",
+    "openOhosRelease": "打开该版本在 OHOS 仓库的发布页"
   }
 }

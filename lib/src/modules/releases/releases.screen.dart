@@ -6,6 +6,7 @@ import '../../components/atoms/typography.dart';
 import '../../components/molecules/version_install_button.dart';
 import '../../components/organisms/screen.dart';
 import '../../modules/common/utils/helpers.dart';
+import '../ohos/components/ohos_channel_card.dart';
 import 'components/channel_showcase_item.dart';
 import 'components/release_list_item.dart';
 import 'releases.provider.dart';
@@ -81,11 +82,13 @@ class ReleasesScreen extends ConsumerWidget {
                 padding: const EdgeInsets.all(8.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
-                  children: releases.channels.map((channel) {
-                    return Expanded(
-                      child: ChannelShowcaseItem(channel),
-                    );
-                  }).toList(),
+                  children: [
+                    ...releases.channels.map(
+                      (channel) =>
+                          Expanded(child: ChannelShowcaseItem(channel)),
+                    ),
+                    const Expanded(child: OhosChannelCard()),
+                  ],
                 ),
               ),
             ),

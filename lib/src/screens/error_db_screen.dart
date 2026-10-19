@@ -8,8 +8,14 @@ import 'package:window_manager/window_manager.dart';
 
 class ErrorDBScreen extends StatelessWidget {
   const ErrorDBScreen({
+    this.onRetry,
     super.key,
   });
+
+  /// Re-attempts opening the Hive boxes. The screen stays until the call
+  /// succeeds, so the lock-holder (usually another Sidekick instance) can be
+  /// closed first and the app recovers without a restart.
+  final Future<void> Function()? onRetry;
 
   @override
   Widget build(BuildContext context) {
@@ -71,6 +77,16 @@ class ErrorDBScreen extends StatelessWidget {
                         const SizedBox(
                           width: 10,
                         ),
+                        if (onRetry != null) ...[
+                          ElevatedButton.icon(
+                            label: const Text('Try Again'),
+                            icon: const Icon(Icons.refresh),
+                            onPressed: () => onRetry!(),
+                          ),
+                          const SizedBox(
+                            width: 10,
+                          ),
+                        ],
                         ElevatedButton.icon(
                           label: const Text('Close'),
                           icon: const Icon(Icons.close),

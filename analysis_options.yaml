@@ -6,6 +6,10 @@ analyzer:
     - "lib/src/generated/*.dart"
     - "lib/generated/intl/*.dart"
     - third_party/**
+    - build/**
+    - windows/**
+    - macos/**
+    - linux/**
 # linter:
 #   rules:
 
