@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:pub_semver/pub_semver.dart';
+import 'package:sidekick/src/design/colors.dart';
+import 'package:sidekick/src/design/kit/kit.dart';
+import 'package:sidekick/src/design/tokens.dart';
 
-import '../../../../components/atoms/typography.dart';
 import '../../../common/utils/helpers.dart';
 import '../../../common/utils/notify.dart';
 import '../project_detail.provider.dart';
@@ -13,16 +15,21 @@ import 'detail_widgets.dart';
 
 const _actionWidth = 100.0;
 
-/// Dependencies with their resolved and latest versions
+/// 依赖列表：解析版本 vs pub.dev 最新版本。
+///
+/// 对应 design/index.html：分组小标题 + 表头 + 逐行依赖，行内用语义色
+/// 标注「已是最新 / 可升级 / 约束过时 / 无法联网」。
 class PackagesTab extends ConsumerWidget {
-  /// Constructor
+  /// 构造函数
   const PackagesTab({required this.details, super.key});
 
-  /// Details read from disk
+  /// 从磁盘读到的项目信息
   final ProjectDetails details;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+
     final packages = details.packages;
     if (packages.isEmpty) {
       return DetailMessage(
@@ -43,8 +50,7 @@ class PackagesTab extends ConsumerWidget {
           status == PackageStatus.constraintOutdated;
     }).length;
 
-    // Packages whose latest version failed for a reason other than not
-    // being published on pub.dev (offline, timeout, server error)
+    // 取最新版本失败但不是「pub.dev 上没有」的包（离线 / 超时 / 服务端错误）
     final unreachable = [
       for (final MapEntry(:key, :value) in latest.entries)
         if (value.hasError && !_isNotFound(value.error)) key,
@@ -67,24 +73,33 @@ class PackagesTab extends ConsumerWidget {
         if (unreachable.isNotEmpty)
           NoticeBanner(
             icon: Icons.cloud_off,
-            color: Colors.redAccent,
+            tone: SkChipTone.danger,
             message: context.i18n('modules:projects.detail.pubDevUnavailable'),
-            action: TextButton(
+            action: SkButton(
+              label: context.i18n('modules:projects.detail.retry'),
+              size: SkButtonSize.sm,
               onPressed: retry,
-              child: Text(context.i18n('modules:projects.detail.retry')),
             ),
           ),
         Padding(
-          padding: const EdgeInsets.fromLTRB(20, 15, 20, 5),
+          padding: const EdgeInsets.fromLTRB(
+            SkTokens.sp6,
+            SkTokens.sp4,
+            SkTokens.sp6,
+            SkTokens.sp1,
+          ),
           child: Row(
             children: [
-              // The count would be misleading while versions are missing
+              // 版本还没拿全时，计数会误导用户
               if (unreachable.isEmpty) ...[
-                Caption(context.i18n(
-                  'modules:projects.detail.outdatedCount',
-                  variables: {'count': outdated},
-                )),
-                const SizedBox(width: 10),
+                Text(
+                  context.i18n(
+                    'modules:projects.detail.outdatedCount',
+                    variables: {'count': outdated},
+                  ),
+                  style: theme.textTheme.labelSmall,
+                ),
+                const SizedBox(width: SkTokens.sp3),
               ],
               if (loading)
                 const SizedBox(
@@ -97,7 +112,12 @@ class PackagesTab extends ConsumerWidget {
         ),
         Expanded(
           child: ListView(
-            padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+            padding: const EdgeInsets.fromLTRB(
+              SkTokens.sp6,
+              0,
+              SkTokens.sp6,
+              SkTokens.sp6,
+            ),
             children: [
               for (final section in DependencySection.values)
                 ..._section(context, section, latest),
@@ -113,6 +133,7 @@ class PackagesTab extends ConsumerWidget {
     DependencySection section,
     Map<String, AsyncValue<Version>> latest,
   ) {
+    final theme = Theme.of(context);
     final packages = details.packages.where((p) => p.section == section);
     if (packages.isEmpty) return const [];
 
@@ -122,11 +143,14 @@ class PackagesTab extends ConsumerWidget {
 
     return [
       Padding(
-        padding: const EdgeInsets.only(top: 15, bottom: 5),
-        child: Subheading(context.i18n(title)),
+        padding: const EdgeInsets.only(top: SkTokens.sp4, bottom: SkTokens.sp1),
+        child: Text(
+          context.i18n(title),
+          style: theme.textTheme.titleSmall,
+        ),
       ),
       _HeaderRow(),
-      const Divider(height: 1),
+      const SkDivider(strong: true),
       for (final package in packages)
         PackageRow(
           projectPath: details.path,
@@ -142,10 +166,13 @@ class _HeaderRow extends StatelessWidget {
   Widget build(BuildContext context) {
     Widget cell(String key, int flex) => Expanded(
           flex: flex,
-          child: Caption(context.i18n(key)),
+          child: Text(
+            context.i18n(key),
+            style: SkText.overline(context),
+          ),
         );
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 6),
+      padding: const EdgeInsets.symmetric(vertical: SkTokens.sp2),
       child: Row(
         children: [
           cell('modules:projects.detail.package', 4),
@@ -159,9 +186,9 @@ class _HeaderRow extends StatelessWidget {
   }
 }
 
-/// One dependency
+/// 单个依赖
 class PackageRow extends ConsumerWidget {
-  /// Constructor
+  /// 构造函数
   const PackageRow({
     required this.projectPath,
     required this.package,
@@ -169,17 +196,20 @@ class PackageRow extends ConsumerWidget {
     super.key,
   });
 
-  /// Project the dependency belongs to
+  /// 依赖所属项目
   final String projectPath;
 
-  /// Dependency
+  /// 依赖
   final ProjectPackage package;
 
-  /// Latest version on pub.dev, null if not on pub.dev
+  /// pub.dev 上的最新版本；不在 pub.dev 上时为 null
   final AsyncValue<Version>? latest;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final c = SkColors.of(context);
+    final theme = Theme.of(context);
+
     final latestVersion = latest?.value;
     final status = package.statusFor(latestVersion);
 
@@ -190,25 +220,32 @@ class PackageRow extends ConsumerWidget {
       final confirmed = await showDialog<bool>(
         context: context,
         builder: (context) => AlertDialog(
-          title: Text(context.i18n(
-            'modules:projects.detail.upgradeTitle',
-            variables: {'package': package.name},
-          )),
-          content: Text(context.i18n(
-            'modules:projects.detail.upgradeMessage',
-            variables: {
-              'from': package.constraint ?? 'any',
-              'to': constraint,
-            },
-          )),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context, false),
-              child: Text(context.i18n('modules:projects.detail.cancel')),
+          title: Text(
+            context.i18n(
+              'modules:projects.detail.upgradeTitle',
+              variables: {'package': package.name},
             ),
-            ElevatedButton(
+            style: theme.textTheme.titleLarge,
+          ),
+          content: Text(
+            context.i18n(
+              'modules:projects.detail.upgradeMessage',
+              variables: {
+                'from': package.constraint ?? 'any',
+                'to': constraint,
+              },
+            ),
+            style: theme.textTheme.bodyMedium,
+          ),
+          actions: [
+            SkButton(
+              label: context.i18n('modules:projects.detail.cancel'),
+              onPressed: () => Navigator.pop(context, false),
+            ),
+            SkButton(
+              label: context.i18n('modules:projects.detail.upgrade'),
+              variant: SkButtonVariant.primary,
               onPressed: () => Navigator.pop(context, true),
-              child: Text(context.i18n('modules:projects.detail.upgrade')),
             ),
           ],
         ),
@@ -229,11 +266,9 @@ class PackageRow extends ConsumerWidget {
     }
 
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 4),
+      padding: const EdgeInsets.symmetric(vertical: SkTokens.sp1),
       decoration: BoxDecoration(
-        border: Border(
-          bottom: BorderSide(color: Theme.of(context).dividerColor),
-        ),
+        border: Border(bottom: BorderSide(color: c.lineSoft)),
       ),
       child: Row(
         children: [
@@ -242,16 +277,26 @@ class PackageRow extends ConsumerWidget {
             child: Text(
               package.name,
               overflow: TextOverflow.ellipsis,
-              style: Theme.of(context).textTheme.bodyMedium,
+              style: theme.textTheme.bodyMedium?.copyWith(color: c.ink1),
             ),
           ),
           Expanded(
             flex: 3,
-            child: Caption(package.constraint ?? _sourceLabel(package.source)),
+            child: Text(
+              package.constraint ?? _sourceLabel(package.source),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: SkText.mono(context, fontSize: 11, color: c.ink2),
+            ),
           ),
           Expanded(
             flex: 2,
-            child: Caption(package.resolved?.toString() ?? '-'),
+            child: Text(
+              package.resolved?.toString() ?? '-',
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: SkText.mono(context, fontSize: 11, color: c.ink2),
+            ),
           ),
           Expanded(flex: 2, child: _latestCell(context, status)),
           SizedBox(
@@ -260,11 +305,10 @@ class PackageRow extends ConsumerWidget {
             child: status == PackageStatus.constraintOutdated
                 ? Align(
                     alignment: Alignment.centerRight,
-                    child: TextButton(
+                    child: SkButton(
+                      label: context.i18n('modules:projects.detail.upgrade'),
+                      size: SkButtonSize.sm,
                       onPressed: upgrade,
-                      child: Text(
-                        context.i18n('modules:projects.detail.upgrade'),
-                      ),
                     ),
                   )
                 : null,
@@ -275,8 +319,13 @@ class PackageRow extends ConsumerWidget {
   }
 
   Widget _latestCell(BuildContext context, PackageStatus status) {
+    final c = SkColors.of(context);
+    final theme = Theme.of(context);
+
     final latest = this.latest;
-    if (latest == null) return const Caption('-');
+    if (latest == null) {
+      return Text('-', style: theme.textTheme.bodySmall);
+    }
 
     final error = latest.error;
     if (error != null) {
@@ -290,7 +339,7 @@ class PackageRow extends ConsumerWidget {
           child: Icon(
             notFound ? Icons.help_outline : Icons.cloud_off,
             size: 16,
-            color: Theme.of(context).disabledColor,
+            color: c.ink3,
           ),
         ),
       );
@@ -310,17 +359,17 @@ class PackageRow extends ConsumerWidget {
 
     final (color, icon, tooltip) = switch (status) {
       PackageStatus.upToDate => (
-          Colors.greenAccent,
+          c.ok,
           Icons.check_circle_outline,
           'modules:projects.detail.upToDate',
         ),
       PackageStatus.upgradable => (
-          Colors.amber,
+          c.warn,
           Icons.arrow_circle_up,
           'modules:projects.detail.updateAvailable',
         ),
       PackageStatus.constraintOutdated => (
-          Colors.deepOrangeAccent,
+          c.accent,
           Icons.error_outline,
           'modules:projects.detail.constraintOutdated',
         ),
@@ -329,7 +378,7 @@ class PackageRow extends ConsumerWidget {
 
     final text = Text(
       version.toString(),
-      style: Theme.of(context).textTheme.bodySmall?.copyWith(color: color),
+      style: SkText.mono(context, fontSize: 11, color: color ?? c.ink1),
     );
     if (icon == null || tooltip == null) return text;
 
@@ -338,7 +387,7 @@ class PackageRow extends ConsumerWidget {
       child: Row(
         children: [
           Icon(icon, size: 14, color: color),
-          const SizedBox(width: 4),
+          const SizedBox(width: SkTokens.sp1),
           Flexible(child: text),
         ],
       ),

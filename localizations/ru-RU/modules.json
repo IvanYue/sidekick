@@ -2,7 +2,6 @@
   "common": {
     "navButtonDashboard": "Панель приборов",
     "navButtonProjects": "Проекты",
-    "navButtonExplore": "Исследуйте",
     "navButtonPackages": "Пакеты",
     "stableChannelDescription": "Мы рекомендуем использовать этот канал для всех выпусков рабочих программ. Приблизительно раз в квартал ветка, стабилизированная до бета-версии, становится нашей следующей стабильной ветвью, и мы создаем стабильную версию этой ветви.",
     "betaChannelDescription": "Ветвь создана для новой бета-версии в начале месяца, обычно первого понедельника, мастером. Тут будет содержаться ветку для Dart, движок и фреймворк.",
@@ -10,7 +9,14 @@
     "masterChannelDescription": "Последняя tip-of-tree, абсолютно последняя передовая сборка. Обычно работает, хотя иногда мы случайно что-то ломаем.",
     "utils": {
       "couldNotLaunchUrl": "Не удалось открыть {{url}}"
-    }
+    },
+    "navGroupWorkspace": "Рабочая область",
+    "navButtonInstalled": "Установленные",
+    "navButtonReleases": "Релизы",
+    "navButtonSettings": "Настройки",
+    "sidebarReady": "Готово",
+    "sidebarChecking": "Проверка",
+    "sidebarMissingComponents": "Не хватает компонентов"
   },
   "fvm": {
     "installedVersions": "Установленные версии",
@@ -52,7 +58,17 @@
       "couldNotUpgradeVersionname": "Не удалось обновить {{versionName}}",
       "forceUpgradeDiscardsChanges": "Принудительное обновление отменяет все локальные изменения в этом SDK, а затем обновляет его. Ваши проекты не будут затронуты.",
       "forceUpgrade": "Принудительно обновить"
-    }
+    },
+    "allInstalledVersions": "All installed versions · {{count}}",
+    "globalVersion": "Global version",
+    "globalVersionPathHint": "The flutter command currently points to {{path}}",
+    "installedVersionsDescription": "Every Flutter SDK in your local FVM cache. Click any row to see version details.",
+    "sortedByInstallTime": "Sorted by install time",
+    "statsCacheSize": "Disk usage",
+    "statsInstalled": "Installed versions",
+    "statsOutdated": "Outdated",
+    "statsUnused": "Unused",
+    "viewPath": "View path"
   },
   "projects": {
     "projectsRefreshed": "Обновить проекты",
@@ -129,7 +145,8 @@
       "setVersion": "Задать версию",
       "save": "Сохранить",
       "versionUpdated": "Версия изменена на {{version}}"
-    }
+    },
+    "flutterProject": "Flutter project"
   },
   "pubPackages": {
     "trending": "Популярный",
@@ -153,7 +170,11 @@
     "all": "Все",
     "releases": "Релизы",
     "versions": "Версии",
-    "theCurrentTipoftreeAbsoluteLatestCuttingEdgeBuildUsuallyFunctional": "Последняя tip-of-tree, абсолютно последняя передовая сборка. Обычно работает, хотя иногда мы случайно что-то ломаем."
+    "theCurrentTipoftreeAbsoluteLatestCuttingEdgeBuildUsuallyFunctional": "Последняя tip-of-tree, абсолютно последняя передовая сборка. Обычно работает, хотя иногда мы случайно что-то ломаем.",
+    "releasesDescription": "Browse the official Flutter channels and every past release.",
+    "loading": "Loading releases…",
+    "empty": "No releases available",
+    "emptyMessage": "Could not fetch the release list from Flutter. Check your connection and retry."
   },
   "sandbox": {
     "playground": "Playground",
@@ -184,7 +205,10 @@
       "channel": "Канал",
       "releaseNotes": "Примечания к выпуску",
       "version": "Версия",
-      "releaseDate": "Дата выпуска"
+      "releaseDate": "Дата выпуска",
+      "close": "Close",
+      "referenceInformation": "Reference information",
+      "releaseDetails": "Release details"
     }
   },
   "settings": {
@@ -218,7 +242,10 @@
       "ideNotFound": "{{ideName}} (не найдено)",
       "ideNotFoundDescription": "{{ideName}} не найдено на этом компьютере. Выберите другую IDE.",
       "detectIdesAgain": "Снова найти установленные IDE",
-      "detectingIdes": "Поиск установленных IDE..."
+      "detectingIdes": "Поиск установленных IDE...",
+      "changesAreSavedImmediately": "Changes are saved immediately.",
+      "languageDescription": "Choose the interface language.",
+      "settingsDescription": "Manage Sidekick's general, Flutter and FVM preferences."
     }
   },
   "updater": {
@@ -228,7 +255,8 @@
       "later": "Позже",
       "updateNow": "Обновить сейчас",
       "clickHereToDownload": "Нажмите здесь, чтобы загрузить",
-      "aNewVersionOfSidekickIsAvailableUpdateinfolatest": "Доступна новая версия Sidekick ({{updateInfoLatest}})."
+      "aNewVersionOfSidekickIsAvailableUpdateinfolatest": "Доступна новая версия Sidekick ({{updateInfoLatest}}).",
+      "checkForUpdates": "Проверить обновления"
     }
   },
   "compatibility": {
@@ -271,6 +299,10 @@
     "orphanBranch": "Remote branch no longer exists",
     "ohosTag": "OHOS",
     "openOhosRepo": "Open the OHOS Flutter repository",
-    "openOhosRelease": "Open this version's OHOS release page"
+    "openOhosRelease": "Open this version's OHOS release page",
+    "openRepo": "Open repo",
+    "statInstalled": "Installed",
+    "statRemoteBranches": "Remote branches",
+    "statUpdatePending": "Update available"
   }
 }

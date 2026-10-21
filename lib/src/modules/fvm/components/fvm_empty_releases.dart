@@ -1,53 +1,47 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:sidekick/src/design/kit/kit.dart';
+import 'package:sidekick/src/design/tokens.dart';
 import 'package:sidekick/src/modules/common/utils/helpers.dart';
 
-import '../../../components/atoms/empty_dataset.dart';
 import '../../navigation/navigation.provider.dart';
 
+/// 已安装页的空态：没有任何 Flutter SDK 时展示。
+///
+/// 对应 design/tokens.css 的 `.empty`：居中图标瓦片 + 标题 + 说明 + 主操作。
 class EmptyVersions extends ConsumerWidget {
+  /// 构造函数
   const EmptyVersions({
     super.key,
   });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return EmptyDataset(
-      icon: const FlutterLogo(),
-      child: Padding(
-        padding: const EdgeInsets.all(40.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              context.i18n('modules:fvm.components.flutterSdkNotInstalled'),
-              style: Theme.of(context).textTheme.headlineSmall,
-              textAlign: TextAlign.center,
+    return Center(
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 520),
+        child: Padding(
+          padding: const EdgeInsets.all(SkTokens.sp8),
+          child: SkEmptyState(
+            tone: SkChipTone.accent,
+            icon: Icons.flutter_dash,
+            title: context.i18n('modules:fvm.components.flutterSdkNotInstalled'),
+            description: context.i18n(
+              'modules:fvm.components.noFlutterVersionInstalledMessage',
             ),
-            const SizedBox(height: 20),
-            Text(
-              context.i18n(
-                  'modules:fvm.components.noFlutterVersionInstalledMessage'),
-              textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.bodySmall,
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton.icon(
-              style: ButtonStyle(
-                  padding: WidgetStateProperty.resolveWith(
-                (states) => const EdgeInsets.fromLTRB(30, 15, 30, 15),
-              )),
+            action: SkButton(
+              label: context.i18n(
+                'modules:fvm.components.exploreFlutterReleases',
+              ),
+              icon: Icons.explore_outlined,
+              variant: SkButtonVariant.primary,
               onPressed: () {
                 ref
                     .read(navigationProvider.notifier)
                     .goTo(NavigationRoutes.exploreScreen);
               },
-              icon: const Icon(Icons.explore),
-              label: Text(
-                context.i18n('modules:fvm.components.exploreFlutterReleases'),
-              ),
-            )
-          ],
+            ),
+          ),
         ),
       ),
     );

@@ -1,32 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import '../../../components/mdi_icons.dart';
+import 'package:sidekick/src/design/colors.dart';
+import 'package:sidekick/src/design/tokens.dart';
 import 'package:sidekick/src/modules/common/utils/helpers.dart';
 
-import '../../../components/atoms/typography.dart';
+import '../../../components/mdi_icons.dart';
 import '../../../modules/common/dto/release.dto.dart';
 import '../../fvm/fvm_queue.provider.dart';
 import '../../ohos/ohos.constants.dart';
 import '../../ohos/ohos.service.dart';
 import '../project.dto.dart';
 
-/// Select project release
+/// 项目卡片里的 Flutter 版本选择器。
+///
+/// 对应 design/tokens.css 的 `.field`：等宽字体显示当前锁定版本 +
+/// 下拉箭头，点开是带 OHOS 标记的版本列表。
 class ProjectReleaseSelect extends ConsumerWidget {
-  /// Constructor
+  /// 构造函数
   const ProjectReleaseSelect({
     required this.project,
     required this.releases,
     super.key,
   });
 
-  /// Project
+  /// 项目
   final FlutterProject project;
 
-  /// Releases
+  /// 可选版本
   final List<ReleaseDto> releases;
 
-  /// Caption for the currently pinned version: OHOS pins show their short
-  /// name instead of the raw branch name.
+  /// 当前锁定版本的显示文案：OHOS 锁定显示短名而不是原始分支名。
   String _pinnedLabel(BuildContext context) {
     final pinned = project.pinnedVersion;
     if (pinned == null) {
@@ -40,66 +43,74 @@ class ProjectReleaseSelect extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return PopupMenuButton<String>(
-        tooltip: context.i18n(
-          'modules:projects.components.selectAFlutterSdkVersion',
-        ),
+    final c = SkColors.of(context);
+    final theme = Theme.of(context);
 
-        // elevation: 1,
-        padding: EdgeInsets.zero,
-        onSelected: (version) async {
-          await ref
-              .read(fvmQueueProvider.notifier)
-              .pinVersion(context, project, version);
-        },
-        itemBuilder: (context) {
-          return releases
-              .map(
-                (version) => PopupMenuItem(
-                  value: version.name,
-                  child: Row(
-                    children: [
-                      Flexible(
-                        child: Text(
-                          version.isOhosSdk
-                              ? ohosDisplayName(version.name)
-                              : version.name,
-                          style: const TextStyle(fontSize: 12),
-                        ),
+    return PopupMenuButton<String>(
+      tooltip: context.i18n(
+        'modules:projects.components.selectAFlutterSdkVersion',
+      ),
+      padding: EdgeInsets.zero,
+      position: PopupMenuPosition.under,
+      onSelected: (version) async {
+        await ref
+            .read(fvmQueueProvider.notifier)
+            .pinVersion(context, project, version);
+      },
+      itemBuilder: (context) {
+        return releases
+            .map(
+              (version) => PopupMenuItem(
+                value: version.name,
+                height: 34,
+                child: Row(
+                  children: [
+                    Flexible(
+                      child: Text(
+                        version.isOhosSdk
+                            ? ohosDisplayName(version.name)
+                            : version.name,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: theme.textTheme.bodySmall,
                       ),
-                      // Distinguish OHOS SDKs in the picker
-                      if (version.isOhosSdk) ...[
-                        const SizedBox(width: 6),
-                        const Icon(Icons.phone_android, size: 12),
-                        const SizedBox(width: 2),
-                        Text(
-                          context.i18n('modules:ohos.ohosTag'),
-                          style: TextStyle(
-                            fontSize: 10,
-                            color: Theme.of(context).colorScheme.secondary,
-                          ),
-                        ),
-                      ],
+                    ),
+                    // 在选择器里区分 OHOS SDK
+                    if (version.isOhosSdk) ...[
+                      const SizedBox(width: SkTokens.sp2),
+                      Icon(Icons.phone_android, size: 12, color: c.ok),
                     ],
-                  ),
+                  ],
                 ),
-              )
-              .toList();
-        },
-        child: Container(
-          padding: const EdgeInsets.fromLTRB(10, 0, 5, 0),
-          constraints: const BoxConstraints(
-            maxWidth: 165,
-          ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Caption(_pinnedLabel(context)),
-              // const SizedBox(width: 20),
-              Icon(MdiIcons.menuDown),
-            ],
-          ),
-        ));
+              ),
+            )
+            .toList();
+      },
+      child: Container(
+        height: SkTokens.controlHeightSm,
+        padding: const EdgeInsets.symmetric(horizontal: SkTokens.sp3),
+        constraints: const BoxConstraints(maxWidth: 165),
+        decoration: BoxDecoration(
+          color: c.bgRaised,
+          borderRadius: SkTokens.radiusSm,
+          border: Border.all(color: c.line),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Flexible(
+              child: Text(
+                _pinnedLabel(context),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: theme.textTheme.labelSmall?.copyWith(color: c.ink2),
+              ),
+            ),
+            const SizedBox(width: SkTokens.sp1),
+            Icon(MdiIcons.menuDown, size: 14, color: c.ink3),
+          ],
+        ),
+      ),
+    );
   }
 }

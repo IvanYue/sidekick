@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fvm/fvm.dart';
+import 'package:sidekick/src/design/kit/kit.dart';
 import 'package:sidekick/src/modules/common/dto/version.dto.dart';
 import 'package:sidekick/src/modules/fvm/components/fvm_release_list_item.dart';
 import 'package:sidekick/src/modules/ohos/components/ohos_badge.dart';
@@ -36,8 +37,21 @@ void main() {
     // OHOS versions display the short branch name
     expect(find.text('oh-3.41.9'), findsOneWidget);
     expect(find.byType(OhosBadge), findsOneWidget);
-    // Actionable badge opens the repository link
-    expect(find.byType(ActionChip), findsOneWidget);
+    // The actionable badge is a tappable chip wrapped in a tooltip
+    expect(
+      find.descendant(
+        of: find.byType(OhosBadge),
+        matching: find.byType(SkChip),
+      ),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(
+        of: find.byType(OhosBadge),
+        matching: find.byType(Tooltip),
+      ),
+      findsOneWidget,
+    );
   });
 
   testWidgets('FvmReleaseListItem shows no OHOS badge for official versions',
@@ -67,7 +81,9 @@ void main() {
     await pumpTestApp(tester, const Center(child: OhosBadge()));
     await settle(tester);
 
-    expect(find.byType(Chip), findsOneWidget);
-    expect(find.byType(ActionChip), findsNothing);
+    expect(find.byType(SkChip), findsOneWidget);
+    // Nothing to tap and nothing to hover-explain
+    expect(find.byType(Tooltip), findsNothing);
+    expect(find.byType(InkWell), findsNothing);
   });
 }

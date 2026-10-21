@@ -2,7 +2,6 @@
   "common": {
     "navButtonDashboard": "لوحة التحكم",
     "navButtonProjects": "المشروعات",
-    "navButtonExplore": "إستكشاف",
     "navButtonPackages": "الحزم",
     "stableChannelDescription": "نوصي بأن تستخدم هذه القناة لجميع إصدارات التطبيق الإنتاجية. مرة كل ثلاثة أشهر تقريبا، وسيصبح الفرع الذي تم الاستقرار عليه في beta فرعنا المستقر المقبل وسننشئ إصدارا مستقرا من ذلك الفرع.",
     "betaChannelDescription": "فرع أنشئ من Master لإصدار beta جديد في بداية الشهر، عادة يوم الاثنين الأول. وسيشمل ذلك فرعا لDart والمحرك والإطار.",
@@ -10,7 +9,14 @@
     "masterChannelDescription": "احدث نسخة جاليا والتي عادة ما تعمل ، بالرغم من أننا في بعض الأحيان نواجه بعض الأخطاء.",
     "utils": {
       "couldNotLaunchUrl": "تعذر تشغيل {{url}}"
-    }
+    },
+    "navGroupWorkspace": "مساحة العمل",
+    "navButtonInstalled": "مثبَّتة",
+    "navButtonReleases": "الإصدارات",
+    "navButtonSettings": "الإعدادات",
+    "sidebarReady": "جاهز",
+    "sidebarChecking": "جارٍ الفحص",
+    "sidebarMissingComponents": "مكوّنات مفقودة"
   },
   "fvm": {
     "installedVersions": "الإصدارات المثبتة",
@@ -52,7 +58,17 @@
       "couldNotUpgradeVersionname": "تعذّرت ترقية {{versionName}}",
       "forceUpgradeDiscardsChanges": "تتجاهل الترقية الإجبارية أي تغييرات محلية في حزمة SDK هذه ثم تقوم بترقيتها. لن تتأثر مشاريعك.",
       "forceUpgrade": "ترقية إجبارية"
-    }
+    },
+    "allInstalledVersions": "All installed versions · {{count}}",
+    "globalVersion": "Global version",
+    "globalVersionPathHint": "The flutter command currently points to {{path}}",
+    "installedVersionsDescription": "Every Flutter SDK in your local FVM cache. Click any row to see version details.",
+    "sortedByInstallTime": "Sorted by install time",
+    "statsCacheSize": "Disk usage",
+    "statsInstalled": "Installed versions",
+    "statsOutdated": "Outdated",
+    "statsUnused": "Unused",
+    "viewPath": "View path"
   },
   "projects": {
     "projectsRefreshed": "تم تحديث المشروعات",
@@ -129,7 +145,8 @@
       "setVersion": "تعيين الإصدار",
       "save": "حفظ",
       "versionUpdated": "تم تغيير الإصدار إلى {{version}}"
-    }
+    },
+    "flutterProject": "Flutter project"
   },
   "pubPackages": {
     "trending": "شائع",
@@ -153,7 +170,11 @@
     "all": "الجميع",
     "releases": "الإصدارات",
     "versions": "النسخ",
-    "theCurrentTipoftreeAbsoluteLatestCuttingEdgeBuildUsuallyFunctional": "النسيج الحالي من الأشجار، أحدث حديث مطلق. عادة ما يعمل ، بالرغم من أننا في بعض الأحيان نقوم بتحطيم الأشياء عن طريق الخطأ."
+    "theCurrentTipoftreeAbsoluteLatestCuttingEdgeBuildUsuallyFunctional": "النسيج الحالي من الأشجار، أحدث حديث مطلق. عادة ما يعمل ، بالرغم من أننا في بعض الأحيان نقوم بتحطيم الأشياء عن طريق الخطأ.",
+    "releasesDescription": "Browse the official Flutter channels and every past release.",
+    "loading": "Loading releases…",
+    "empty": "No releases available",
+    "emptyMessage": "Could not fetch the release list from Flutter. Check your connection and retry."
   },
   "sandbox": {
     "playground": "ملعب",
@@ -184,7 +205,10 @@
       "channel": "قناة",
       "releaseNotes": "ملاحظات الإصدار",
       "version": "نسخة",
-      "releaseDate": "تاريخ الإصدار"
+      "releaseDate": "تاريخ الإصدار",
+      "close": "Close",
+      "referenceInformation": "Reference information",
+      "releaseDetails": "Release details"
     }
   },
   "settings": {
@@ -218,7 +242,10 @@
       "ideNotFound": "{{ideName}} (غير موجود)",
       "ideNotFoundDescription": "لم يتم العثور على {{ideName}} على هذا الكمبيوتر. اختر بيئة تطوير أخرى.",
       "detectIdesAgain": "إعادة اكتشاف بيئات التطوير المثبتة",
-      "detectingIdes": "جارٍ اكتشاف بيئات التطوير المثبتة..."
+      "detectingIdes": "جارٍ اكتشاف بيئات التطوير المثبتة...",
+      "changesAreSavedImmediately": "Changes are saved immediately.",
+      "languageDescription": "Choose the interface language.",
+      "settingsDescription": "Manage Sidekick's general, Flutter and FVM preferences."
     }
   },
   "updater": {
@@ -228,7 +255,8 @@
       "later": "لاحقاً",
       "updateNow": "التحديث الآن",
       "clickHereToDownload": "انقر هنا للتحميل.",
-      "aNewVersionOfSidekickIsAvailableUpdateinfolatest": "يتوفر إصدار جديد من Sidekick ({{updateInfoLatest}})."
+      "aNewVersionOfSidekickIsAvailableUpdateinfolatest": "يتوفر إصدار جديد من Sidekick ({{updateInfoLatest}}).",
+      "checkForUpdates": "التحقق من التحديثات"
     }
   },
   "compatibility": {
@@ -271,6 +299,10 @@
     "orphanBranch": "Remote branch no longer exists",
     "ohosTag": "OHOS",
     "openOhosRepo": "Open the OHOS Flutter repository",
-    "openOhosRelease": "Open this version's OHOS release page"
+    "openOhosRelease": "Open this version's OHOS release page",
+    "openRepo": "Open repo",
+    "statInstalled": "Installed",
+    "statRemoteBranches": "Remote branches",
+    "statUpdatePending": "Update available"
   }
 }

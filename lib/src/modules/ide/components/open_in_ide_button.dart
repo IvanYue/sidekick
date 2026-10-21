@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:sidekick/src/design/colors.dart';
+import 'package:sidekick/src/design/tokens.dart';
+import 'package:sidekick/src/modules/common/utils/helpers.dart';
 
-import '../../../components/atoms/typography.dart';
 import '../../../components/mdi_icons.dart';
-import '../../common/utils/helpers.dart';
 import '../../common/utils/notify.dart';
 import '../../settings/settings.dto.dart';
 import '../ide.provider.dart';
@@ -11,7 +12,7 @@ import '../ide_detector.dart';
 import '../ide_icons.dart';
 import '../ide_opener.dart';
 
-/// Opens [folder] in [ide] and reports failures with a toast
+/// 在 [ide] 中打开 [folder]，失败时弹提示。
 Future<void> openFolderInIde(
   BuildContext context,
   WidgetRef ref,
@@ -29,16 +30,15 @@ Future<void> openFolderInIde(
   }
 }
 
-/// Quick button for the IDE selected in settings. Hidden when none is
-/// selected or the selected one is not installed.
+/// 设置里选中的 IDE 的快捷按钮。未选或选中的 IDE 未安装时不显示。
 class OpenInSelectedIdeButton extends ConsumerWidget {
-  /// Constructor
+  /// 构造函数
   const OpenInSelectedIdeButton(this.folder, this.settings, {super.key});
 
-  /// Folder to open
+  /// 要打开的目录
   final String folder;
 
-  /// Settings with the selected IDE
+  /// 含已选 IDE 的设置
   final SidekickSettings settings;
 
   @override
@@ -52,37 +52,46 @@ class OpenInSelectedIdeButton extends ConsumerWidget {
     );
     if (ide == null) return const SizedBox.shrink();
 
+    // 用 IDE 自己的图标，包一层与 SkIconButton 一致的 28×28 点击区
     return Tooltip(
       message: context.i18n(
         'modules:projects.components.openIde',
         variables: {'ideName': ide.name},
       ),
-      child: IconButton(
-        iconSize: 20,
-        splashRadius: 20,
-        icon: ideIcon(ide.launcher),
-        onPressed: () => openFolderInIde(context, ref, ide, folder),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: () => openFolderInIde(context, ref, ide, folder),
+          borderRadius: SkTokens.radiusMd,
+          hoverColor: SkColors.of(context).bgHover,
+          child: SizedBox(
+            width: SkTokens.iconButtonSize,
+            height: SkTokens.iconButtonSize,
+            child: Center(child: ideIcon(ide.launcher)),
+          ),
+        ),
       ),
     );
   }
 }
 
-/// Menu value of the "detect again" entry
+/// 「重新检测」菜单项的取值
 const _refreshAction = 'refresh';
 
-/// "Open in" menu listing every installed launcher
+/// 「打开方式」菜单，列出所有已安装的启动器。
 class OpenInIdeMenu extends ConsumerWidget {
-  /// Constructor
+  /// 构造函数
   const OpenInIdeMenu(this.folder, this.settings, {super.key});
 
-  /// Folder to open
+  /// 要打开的目录
   final String folder;
 
-  /// Settings with the custom IDE location
+  /// 含自定义 IDE 路径的设置
   final SidekickSettings settings;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
     final sidekick = settings;
     final detection = ref.watch(ideDetectionProvider);
     final custom = customIde(sidekick.customIdeLocation);
@@ -95,16 +104,21 @@ class OpenInIdeMenu extends ConsumerWidget {
       return Row(
         children: [
           IconTheme.merge(data: const IconThemeData(size: 15), child: icon),
-          const SizedBox(width: 10),
-          Flexible(child: Caption(label)),
+          const SizedBox(width: SkTokens.sp3),
+          Flexible(
+            child: Text(
+              label,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: theme.textTheme.bodySmall,
+            ),
+          ),
         ],
       );
     }
 
     return PopupMenuButton<Object>(
       tooltip: context.i18n('modules:projects.components.openIn'),
-      icon: Icon(MdiIcons.openInNew, size: 20),
-      splashRadius: 20,
       onSelected: (ide) {
         if (ide is DetectedIde) {
           openFolderInIde(context, ref, ide, folder);
@@ -117,15 +131,17 @@ class OpenInIdeMenu extends ConsumerWidget {
           if (launchers.isEmpty)
             PopupMenuItem(
               enabled: false,
-              child: Caption(
+              child: Text(
                 detection.isLoading
                     ? context.i18n('modules:settings.scenes.detectingIdes')
                     : context.i18n('modules:projects.components.noIdesFound'),
+                style: theme.textTheme.bodySmall,
               ),
             ),
           ...launchers.map(
             (ide) => PopupMenuItem<Object>(
               value: ide,
+              height: 34,
               child: renderItem(
                 ideIcon(ide.launcher),
                 ide.launcher.isCustom
@@ -137,6 +153,7 @@ class OpenInIdeMenu extends ConsumerWidget {
           const PopupMenuDivider(),
           PopupMenuItem<Object>(
             value: _refreshAction,
+            height: 34,
             child: renderItem(
               Icon(MdiIcons.refresh),
               context.i18n('modules:settings.scenes.detectIdesAgain'),
@@ -144,6 +161,12 @@ class OpenInIdeMenu extends ConsumerWidget {
           ),
         ];
       },
+      child: SizedBox(
+        width: SkTokens.iconButtonSize,
+        height: SkTokens.iconButtonSize,
+        child: Icon(MdiIcons.openInNew,
+            size: 18, color: SkColors.of(context).ink2),
+      ),
     );
   }
 }

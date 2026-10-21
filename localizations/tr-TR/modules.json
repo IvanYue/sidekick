@@ -2,7 +2,6 @@
   "common": {
     "navButtonDashboard": "Kontrol Paneli",
     "navButtonProjects": "Projeler",
-    "navButtonExplore": "Keşfet",
     "navButtonPackages": "Paketler",
     "stableChannelDescription": "Canlı ortamda kullanılacak tüm uygulamaların yayınları için bu kanalı kullanmanızı öneririz. Yaklaşık üç ayda bir, beta olarak stabilize edilmiş bir dal (branch) bir sonraki stabil dalımız olur ve biz o dalın kararlı bir yayınını oluştururuz.",
     "betaChannelDescription": "Bu dal, her ayın başında, genellikle ilk Pazartesi günü master tarafından yeni bir beta yayını için oluşturulur. Bu dal, Dart, motor (engine) ve çerçeve (framework) için bir dal içerecektir.",
@@ -10,7 +9,14 @@
     "masterChannelDescription": "En yeni ağaç ucu, kesinlikle bıçağın ağzındaki yapım. Genellikle işlevseldir, ancak bazen yanlışlıkla bir şeyleri bozarız.",
     "utils": {
       "couldNotLaunchUrl": "{{url}} açılamadı"
-    }
+    },
+    "navGroupWorkspace": "Çalışma alanı",
+    "navButtonInstalled": "Kurulu",
+    "navButtonReleases": "Sürümler",
+    "navButtonSettings": "Ayarlar",
+    "sidebarReady": "Hazır",
+    "sidebarChecking": "Kontrol ediliyor",
+    "sidebarMissingComponents": "Eksik bileşenler"
   },
   "fvm": {
     "installedVersions": "Yüklü Sürümler",
@@ -52,7 +58,17 @@
       "couldNotUpgradeVersionname": "{{versionName}} yükseltilemedi",
       "forceUpgradeDiscardsChanges": "Zorla yükseltme, bu SDK'daki tüm yerel değişiklikleri siler ve ardından yükseltir. Projeleriniz etkilenmez.",
       "forceUpgrade": "Zorla yükselt"
-    }
+    },
+    "allInstalledVersions": "All installed versions · {{count}}",
+    "globalVersion": "Global version",
+    "globalVersionPathHint": "The flutter command currently points to {{path}}",
+    "installedVersionsDescription": "Every Flutter SDK in your local FVM cache. Click any row to see version details.",
+    "sortedByInstallTime": "Sorted by install time",
+    "statsCacheSize": "Disk usage",
+    "statsInstalled": "Installed versions",
+    "statsOutdated": "Outdated",
+    "statsUnused": "Unused",
+    "viewPath": "View path"
   },
   "projects": {
     "projectsRefreshed": "Yenilenen projeler",
@@ -129,7 +145,8 @@
       "setVersion": "Sürümü ayarla",
       "save": "Kaydet",
       "versionUpdated": "Sürüm {{version}} olarak değiştirildi"
-    }
+    },
+    "flutterProject": "Flutter project"
   },
   "pubPackages": {
     "trending": "Popüler",
@@ -153,7 +170,11 @@
     "all": "Hepsi",
     "releases": "Yayınlar",
     "versions": "Sürümler",
-    "theCurrentTipoftreeAbsoluteLatestCuttingEdgeBuildUsuallyFunctional": "Şu anki ağaç ucu, kesinlikle bıçağın ağzındaki en son yapım. Genellikle işlevsel, ancak bazen yanlışlıkla şeyleri bozuyoruz."
+    "theCurrentTipoftreeAbsoluteLatestCuttingEdgeBuildUsuallyFunctional": "Şu anki ağaç ucu, kesinlikle bıçağın ağzındaki en son yapım. Genellikle işlevsel, ancak bazen yanlışlıkla şeyleri bozuyoruz.",
+    "releasesDescription": "Browse the official Flutter channels and every past release.",
+    "loading": "Loading releases…",
+    "empty": "No releases available",
+    "emptyMessage": "Could not fetch the release list from Flutter. Check your connection and retry."
   },
   "sandbox": {
     "playground": "Oyun alanı",
@@ -184,7 +205,10 @@
       "channel": "Kanal",
       "releaseNotes": "Yayın Notları",
       "version": "Sürüm",
-      "releaseDate": "Yayın tarihi"
+      "releaseDate": "Yayın tarihi",
+      "close": "Close",
+      "referenceInformation": "Reference information",
+      "releaseDetails": "Release details"
     }
   },
   "settings": {
@@ -218,7 +242,10 @@
       "ideNotFound": "{{ideName}} (bulunamadı)",
       "ideNotFoundDescription": "{{ideName}} bu bilgisayarda bulunamadı. Başka bir IDE seçin.",
       "detectIdesAgain": "Yüklü IDE'leri yeniden algıla",
-      "detectingIdes": "Yüklü IDE'ler algılanıyor..."
+      "detectingIdes": "Yüklü IDE'ler algılanıyor...",
+      "changesAreSavedImmediately": "Changes are saved immediately.",
+      "languageDescription": "Choose the interface language.",
+      "settingsDescription": "Manage Sidekick's general, Flutter and FVM preferences."
     }
   },
   "updater": {
@@ -228,7 +255,8 @@
       "later": "Sonra",
       "updateNow": "Şimdi güncelle",
       "clickHereToDownload": "İndirmek için buraya tıklayın",
-      "aNewVersionOfSidekickIsAvailableUpdateinfolatest": "Sidekick'in yeni bir sürümü mevcut ({{updateInfoLatest}})."
+      "aNewVersionOfSidekickIsAvailableUpdateinfolatest": "Sidekick'in yeni bir sürümü mevcut ({{updateInfoLatest}}).",
+      "checkForUpdates": "Güncellemeleri denetle"
     }
   },
   "compatibility": {
@@ -271,6 +299,10 @@
     "orphanBranch": "Remote branch no longer exists",
     "ohosTag": "OHOS",
     "openOhosRepo": "Open the OHOS Flutter repository",
-    "openOhosRelease": "Open this version's OHOS release page"
+    "openOhosRelease": "Open this version's OHOS release page",
+    "openRepo": "Open repo",
+    "statInstalled": "Installed",
+    "statRemoteBranches": "Remote branches",
+    "statUpdatePending": "Update available"
   }
 }

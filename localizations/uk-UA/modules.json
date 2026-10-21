@@ -2,7 +2,6 @@
   "common": {
     "navButtonDashboard": "Панель приладів",
     "navButtonProjects": "Проекти",
-    "navButtonExplore": "Досліджуйте",
     "navButtonPackages": "Пакети",
     "stableChannelDescription": "Ми рекомендуємо використовувати цей канал для всіх випусків робочих програм. Приблизно раз на квартал гілка, яка була стабілізована до бета-версії, стає нашою наступною стабільною гілкою, і ми створюємо стабільну версію цієї гілки.",
     "betaChannelDescription": "Гілка створена для нової бета-версії на початку місяця, зазвичай першого понеділка, майстром. Це буде містити гілку для Dart, двигун і фреймворк.",
@@ -10,7 +9,14 @@
     "masterChannelDescription": "The latest tip-of-tree, absolutely latest cutting edge build. Usually functional, though sometimes we accidentally break things.",
     "utils": {
       "couldNotLaunchUrl": "Не вдалося відкрити {{url}}"
-    }
+    },
+    "navGroupWorkspace": "Робоча область",
+    "navButtonInstalled": "Встановлені",
+    "navButtonReleases": "Випуски",
+    "navButtonSettings": "Налаштування",
+    "sidebarReady": "Готово",
+    "sidebarChecking": "Перевірка",
+    "sidebarMissingComponents": "Відсутні компоненти"
   },
   "fvm": {
     "installedVersions": "Встановлені версії",
@@ -52,7 +58,17 @@
       "couldNotUpgradeVersionname": "Не вдалося оновити {{versionName}}",
       "forceUpgradeDiscardsChanges": "Примусове оновлення скасовує всі локальні зміни в цьому SDK, а потім оновлює його. Ваші проєкти не буде змінено.",
       "forceUpgrade": "Примусово оновити"
-    }
+    },
+    "allInstalledVersions": "All installed versions · {{count}}",
+    "globalVersion": "Global version",
+    "globalVersionPathHint": "The flutter command currently points to {{path}}",
+    "installedVersionsDescription": "Every Flutter SDK in your local FVM cache. Click any row to see version details.",
+    "sortedByInstallTime": "Sorted by install time",
+    "statsCacheSize": "Disk usage",
+    "statsInstalled": "Installed versions",
+    "statsOutdated": "Outdated",
+    "statsUnused": "Unused",
+    "viewPath": "View path"
   },
   "projects": {
     "projectsRefreshed": "Оновити проекти",
@@ -129,7 +145,8 @@
       "setVersion": "Встановити версію",
       "save": "Зберегти",
       "versionUpdated": "Версію змінено на {{version}}"
-    }
+    },
+    "flutterProject": "Flutter project"
   },
   "pubPackages": {
     "trending": "Популярний",
@@ -153,7 +170,11 @@
     "all": "Всі",
     "releases": "Релізи",
     "versions": "Версії",
-    "theCurrentTipoftreeAbsoluteLatestCuttingEdgeBuildUsuallyFunctional": "The current tip-of-tree, the absolute latest cutting edge build. Usually functional, although sometimes we accidentally break things."
+    "theCurrentTipoftreeAbsoluteLatestCuttingEdgeBuildUsuallyFunctional": "The current tip-of-tree, the absolute latest cutting edge build. Usually functional, although sometimes we accidentally break things.",
+    "releasesDescription": "Browse the official Flutter channels and every past release.",
+    "loading": "Loading releases…",
+    "empty": "No releases available",
+    "emptyMessage": "Could not fetch the release list from Flutter. Check your connection and retry."
   },
   "sandbox": {
     "playground": "Playground",
@@ -184,7 +205,10 @@
       "channel": "Канал",
       "releaseNotes": "Примітки до випуску",
       "version": "Версія",
-      "releaseDate": "Дата випуску"
+      "releaseDate": "Дата випуску",
+      "close": "Close",
+      "referenceInformation": "Reference information",
+      "releaseDetails": "Release details"
     }
   },
   "settings": {
@@ -218,7 +242,10 @@
       "ideNotFound": "{{ideName}} (не знайдено)",
       "ideNotFoundDescription": "{{ideName}} не знайдено на цьому комп'ютері. Виберіть іншу IDE.",
       "detectIdesAgain": "Знову знайти встановлені IDE",
-      "detectingIdes": "Пошук встановлених IDE..."
+      "detectingIdes": "Пошук встановлених IDE...",
+      "changesAreSavedImmediately": "Changes are saved immediately.",
+      "languageDescription": "Choose the interface language.",
+      "settingsDescription": "Manage Sidekick's general, Flutter and FVM preferences."
     }
   },
   "updater": {
@@ -228,7 +255,8 @@
       "later": "Пізніше",
       "updateNow": "Оновити зараз",
       "clickHereToDownload": "Натисніть тут, щоб завантажити",
-      "aNewVersionOfSidekickIsAvailableUpdateinfolatest": "Доступна нова версія Sidekick ({{updateInfoLatest}})."
+      "aNewVersionOfSidekickIsAvailableUpdateinfolatest": "Доступна нова версія Sidekick ({{updateInfoLatest}}).",
+      "checkForUpdates": "Перевірити оновлення"
     }
   },
   "compatibility": {
@@ -271,6 +299,10 @@
     "orphanBranch": "Remote branch no longer exists",
     "ohosTag": "OHOS",
     "openOhosRepo": "Open the OHOS Flutter repository",
-    "openOhosRelease": "Open this version's OHOS release page"
+    "openOhosRelease": "Open this version's OHOS release page",
+    "openRepo": "Open repo",
+    "statInstalled": "Installed",
+    "statRemoteBranches": "Remote branches",
+    "statUpdatePending": "Update available"
   }
 }

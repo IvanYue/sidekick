@@ -1,12 +1,13 @@
 {
-    "atoms": {
-        "copiedToClipboard": "复制",
-        "refresh": "刷新",
-        "countFound": "{{count}} found"
-    },
-    "molecules": {
-        "master": "Master",
-        "versionIsInstalled": "版本已安装",
-        "versionNotInstalledClickToInstall": "未安装的版本，点击安装."
-    }
+  "atoms": {
+    "copiedToClipboard": "复制",
+    "refresh": "刷新",
+    "countFound": "{{count}} found"
+  },
+  "molecules": {
+    "master": "Master",
+    "versionIsInstalled": "版本已安装",
+    "versionNotInstalledClickToInstall": "未安装的版本，点击安装.",
+    "install": "安装"
+  }
 }

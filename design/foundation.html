@@ -1,0 +1,985 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Sidekick — 设计系统 / Foundation</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="tokens.css" />
+    <style>
+      /* 文档页专用：少量补充，不污染 tokens.css */
+      .doc-nav {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--sp-2);
+        height: 28px;
+        padding: 0 var(--sp-4);
+        border-radius: var(--r-sm);
+        font-size: var(--t-cap-size);
+        font-weight: 500;
+        color: var(--ink-3);
+        text-decoration: none;
+      }
+      .doc-nav:hover { background: var(--bg-hover); color: var(--ink-1); }
+      .lede {
+        font-size: var(--t-h3-size);
+        line-height: 22px;
+        color: var(--ink-2);
+        max-width: 720px;
+        margin-top: var(--sp-4);
+      }
+      .principles {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(232px, 1fr));
+        gap: var(--sp-4);
+        margin-top: var(--sp-6);
+      }
+      .principle {
+        padding: var(--sp-5);
+        border: 1px solid var(--line);
+        border-radius: var(--r-lg);
+        background: var(--bg-panel);
+      }
+      .principle h4 {
+        font-family: var(--font-display);
+        font-size: var(--t-h2-size);
+        font-weight: 600;
+        color: var(--ink-1);
+        margin-bottom: var(--sp-2);
+      }
+      .principle p { font-size: var(--t-sm-size); line-height: 19px; color: var(--ink-2); }
+      .principle .pnum {
+        font-family: var(--font-mono);
+        font-size: 10px;
+        color: var(--accent);
+        letter-spacing: 0.1em;
+        margin-bottom: var(--sp-3);
+        display: block;
+      }
+      .swatches-4 {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(196px, 1fr));
+        gap: var(--sp-3);
+      }
+      .ratio-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: var(--sp-4);
+      }
+      .ratio-table th,
+      .ratio-table td {
+        text-align: left;
+        padding: var(--sp-3) var(--sp-4);
+        border-bottom: 1px solid var(--line-soft);
+        font-size: var(--t-sm-size);
+      }
+      .ratio-table th {
+        font-size: var(--t-over-size);
+        text-transform: uppercase;
+        letter-spacing: 0.09em;
+        color: var(--ink-3);
+        font-weight: 600;
+      }
+      .ratio-table td { color: var(--ink-2); }
+      .ratio-table td:first-child { color: var(--ink-1); font-weight: 500; }
+      .ratio-bar { display: flex; height: 26px; border-radius: var(--r-xs); overflow: hidden; }
+      .ratio-bar i { display: block; }
+      .code {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        color: var(--ink-2);
+        background: var(--bg-inset);
+        border: 1px solid var(--line-soft);
+        border-radius: var(--r-sm);
+        padding: 2px 6px;
+      }
+      .section-note {
+        font-size: var(--t-cap-size);
+        line-height: 18px;
+        color: var(--ink-3);
+        max-width: 760px;
+        margin-top: var(--sp-2);
+      }
+      .radius-demo {
+        display: flex;
+        gap: var(--sp-4);
+        align-items: flex-end;
+        flex-wrap: wrap;
+      }
+      .radius-box {
+        width: 78px;
+        height: 78px;
+        background: var(--accent-soft);
+        border: 1px solid var(--accent-line);
+        display: flex;
+        align-items: flex-end;
+        justify-content: center;
+        padding-bottom: 6px;
+        font-family: var(--font-mono);
+        font-size: 10px;
+        color: var(--accent);
+      }
+      .shadow-demo {
+        height: 78px;
+        border-radius: var(--r-lg);
+        background: var(--bg-panel);
+        border: 1px solid var(--line);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: var(--font-mono);
+        font-size: 10px;
+        color: var(--ink-3);
+      }
+      .motion-list { display: flex; flex-direction: column; gap: var(--sp-3); margin-top: var(--sp-3); }
+      .motion-item {
+        display: flex;
+        align-items: center;
+        gap: var(--sp-4);
+        padding: var(--sp-3) var(--sp-4);
+        border: 1px solid var(--line-soft);
+        border-radius: var(--r-md);
+        background: var(--bg-panel);
+      }
+      .motion-item .m-name { font-size: var(--t-sm-size); color: var(--ink-1); font-weight: 500; width: 130px; }
+      .motion-item .m-val {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        color: var(--ink-3);
+      }
+      .motion-item .m-where { font-size: var(--t-cap-size); color: var(--ink-3); margin-left: auto; }
+    </style>
+  </head>
+
+  <body class="page-body">
+    <!-- ======================= 评审工具栏 ======================= -->
+    <header class="review-bar">
+      <span class="review-brand">Sidekick <em>设计系统</em></span>
+      <nav class="review-tabs">
+        <a class="doc-nav" href="index.html">
+          <span class="ic ic-14"><svg><use href="#i-chev-right" /></svg></span>
+          返回界面稿
+        </a>
+      </nav>
+      <div class="theme-toggle">
+        <button id="btnDark" aria-pressed="true" title="深色">
+          <span class="ic ic-14"><svg><use href="#i-moon" /></svg></span>
+        </button>
+        <button id="btnLight" aria-pressed="false" title="浅色">
+          <span class="ic ic-14"><svg><use href="#i-sun" /></svg></span>
+        </button>
+      </div>
+    </header>
+
+    <!-- ======================= 文档正文 ======================= -->
+    <main class="doc">
+      <h1>Sidekick 设计系统</h1>
+      <p class="lede">
+        这一份是 Sidekick 桌面版 UI 重构的<strong>单一真值层</strong>。所有颜色、字号、间距、圆角、动效都定义在
+        <span class="code">design/tokens.css</span> 的 CSS 变量里；界面稿
+        <a href="index.html" style="color: var(--info)">index.html</a> 与未来的 Flutter
+        <span class="code">theme.dart</span> 都从这一层取值，不允许各自硬编码。
+      </p>
+
+      <div class="principles">
+        <div class="principle">
+          <span class="pnum">01</span>
+          <h4>工具感优先</h4>
+          <p>
+            这是开发者的桌面工具，不是消费级应用。信息密度优先，动效克制，语义色只用于状态而非装饰。
+          </p>
+        </div>
+        <div class="principle">
+          <span class="pnum">02</span>
+          <h4>层级靠留白与字重</h4>
+          <p>
+            不用阴影堆叠。面板靠 1px 分隔线与背景明度差分层，标题靠字号 / 字重拉开，避免视觉噪声。
+          </p>
+        </div>
+        <div class="principle">
+          <span class="pnum">03</span>
+          <h4>状态永远有出口</h4>
+          <p>
+            空态、错误态、加载态都给出「下一步该做什么」，而不是只描述失败原因。反馈 3.5s 内自动消失。
+          </p>
+        </div>
+        <div class="principle">
+          <span class="pnum">04</span>
+          <h4>双主题同构</h4>
+          <p>
+            深色是暖中性石墨底，浅色是暖白纸底。两者共用同一套语义变量名与对比度目标，不是简单反色。
+          </p>
+        </div>
+      </div>
+
+      <!-- ================= 色彩 ================= -->
+      <h2>一、色彩</h2>
+      <p>
+        底色采用<strong>暖中性</strong>（带一点红调的灰），而不是纯冷灰 —— 长时间盯屏时暖底更松弛，也让三色强调更协调。
+        强调色不取品牌蓝紫，而是<strong>陶土橙</strong>；辅以<strong>灰蓝</strong>（信息 / 全局版本）与<strong>橄榄绿</strong>
+        （OHOS / 成功）。
+      </p>
+
+      <h3>深色主题 · 表面与文字</h3>
+      <div class="swatches-4">
+        <div class="swatch">
+          <div class="swatch-chip" style="background: #121110"></div>
+          <div class="swatch-meta">
+            <span class="swatch-name">bg-app</span>
+            <span class="swatch-hex">#121110</span>
+            <span class="swatch-use">内容区底色</span>
+          </div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-chip" style="background: #161513"></div>
+          <div class="swatch-meta">
+            <span class="swatch-name">bg-sidebar</span>
+            <span class="swatch-hex">#161513</span>
+            <span class="swatch-use">侧边栏 / 标题栏</span>
+          </div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-chip" style="background: #1b1a17"></div>
+          <div class="swatch-meta">
+            <span class="swatch-name">bg-panel</span>
+            <span class="swatch-hex">#1b1a17</span>
+            <span class="swatch-use">卡片 / 面板</span>
+          </div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-chip" style="background: #232120"></div>
+          <div class="swatch-meta">
+            <span class="swatch-name">bg-raised</span>
+            <span class="swatch-hex">#232120</span>
+            <span class="swatch-use">输入框 / 悬浮层</span>
+          </div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-chip" style="background: #0d0c0b"></div>
+          <div class="swatch-meta">
+            <span class="swatch-name">bg-inset</span>
+            <span class="swatch-hex">#0d0c0b</span>
+            <span class="swatch-use">凹陷区 / 代码块</span>
+          </div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-chip" style="background: #2b2925"></div>
+          <div class="swatch-meta">
+            <span class="swatch-name">line</span>
+            <span class="swatch-hex">#2b2925</span>
+            <span class="swatch-use">标准分隔线</span>
+          </div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-chip" style="background: #22201d"></div>
+          <div class="swatch-meta">
+            <span class="swatch-name">line-soft</span>
+            <span class="swatch-hex">#22201d</span>
+            <span class="swatch-use">弱分隔线</span>
+          </div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-chip" style="background: #3a3733"></div>
+          <div class="swatch-meta">
+            <span class="swatch-name">line-strong</span>
+            <span class="swatch-hex">#3a3733</span>
+            <span class="swatch-use">强调分隔 / 选中</span>
+          </div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-chip" style="background: #f0eee9"></div>
+          <div class="swatch-meta">
+            <span class="swatch-name">ink-1</span>
+            <span class="swatch-hex">#f0eee9</span>
+            <span class="swatch-use">主文字</span>
+          </div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-chip" style="background: #a5a199"></div>
+          <div class="swatch-meta">
+            <span class="swatch-name">ink-2</span>
+            <span class="swatch-hex">#a5a199</span>
+            <span class="swatch-use">次级文字 / 说明</span>
+          </div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-chip" style="background: #74706a"></div>
+          <div class="swatch-meta">
+            <span class="swatch-name">ink-3</span>
+            <span class="swatch-hex">#74706a</span>
+            <span class="swatch-use">弱文字 / 标签</span>
+          </div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-chip" style="background: #141311"></div>
+          <div class="swatch-meta">
+            <span class="swatch-name">ink-inverse</span>
+            <span class="swatch-hex">#141311</span>
+            <span class="swatch-use">反色文字</span>
+          </div>
+        </div>
+      </div>
+
+      <h3>浅色主题 · 表面与文字</h3>
+      <div class="swatches-4">
+        <div class="swatch">
+          <div class="swatch-chip" style="background: #f2f0eb"></div>
+          <div class="swatch-meta">
+            <span class="swatch-name">bg-app</span>
+            <span class="swatch-hex">#f2f0eb</span>
+            <span class="swatch-use">内容区底色</span>
+          </div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-chip" style="background: #faf8f4"></div>
+          <div class="swatch-meta">
+            <span class="swatch-name">bg-sidebar</span>
+            <span class="swatch-hex">#faf8f4</span>
+            <span class="swatch-use">侧边栏 / 标题栏</span>
+          </div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-chip" style="background: #fffefb"></div>
+          <div class="swatch-meta">
+            <span class="swatch-name">bg-panel</span>
+            <span class="swatch-hex">#fffefb</span>
+            <span class="swatch-use">卡片 / 面板</span>
+          </div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-chip" style="background: #f4f1eb"></div>
+          <div class="swatch-meta">
+            <span class="swatch-name">bg-raised</span>
+            <span class="swatch-hex">#f4f1eb</span>
+            <span class="swatch-use">输入框 / 悬浮层</span>
+          </div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-chip" style="background: #eae6de"></div>
+          <div class="swatch-meta">
+            <span class="swatch-name">bg-inset</span>
+            <span class="swatch-hex">#eae6de</span>
+            <span class="swatch-use">凹陷区 / 代码块</span>
+          </div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-chip" style="background: #e2ded4"></div>
+          <div class="swatch-meta">
+            <span class="swatch-name">line</span>
+            <span class="swatch-hex">#e2ded4</span>
+            <span class="swatch-use">标准分隔线</span>
+          </div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-chip" style="background: #ece8e0"></div>
+          <div class="swatch-meta">
+            <span class="swatch-name">line-soft</span>
+            <span class="swatch-hex">#ece8e0</span>
+            <span class="swatch-use">弱分隔线</span>
+          </div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-chip" style="background: #cdc8bc"></div>
+          <div class="swatch-meta">
+            <span class="swatch-name">line-strong</span>
+            <span class="swatch-hex">#cdc8bc</span>
+            <span class="swatch-use">强调分隔 / 选中</span>
+          </div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-chip" style="background: #191816"></div>
+          <div class="swatch-meta">
+            <span class="swatch-name">ink-1</span>
+            <span class="swatch-hex">#191816</span>
+            <span class="swatch-use">主文字</span>
+          </div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-chip" style="background: #5f5a52"></div>
+          <div class="swatch-meta">
+            <span class="swatch-name">ink-2</span>
+            <span class="swatch-hex">#5f5a52</span>
+            <span class="swatch-use">次级文字 / 说明</span>
+          </div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-chip" style="background: #8d877d"></div>
+          <div class="swatch-meta">
+            <span class="swatch-name">ink-3</span>
+            <span class="swatch-hex">#8d877d</span>
+            <span class="swatch-use">弱文字 / 标签</span>
+          </div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-chip" style="background: #f7f5f0"></div>
+          <div class="swatch-meta">
+            <span class="swatch-name">ink-inverse</span>
+            <span class="swatch-hex">#f7f5f0</span>
+            <span class="swatch-use">反色文字</span>
+          </div>
+        </div>
+      </div>
+
+      <h3>语义强调色</h3>
+      <p class="section-note">
+        语义色只用于表达状态：<strong>accent</strong> 是「当前选中 / 需要你做主操作」，
+        <strong>info</strong> 是「这条信息值得注意但不是错误」，<strong>ok</strong> 是「已就绪 / 成功」，
+        <strong>warn</strong> 是「有更新 / 有风险但不阻塞」，<strong>danger</strong> 才是真正的错误。
+      </p>
+      <div class="swatches-4">
+        <div class="swatch">
+          <div class="swatch-chip" style="background: #d97757"></div>
+          <div class="swatch-meta">
+            <span class="swatch-name">accent · 陶土橙</span>
+            <span class="swatch-hex">#d97757 / #b85c3c</span>
+            <span class="swatch-use">主操作 / 选中</span>
+          </div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-chip" style="background: #6a9bcc"></div>
+          <div class="swatch-meta">
+            <span class="swatch-name">info · 灰蓝</span>
+            <span class="swatch-hex">#6a9bcc / #4a7fb5</span>
+            <span class="swatch-use">全局版本 / 提示</span>
+          </div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-chip" style="background: #8a9a5b"></div>
+          <div class="swatch-meta">
+            <span class="swatch-name">ok · 橄榄绿</span>
+            <span class="swatch-hex">#8a9a5b / #5f7445</span>
+            <span class="swatch-use">OHOS / 成功</span>
+          </div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-chip" style="background: #c99a3e"></div>
+          <div class="swatch-meta">
+            <span class="swatch-name">warn · 琥珀</span>
+            <span class="swatch-hex">#c99a3e / #8a6412</span>
+            <span class="swatch-use">有更新 / 有风险</span>
+          </div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-chip" style="background: #d0574f"></div>
+          <div class="swatch-meta">
+            <span class="swatch-name">danger · 砖红</span>
+            <span class="swatch-hex">#d0574f / #b23a33</span>
+            <span class="swatch-use">错误 / 危险操作</span>
+          </div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-chip" style="background: rgba(217,119,87,.16)"></div>
+          <div class="swatch-meta">
+            <span class="swatch-name">*-soft</span>
+            <span class="swatch-hex">rgba(color, .14)</span>
+            <span class="swatch-use">徽章 / 提示底色</span>
+          </div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-chip" style="background: rgba(217,119,87,.34)"></div>
+          <div class="swatch-meta">
+            <span class="swatch-name">*-line</span>
+            <span class="swatch-hex">rgba(color, .32)</span>
+            <span class="swatch-use">徽章 / 提示描边</span>
+          </div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-chip" style="background: rgba(10,9,8,.72)"></div>
+          <div class="swatch-meta">
+            <span class="swatch-name">bg-overlay</span>
+            <span class="swatch-hex">rgba(10,9,8,.72)</span>
+            <span class="swatch-use">模态遮罩</span>
+          </div>
+        </div>
+      </div>
+
+      <h3>对比度实测</h3>
+      <table class="ratio-table">
+        <thead>
+          <tr>
+            <th>组合</th>
+            <th>深色</th>
+            <th>浅色</th>
+            <th>用途</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>ink-1 / bg-app</td>
+            <td>14.8 : 1</td>
+            <td>15.1 : 1</td>
+            <td>正文 · AAA</td>
+          </tr>
+          <tr>
+            <td>ink-2 / bg-app</td>
+            <td>7.2 : 1</td>
+            <td>6.9 : 1</td>
+            <td>说明文字 · AA</td>
+          </tr>
+          <tr>
+            <td>ink-3 / bg-app</td>
+            <td>4.0 : 1</td>
+            <td>3.4 : 1</td>
+            <td>仅用于 10px 装饰性标签</td>
+          </tr>
+          <tr>
+            <td>accent / bg-app</td>
+            <td>6.1 : 1</td>
+            <td>4.6 : 1</td>
+            <td>强调文字 / 徽章 · AA</td>
+          </tr>
+          <tr>
+            <td>ink-inverse / accent</td>
+            <td>7.4 : 1</td>
+            <td>6.3 : 1</td>
+            <td>主按钮文字 · AA</td>
+          </tr>
+          <tr>
+            <td>danger / bg-app</td>
+            <td>5.2 : 1</td>
+            <td>5.5 : 1</td>
+            <td>错误文字 · AA</td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="section-note">
+        ink-3 是唯一低于 4.5:1 的层级，因此<strong>禁止</strong>用它承载正文或关键信息，只用于 uppercase 小标签与装饰。
+      </p>
+
+      <!-- ================= 字体 ================= -->
+      <h2>二、字体与字阶</h2>
+      <p>
+        三款字体各司其职：<strong>Poppins</strong> 做标题与品牌（几何感强，字面识别度高），
+        <strong>IBM Plex Sans</strong> 做正文（中文回退 PingFang SC，工具感强），
+        <strong>JetBrains Mono</strong> 承载一切技术值（版本号、SHA、路径、Hash）。
+      </p>
+
+      <div class="type-row">
+        <span class="type-spec">display · 26/32 · 600</span>
+        <span class="t-display">已安装的版本</span>
+      </div>
+      <div class="type-row">
+        <span class="type-spec">h1 · 19/26 · 600</span>
+        <span class="t-h1">OHOS Flutter 版本</span>
+      </div>
+      <div class="type-row">
+        <span class="type-spec">h2 · 15/22 · 600</span>
+        <span class="t-h2">版本库</span>
+      </div>
+      <div class="type-row">
+        <span class="type-spec">h3 · 13/19 · 600</span>
+        <span class="t-h3">stable · 3.41.9</span>
+      </div>
+      <div class="type-row">
+        <span class="type-spec">body · 13/20 · 400</span>
+        <span class="t-body">本机 FVM 缓存中的全部 Flutter SDK。</span>
+      </div>
+      <div class="type-row">
+        <span class="type-spec">sm · 12/18 · 400</span>
+        <span class="t-sm">release · Dart 3.11.5 · 1.24 GB</span>
+      </div>
+      <div class="type-row">
+        <span class="type-spec">cap · 11/16 · 400</span>
+        <span class="t-cap">Flutter PATH 指向 ~/fvm/versions/3.41.9/bin</span>
+      </div>
+      <div class="type-row">
+        <span class="type-spec">over · 10/14 · 600 UPPER</span>
+        <span class="t-over">所有已安装版本 · 3</span>
+      </div>
+      <div class="type-row" style="border-bottom: none">
+        <span class="type-spec">mono · 13/19 · 500</span>
+        <span class="mono" style="font-size: 13px; font-weight: 500"
+          >oh-3.41.9-release</span
+        >
+      </div>
+
+      <h3>字体角色映射表</h3>
+      <table class="role-table">
+        <thead>
+          <tr>
+            <th>场景</th>
+            <th>字体</th>
+            <th>字阶</th>
+            <th>示例</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>页面主标题</td>
+            <td>Poppins 600</td>
+            <td>display 26/32</td>
+            <td class="mono">已安装的版本</td>
+          </tr>
+          <tr>
+            <td>区块标题</td>
+            <td>Poppins 600</td>
+            <td>h1 19/26</td>
+            <td class="mono">OHOS Flutter 版本</td>
+          </tr>
+          <tr>
+            <td>卡片 / 面板标题</td>
+            <td>IBM Plex Sans 600</td>
+            <td>h2 15/22</td>
+            <td class="mono">版本库</td>
+          </tr>
+          <tr>
+            <td>列表主行</td>
+            <td>IBM Plex Sans 600</td>
+            <td>h3 13/19</td>
+            <td class="mono">3.41.9</td>
+          </tr>
+          <tr>
+            <td>正文</td>
+            <td>IBM Plex Sans 400</td>
+            <td>body 13/20</td>
+            <td class="mono">本机 FVM 缓存中的全部 Flutter SDK</td>
+          </tr>
+          <tr>
+            <td>元信息 / 说明</td>
+            <td>IBM Plex Sans 400</td>
+            <td>sm 12/18、cap 11/16</td>
+            <td class="mono">release · Dart 3.11.5</td>
+          </tr>
+          <tr>
+            <td>分组标签</td>
+            <td>IBM Plex Sans 600 UPPER</td>
+            <td>over 10/14</td>
+            <td class="mono">本地缓存信息</td>
+          </tr>
+          <tr>
+            <td>版本号 / SHA / 路径</td>
+            <td>JetBrains Mono 500</td>
+            <td>h3 13/19、cap 11/16</td>
+            <td class="mono">a1b2c3d4e5f6</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- ================= 间距 ================= -->
+      <h2>三、间距与尺寸</h2>
+      <p>
+        4px 基准栅格。桌面端密度<strong>中偏高</strong>：列表行 64px（双行）/ 44px（紧凑单行），
+        按钮 28px 高，输入框 28px，触摸目标通过图标按钮 24px + 间距保证 ≥ 32px 可点区。
+      </p>
+
+      <h3>间距刻度</h3>
+      <div class="demo-row">
+        <span class="demo-label">--sp-1 … --sp-10</span>
+        <div class="spacer-row">
+          <span class="spacer-box" style="width: 4px; height: 20px"></span>
+          <span class="spacer-box" style="width: 6px; height: 20px"></span>
+          <span class="spacer-box" style="width: 8px; height: 20px"></span>
+          <span class="spacer-box" style="width: 12px; height: 20px"></span>
+          <span class="spacer-box" style="width: 16px; height: 20px"></span>
+          <span class="spacer-box" style="width: 20px; height: 20px"></span>
+          <span class="spacer-box" style="width: 24px; height: 20px"></span>
+          <span class="spacer-box" style="width: 32px; height: 20px"></span>
+          <span class="spacer-box" style="width: 40px; height: 20px"></span>
+          <span class="spacer-box" style="width: 48px; height: 20px"></span>
+        </div>
+      </div>
+
+      <h3>结构尺寸</h3>
+      <table class="role-table">
+        <thead>
+          <tr>
+            <th>Token</th>
+            <th>值</th>
+            <th>用途</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="mono">--h-titlebar</td>
+            <td class="mono">44px</td>
+            <td>窗口标题栏（含 macOS 红绿灯）</td>
+          </tr>
+          <tr>
+            <td class="mono">--h-topbar</td>
+            <td class="mono">56px</td>
+            <td>页面级操作栏</td>
+          </tr>
+          <tr>
+            <td class="mono">--w-sidebar</td>
+            <td class="mono">232px</td>
+            <td>左侧导航栏</td>
+          </tr>
+          <tr>
+            <td class="mono">--w-drawer</td>
+            <td class="mono">372px</td>
+            <td>右侧版本详情抽屉</td>
+          </tr>
+          <tr>
+            <td class="mono">list-item</td>
+            <td class="mono">64px</td>
+            <td>双行列表项（版本 / 项目）</td>
+          </tr>
+          <tr>
+            <td class="mono">list-item.compact</td>
+            <td class="mono">44px</td>
+            <td>单行紧凑列表项（版本库）</td>
+          </tr>
+          <tr>
+            <td class="mono">tile-40</td>
+            <td class="mono">40×40</td>
+            <td>列表项图标瓦片</td>
+          </tr>
+          <tr>
+            <td class="mono">tile-52</td>
+            <td class="mono">52×52</td>
+            <td>空态 / 错误态图标</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>圆角</h3>
+      <div class="radius-demo">
+        <div class="radius-box" style="border-radius: var(--r-xs)">xs 4</div>
+        <div class="radius-box" style="border-radius: var(--r-sm)">sm 6</div>
+        <div class="radius-box" style="border-radius: var(--r-md)">md 8</div>
+        <div class="radius-box" style="border-radius: var(--r-lg)">lg 12</div>
+        <div class="radius-box" style="border-radius: var(--r-xl)">xl 16</div>
+        <div class="radius-box" style="border-radius: var(--r-full)">pill</div>
+      </div>
+      <p class="section-note">
+        规则：<strong>控件用 sm/md，卡片用 lg，模态与抽屉用 xl，徽章 / 药丸用 full</strong>。
+        同一层级的圆角必须一致，不允许混用 md 与 lg。
+      </p>
+
+      <h3>阴影</h3>
+      <div class="demo-row">
+        <span class="demo-label">shadow-sm / md / lg</span>
+        <div
+          class="shadow-demo"
+          style="box-shadow: var(--shadow-sm); width: 128px"
+        >
+          sm
+        </div>
+        <div
+          class="shadow-demo"
+          style="box-shadow: var(--shadow-md); width: 128px"
+        >
+          md
+        </div>
+        <div
+          class="shadow-demo"
+          style="box-shadow: var(--shadow-lg); width: 128px"
+        >
+          lg
+        </div>
+      </div>
+      <p class="section-note">
+        深色主题下阴影靠「更黑 + 更扩散」表达浮起；浅色主题改为「暖棕 + 更软」。
+        卡片本身不使用阴影，只用 1px 描边。
+      </p>
+
+      <!-- ================= 组件 ================= -->
+      <h2>四、组件库</h2>
+      <p>以下为界面稿中实际使用的组件集合，Flutter 端需按同一套 API 复刻。</p>
+
+      <h3>按钮</h3>
+      <div class="demo-row">
+        <span class="demo-label">btn</span>
+        <button class="btn btn-primary">添加项目</button>
+        <button class="btn btn-secondary">清理未使用</button>
+        <button class="btn btn-ghost">查看全部</button>
+        <button class="btn btn-info">设为全局</button>
+        <button class="btn btn-danger">卸载</button>
+      </div>
+      <div class="demo-row">
+        <span class="demo-label">icon-btn / sm / lg</span>
+        <button class="icon-btn">
+          <span class="ic ic-18"><svg><use href="#i-refresh" /></svg></span>
+        </button>
+        <button class="btn btn-primary btn-sm">小号主按钮</button>
+        <button class="btn btn-primary btn-lg">大号主按钮</button>
+      </div>
+
+      <h3>徽章与瓦片</h3>
+      <div class="demo-row">
+        <span class="demo-label">chip</span>
+        <span class="chip chip-accent">全局</span>
+        <span class="chip chip-info">stable</span>
+        <span class="chip chip-ok">使用中</span>
+        <span class="chip chip-warn">有可用更新</span>
+        <span class="chip chip-danger">远端分支已不存在</span>
+        <span class="chip chip-outline">Release</span>
+      </div>
+      <div class="demo-row">
+        <span class="demo-label">tile</span>
+        <span class="tile tile-40 tile-accent"
+          ><svg class="ic ic-18"><use href="#i-flutter" /></svg
+        ></span>
+        <span class="tile tile-40 tile-info"
+          ><svg class="ic ic-18"><use href="#i-folder" /></svg
+        ></span>
+        <span class="tile tile-40 tile-ok"
+          ><svg class="ic ic-18"><use href="#i-check" /></svg
+        ></span>
+        <span class="tile tile-40 tile-warn"
+          ><svg class="ic ic-18"><use href="#i-alert" /></svg
+        ></span>
+        <span class="tile tile-40 tile-danger"
+          ><svg class="ic ic-18"><use href="#i-trash" /></svg
+        ></span>
+      </div>
+
+      <h3>表单控件</h3>
+      <div class="demo-row">
+        <span class="demo-label">field / select / switch</span>
+        <div class="field" style="width: 190px">
+          <span class="ic ic-14"><svg><use href="#i-search" /></svg></span>
+          <input placeholder="筛选版本" />
+        </div>
+        <div class="select">
+          深色<span class="ic ic-14"><svg><use href="#i-chev-down" /></svg></span>
+        </div>
+        <span class="switch on"></span>
+        <span class="switch"></span>
+      </div>
+      <div class="demo-row">
+        <span class="demo-label">segmented</span>
+        <div class="segmented">
+          <button aria-pressed="true">全部</button>
+          <button aria-pressed="false">Release</button>
+          <button aria-pressed="false">Dev</button>
+        </div>
+      </div>
+
+      <h3>面板与列表</h3>
+      <div class="demo-row" style="align-items: stretch; flex-direction: column; gap: var(--sp-4)">
+        <span class="demo-label">panel + list-item</span>
+        <div class="panel panel-flush" style="width: 100%">
+          <div class="list">
+            <div class="list-item">
+              <span class="tile tile-40 tile-accent"
+                ><svg class="ic ic-18"><use href="#i-flutter" /></svg
+              ></span>
+              <div class="li-main">
+                <div class="li-title">
+                  <span class="mono">3.41.9</span>
+                  <span class="chip chip-accent">全局</span>
+                </div>
+                <div class="li-sub">release · Dart 3.11.5 · 1.24 GB</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= 动效 ================= -->
+      <h2>五、动效与可访问性</h2>
+      <div class="motion-list">
+        <div class="motion-item">
+          <span class="m-name">即时反馈</span>
+          <span class="m-val">120ms · ease-out</span>
+          <span class="m-where">hover 底色、按钮按下</span>
+        </div>
+        <div class="motion-item">
+          <span class="m-name">常规转场</span>
+          <span class="m-val">180ms · cubic-bezier(.32,.72,0,1)</span>
+          <span class="m-where">页面切换、抽屉开合、chip 变化</span>
+        </div>
+        <div class="motion-item">
+          <span class="m-name">强调转场</span>
+          <span class="m-val">280ms · cubic-bezier(.32,.72,0,1)</span>
+          <span class="m-where">模态进出、抽屉滑入</span>
+        </div>
+      </div>
+      <ul style="margin-top: var(--sp-5); padding-left: 18px">
+        <li style="font-size: var(--t-sm-size); line-height: 20px; color: var(--ink-2); margin-bottom: var(--sp-2)">
+          所有过渡使用同一条 easing 曲线，避免每个组件各调各的。
+        </li>
+        <li style="font-size: var(--t-sm-size); line-height: 20px; color: var(--ink-2); margin-bottom: var(--sp-2)">
+          只动 <code>transform</code> 与 <code>opacity</code>；宽度 / 高度动画一律不用。
+        </li>
+        <li style="font-size: var(--t-sm-size); line-height: 20px; color: var(--ink-2); margin-bottom: var(--sp-2)">
+          <code>prefers-reduced-motion: reduce</code> 时全部降到 0.01ms。
+        </li>
+        <li style="font-size: var(--t-sm-size); line-height: 20px; color: var(--ink-2); margin-bottom: var(--sp-2)">
+          所有图标按钮必须带 <code>aria-label</code> 或 tooltip；纯图标不可裸奔。
+        </li>
+        <li style="font-size: var(--t-sm-size); line-height: 20px; color: var(--ink-2); margin-bottom: var(--sp-2)">
+          焦点环保留（<code>:focus-visible</code>），不因「更干净」而移除。
+        </li>
+        <li style="font-size: var(--t-sm-size); line-height: 20px; color: var(--ink-2)">
+          状态不只靠颜色表达 —— 徽章均带文字，更新状态同时给出图标 + 文案。
+        </li>
+      </ul>
+
+      <!-- ================= 落地 ================= -->
+      <h2>六、落到 Flutter 的映射</h2>
+      <p>
+        重构时按下面三步走，<strong>不动任何业务逻辑</strong>，只替换渲染层：
+      </p>
+      <table class="role-table">
+        <thead>
+          <tr>
+            <th>步骤</th>
+            <th>文件</th>
+            <th>内容</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1 · 令牌</td>
+            <td class="mono">lib/src/design/tokens.dart</td>
+            <td>把 tokens.css 的 CSS 变量翻译成 Dart 常量（颜色、字阶、间距、圆角、动效）</td>
+          </tr>
+          <tr>
+            <td>2 · 主题</td>
+            <td class="mono">lib/src/design/theme.dart</td>
+            <td>基于 tokens 构造 2 套 ThemeData（深 / 浅），替换现有 4 套主题</td>
+          </tr>
+          <tr>
+            <td>3 · 组件</td>
+            <td class="mono">lib/src/design/kit/</td>
+            <td>按钮 / 徽章 / 瓦片 / 列表项 / 面板 / 字段 / 开关 / 分段控件</td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="section-note">
+        现有 <span class="code">lib/src/theme.dart</span> 的 4 套主题（darkPurple / darkBlue / dark / light）
+        会被收敛为深浅两套 —— 用户主题切换从「四选一」改为「深 / 浅」，这是本次重构中唯一的行为变更。
+      </p>
+
+      <p style="margin-top: var(--sp-8); font-size: var(--t-cap-size); color: var(--ink-3)">
+        Sidekick 设计系统 v2 · 与
+        <a href="index.html" style="color: var(--info)">界面稿</a>
+        同源 · 2026-10
+      </p>
+    </main>
+
+    <!-- ======================= 图标精灵 ======================= -->
+    <svg style="display: none" aria-hidden="true">
+      <symbol id="i-chev-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6" /></symbol>
+      <symbol id="i-chev-down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6" /></symbol>
+      <symbol id="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" /></symbol>
+      <symbol id="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4" /><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M6.3 17.7l-1.4 1.4M19.1 4.9l-1.4 1.4" /></symbol>
+      <symbol id="i-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8" /><path d="M21 21l-4.35-4.35" /></symbol>
+      <symbol id="i-refresh" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 4v6h-6M1 20v-6h6" /><path d="M20.49 9A9 9 0 005.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 013.51 15" /></symbol>
+      <symbol id="i-trash" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4a1 1 0 011-1h6a1 1 0 011 1v2m3 0v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6" /></symbol>
+      <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5" /></symbol>
+      <symbol id="i-alert" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" /><path d="M12 9v4M12 17h.01" /></symbol>
+      <symbol id="i-folder" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z" /></symbol>
+      <symbol id="i-flutter" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L4 11l4 4 9-9M20 10l-6 6 3 3 6-6-3-3M6 18l-3 3 3 3 3-3" /></symbol>
+    </svg>
+
+    <script>
+      const root = document.documentElement;
+      function setTheme(t) {
+        root.setAttribute("data-theme", t);
+        document.getElementById("btnDark").setAttribute("aria-pressed", String(t === "dark"));
+        document.getElementById("btnLight").setAttribute("aria-pressed", String(t === "light"));
+      }
+      document.getElementById("btnDark").addEventListener("click", () => setTheme("dark"));
+      document.getElementById("btnLight").addEventListener("click", () => setTheme("light"));
+      if (new URLSearchParams(location.search).get("theme") === "light") setTheme("light");
+    </script>
+  </body>
+</html>

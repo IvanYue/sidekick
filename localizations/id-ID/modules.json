@@ -2,7 +2,6 @@
   "common": {
     "navButtonDashboard": "Dashboard",
     "navButtonProjects": "Proyek",
-    "navButtonExplore": "Jelajah",
     "navButtonPackages": "Paket",
     "stableChannelDescription": "Sebaiknya gunakan channel ini untuk semua rilis aplikasi anda. Sekitar 3 bulan sekali, branch yang telah di stabilkan di beta akan menjadi branch stabil berikutnya dan kami membuat versi stabil dari branch tersebut.",
     "betaChannelDescription": "Branch di buat untuk rilis beta baru di awal bulan, biasanya di hari senin di Branch Master. Nantinya akan berisi Branch untuk Dart, Engine dan Framework.",
@@ -10,7 +9,14 @@
     "masterChannelDescription": "Tip-of-tree terbaru, build terakhir. Biasanya berfungsi dengan baik, meskipun terkadang kami tidak sengaja merusaknya.",
     "utils": {
       "couldNotLaunchUrl": "Tidak dapat membuka {{url}}"
-    }
+    },
+    "navGroupWorkspace": "Ruang kerja",
+    "navButtonInstalled": "Terpasang",
+    "navButtonReleases": "Rilis",
+    "navButtonSettings": "Pengaturan",
+    "sidebarReady": "Siap",
+    "sidebarChecking": "Memeriksa",
+    "sidebarMissingComponents": "Komponen hilang"
   },
   "fvm": {
     "installedVersions": "Versi yang terpasang",
@@ -52,7 +58,17 @@
       "couldNotUpgradeVersionname": "Tidak dapat memperbarui {{versionName}}",
       "forceUpgradeDiscardsChanges": "Pembaruan paksa membuang semua perubahan lokal di SDK ini lalu memperbaruinya. Proyek Anda tidak terpengaruh.",
       "forceUpgrade": "Paksa perbarui"
-    }
+    },
+    "allInstalledVersions": "All installed versions · {{count}}",
+    "globalVersion": "Global version",
+    "globalVersionPathHint": "The flutter command currently points to {{path}}",
+    "installedVersionsDescription": "Every Flutter SDK in your local FVM cache. Click any row to see version details.",
+    "sortedByInstallTime": "Sorted by install time",
+    "statsCacheSize": "Disk usage",
+    "statsInstalled": "Installed versions",
+    "statsOutdated": "Outdated",
+    "statsUnused": "Unused",
+    "viewPath": "View path"
   },
   "projects": {
     "projectsRefreshed": "Proyek dimuat ulang",
@@ -129,7 +145,8 @@
       "setVersion": "Atur versi",
       "save": "Simpan",
       "versionUpdated": "Versi diubah menjadi {{version}}"
-    }
+    },
+    "flutterProject": "Flutter project"
   },
   "pubPackages": {
     "trending": "Populer",
@@ -153,7 +170,11 @@
     "all": "Semua",
     "releases": "Rilis",
     "versions": "Versi",
-    "theCurrentTipoftreeAbsoluteLatestCuttingEdgeBuildUsuallyFunctional": "tip-of-tree (absolut terbaru) yang terbaru, biasanya berfungsional, meskipun terkadang kami tidak sengaja merusaknya."
+    "theCurrentTipoftreeAbsoluteLatestCuttingEdgeBuildUsuallyFunctional": "tip-of-tree (absolut terbaru) yang terbaru, biasanya berfungsional, meskipun terkadang kami tidak sengaja merusaknya.",
+    "releasesDescription": "Browse the official Flutter channels and every past release.",
+    "loading": "Loading releases…",
+    "empty": "No releases available",
+    "emptyMessage": "Could not fetch the release list from Flutter. Check your connection and retry."
   },
   "sandbox": {
     "playground": "Playground",
@@ -184,7 +205,10 @@
       "channel": "Channel",
       "releaseNotes": "Catatan Rilis",
       "version": "Versi",
-      "releaseDate": "Tanggal Rilis"
+      "releaseDate": "Tanggal Rilis",
+      "close": "Close",
+      "referenceInformation": "Reference information",
+      "releaseDetails": "Release details"
     }
   },
   "settings": {
@@ -218,7 +242,10 @@
       "ideNotFound": "{{ideName}} (tidak ditemukan)",
       "ideNotFoundDescription": "{{ideName}} tidak ditemukan di komputer ini. Pilih IDE lain.",
       "detectIdesAgain": "Deteksi ulang IDE yang terpasang",
-      "detectingIdes": "Mendeteksi IDE yang terpasang..."
+      "detectingIdes": "Mendeteksi IDE yang terpasang...",
+      "changesAreSavedImmediately": "Changes are saved immediately.",
+      "languageDescription": "Choose the interface language.",
+      "settingsDescription": "Manage Sidekick's general, Flutter and FVM preferences."
     }
   },
   "updater": {
@@ -228,7 +255,8 @@
       "later": "Nanti",
       "updateNow": "Perbarui sekarang",
       "clickHereToDownload": "Klik disini untuk mengunduh",
-      "aNewVersionOfSidekickIsAvailableUpdateinfolatest": "Sidekick versi terbaru telah tersedia. ({{updateInfoLatest}})"
+      "aNewVersionOfSidekickIsAvailableUpdateinfolatest": "Sidekick versi terbaru telah tersedia. ({{updateInfoLatest}})",
+      "checkForUpdates": "Periksa pembaruan"
     }
   },
   "compatibility": {
@@ -271,6 +299,10 @@
     "orphanBranch": "Remote branch no longer exists",
     "ohosTag": "OHOS",
     "openOhosRepo": "Open the OHOS Flutter repository",
-    "openOhosRelease": "Open this version's OHOS release page"
+    "openOhosRelease": "Open this version's OHOS release page",
+    "openRepo": "Open repo",
+    "statInstalled": "Installed",
+    "statRemoteBranches": "Remote branches",
+    "statUpdatePending": "Update available"
   }
 }

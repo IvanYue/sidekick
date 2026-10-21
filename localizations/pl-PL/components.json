@@ -1,12 +1,13 @@
 {
-    "atoms": {
-        "copiedToClipboard": "Skopiowano do schowka",
-        "refresh": "Odśwież",
-        "countFound": "Znaleziono {{count}}"
-    },
-    "molecules": {
-        "master": "Master",
-        "versionIsInstalled": "Wersja jest zainstalowana",
-        "versionNotInstalledClickToInstall": "Wersja nie jest zainstalowana. Kliknij, aby zainstalować."
-    }
+  "atoms": {
+    "copiedToClipboard": "Skopiowano do schowka",
+    "refresh": "Odśwież",
+    "countFound": "Znaleziono {{count}}"
+  },
+  "molecules": {
+    "master": "Master",
+    "versionIsInstalled": "Wersja jest zainstalowana",
+    "versionNotInstalledClickToInstall": "Wersja nie jest zainstalowana. Kliknij, aby zainstalować.",
+    "install": "Zainstaluj"
+  }
 }

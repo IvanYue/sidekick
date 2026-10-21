@@ -2,7 +2,6 @@
   "common": {
     "navButtonDashboard": "ড্যাশবোর্ড",
     "navButtonProjects": "প্রজেক্টস",
-    "navButtonExplore": "এক্সপ্লোর",
     "navButtonPackages": "প্যাকেজেস",
     "stableChannelDescription": "আমরা আপনাকে সমস্ত প্রোডাকশন অ্যাপ রিলিজের জন্য এই চ্যানেলটি ব্যবহার করার পরামর্শ দিচ্ছি। প্রতি তিন মাসে প্রায় একবার, একটি ব্র্যাঞ্চ যা বিটায় স্থিতিশীল হয়েছে তা আমাদের পরবর্তী স্টেবল ব্র্যাঞ্চে পরিণত হয় এবং আমরা সেই ব্র্যাঞ্চের একটি স্টেবল ভার্সন তৈরি করি।",
     "betaChannelDescription": "মাসের শুরুতে, সাধারণত প্রথম সোমবার, মাস্টার দ্বারা একটি নতুন বিটা রিলিজের জন্য ব্র্যাঞ্চ তৈরি করা হয়। এতে ডার্ট, ইঞ্জিন এবং ফ্রেমওয়ার্কের জন্য একটি ব্র্যাঞ্চ থাকবে।",
@@ -10,7 +9,14 @@
     "masterChannelDescription": "একেবারে নিখুঁত সর্বশেষ বিল্ড। সাধারণত কার্যকরী, যদিও মাঝেমাঝে আমরা ঘটনাক্রমে কিছু ত্রুটির সম্মুখীন হই।",
     "utils": {
       "couldNotLaunchUrl": "খুলতে পারেনি {{url}}"
-    }
+    },
+    "navGroupWorkspace": "ওয়ার্কস্পেস",
+    "navButtonInstalled": "ইনস্টল করা",
+    "navButtonReleases": "রিলিজ",
+    "navButtonSettings": "সেটিংস",
+    "sidebarReady": "প্রস্তুত",
+    "sidebarChecking": "পরীক্ষা হচ্ছে",
+    "sidebarMissingComponents": "উপাদান অনুপস্থিত"
   },
   "fvm": {
     "installedVersions": "ইনস্টল করা ভার্সনসমূহ",
@@ -52,7 +58,17 @@
       "couldNotUpgradeVersionname": "{{versionName}} আপগ্রেড করা যায়নি",
       "forceUpgradeDiscardsChanges": "জোরপূর্বক আপগ্রেড এই SDK-এর সব স্থানীয় পরিবর্তন বাতিল করে তারপর এটি আপগ্রেড করে। আপনার প্রজেক্টগুলো প্রভাবিত হবে না।",
       "forceUpgrade": "জোরপূর্বক আপগ্রেড"
-    }
+    },
+    "allInstalledVersions": "All installed versions · {{count}}",
+    "globalVersion": "Global version",
+    "globalVersionPathHint": "The flutter command currently points to {{path}}",
+    "installedVersionsDescription": "Every Flutter SDK in your local FVM cache. Click any row to see version details.",
+    "sortedByInstallTime": "Sorted by install time",
+    "statsCacheSize": "Disk usage",
+    "statsInstalled": "Installed versions",
+    "statsOutdated": "Outdated",
+    "statsUnused": "Unused",
+    "viewPath": "View path"
   },
   "projects": {
     "projectsRefreshed": "রিফ্রেশ করা প্রজেক্টস",
@@ -129,7 +145,8 @@
       "setVersion": "সংস্করণ নির্ধারণ করুন",
       "save": "সংরক্ষণ করুন",
       "versionUpdated": "সংস্করণ {{version}}-এ পরিবর্তিত হয়েছে"
-    }
+    },
+    "flutterProject": "Flutter project"
   },
   "pubPackages": {
     "trending": "জনপ্রিয়",
@@ -153,7 +170,11 @@
     "all": "সব",
     "releases": "রিলিজসমূহ",
     "versions": "ভার্সনসমূহ",
-    "theCurrentTipoftreeAbsoluteLatestCuttingEdgeBuildUsuallyFunctional": "একেবারে নিখুঁত সর্বশেষ বিল্ড। সাধারণত কার্যকরী, যদিও মাঝেমাঝে আমরা ঘটনাক্রমে কিছু ত্রুটির সম্মুখীন হই।"
+    "theCurrentTipoftreeAbsoluteLatestCuttingEdgeBuildUsuallyFunctional": "একেবারে নিখুঁত সর্বশেষ বিল্ড। সাধারণত কার্যকরী, যদিও মাঝেমাঝে আমরা ঘটনাক্রমে কিছু ত্রুটির সম্মুখীন হই।",
+    "releasesDescription": "Browse the official Flutter channels and every past release.",
+    "loading": "Loading releases…",
+    "empty": "No releases available",
+    "emptyMessage": "Could not fetch the release list from Flutter. Check your connection and retry."
   },
   "sandbox": {
     "playground": "প্লেগ্রাউন্ড",
@@ -184,7 +205,10 @@
       "channel": "চ্যানেল",
       "releaseNotes": "রিলিজ নোটস",
       "version": "ভার্সন",
-      "releaseDate": "রিলিজ ডেট"
+      "releaseDate": "রিলিজ ডেট",
+      "close": "Close",
+      "referenceInformation": "Reference information",
+      "releaseDetails": "Release details"
     }
   },
   "settings": {
@@ -218,7 +242,10 @@
       "ideNotFound": "{{ideName}} (পাওয়া যায়নি)",
       "ideNotFoundDescription": "এই কম্পিউটারে {{ideName}} পাওয়া যায়নি। অন্য একটি IDE নির্বাচন করুন।",
       "detectIdesAgain": "ইনস্টল করা IDE আবার শনাক্ত করুন",
-      "detectingIdes": "ইনস্টল করা IDE শনাক্ত করা হচ্ছে..."
+      "detectingIdes": "ইনস্টল করা IDE শনাক্ত করা হচ্ছে...",
+      "changesAreSavedImmediately": "Changes are saved immediately.",
+      "languageDescription": "Choose the interface language.",
+      "settingsDescription": "Manage Sidekick's general, Flutter and FVM preferences."
     }
   },
   "updater": {
@@ -228,7 +255,8 @@
       "later": "পরে",
       "updateNow": "এখন আপডেট করুন",
       "clickHereToDownload": "ডাউনলোড করতে এখানে ক্লিক করুন",
-      "aNewVersionOfSidekickIsAvailableUpdateinfolatest": "Sidekick-এর একটি নতুন ভার্সন ব্যবহারযোগ্য ({{updateInfoLatest}})৷"
+      "aNewVersionOfSidekickIsAvailableUpdateinfolatest": "Sidekick-এর একটি নতুন ভার্সন ব্যবহারযোগ্য ({{updateInfoLatest}})৷",
+      "checkForUpdates": "আপডেট পরীক্ষা করুন"
     }
   },
   "compatibility": {
@@ -271,6 +299,10 @@
     "orphanBranch": "Remote branch no longer exists",
     "ohosTag": "OHOS",
     "openOhosRepo": "Open the OHOS Flutter repository",
-    "openOhosRelease": "Open this version's OHOS release page"
+    "openOhosRelease": "Open this version's OHOS release page",
+    "openRepo": "Open repo",
+    "statInstalled": "Installed",
+    "statRemoteBranches": "Remote branches",
+    "statUpdatePending": "Update available"
   }
 }

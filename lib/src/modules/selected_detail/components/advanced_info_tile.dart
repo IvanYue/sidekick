@@ -1,22 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:sidekick/src/modules/common/utils/helpers.dart';
+import 'package:sidekick/src/design/colors.dart';
+import 'package:sidekick/src/design/kit/kit.dart';
+import 'package:sidekick/src/design/tokens.dart';
 
-import '../../../components/atoms/copy_button.dart';
-import '../../../components/atoms/group_tile.dart';
-import '../../../components/atoms/typography.dart';
-import '../../../components/molecules/list_tile.dart';
 import '../../common/dto/release.dto.dart';
+import '../../common/utils/helpers.dart';
 import '../../common/utils/open_link.dart';
+import 'detail_section.dart';
 
-/// Advanced info tile
+/// 版本详情抽屉的「高级」分区。
+///
+/// 对应 design/index.html 的 `.drawer-section`（高级）：下载 zip、Hash、Sha256。
 class AdvancedInfoTile extends StatelessWidget {
-  /// Constructor
+  /// 构造函数
   const AdvancedInfoTile(
     this.release, {
     super.key,
   });
 
-  /// Release
+  /// 版本
   final ReleaseDto release;
 
   @override
@@ -25,32 +27,64 @@ class AdvancedInfoTile extends StatelessWidget {
       return const SizedBox(height: 0);
     }
 
-    return SkGroupTile(
-      title: Text(context.i18n('modules:selectedDetail.components.advanced')),
+    final c = SkColors.of(context);
+    final hash = release.release?.hash ?? '';
+    final sha256 = release.release?.sha256 ?? '';
+
+    return DetailSection(
+      title: context.i18n('modules:selectedDetail.components.advanced'),
       children: [
-        SkListTile(
-          title: Text(
-              context.i18n('modules:selectedDetail.components.downloadZip')),
-          subtitle: Caption(context.i18n(
-              'modules:selectedDetail.components.zipFileWithAllReleaseDependencies')),
-          trailing: IconButton(
-            icon: const Icon(Icons.cloud_download),
+        DetailKvRow(
+          label: context.i18n(
+            'modules:selectedDetail.components.downloadZip',
+          ),
+          trailing: SkIconButton(
+            icon: Icons.cloud_download_outlined,
+            size: 22,
+            iconSize: 14,
+            color: c.ink3,
             onPressed: () async {
               await openLink(release.release?.archiveUrl ?? '');
             },
           ),
         ),
-        const Divider(),
-        SkListTile(
-          title: Text(context.i18n('modules:selectedDetail.components.hash')),
-          subtitle: Caption(release.release?.hash ?? ''),
-          trailing: CopyButton(release.release?.hash ?? ''),
+        DetailKvRow(
+          label: context.i18n('modules:selectedDetail.components.hash'),
+          trailing: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Flexible(
+                child: Text(
+                  hash,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.right,
+                  style: SkText.mono(context, fontSize: 11, color: c.ink1),
+                ),
+              ),
+              const SizedBox(width: SkTokens.sp2),
+              DetailCopyButton(hash),
+            ],
+          ),
         ),
-        const Divider(),
-        SkListTile(
-          title: Text(context.i18n('modules:selectedDetail.components.sha256')),
-          subtitle: Caption(release.release?.sha256 ?? ''),
-          trailing: CopyButton(release.release?.sha256 ?? ''),
+        DetailKvRow(
+          label: context.i18n('modules:selectedDetail.components.sha256'),
+          trailing: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Flexible(
+                child: Text(
+                  sha256,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.right,
+                  style: SkText.mono(context, fontSize: 11, color: c.ink1),
+                ),
+              ),
+              const SizedBox(width: SkTokens.sp2),
+              DetailCopyButton(sha256),
+            ],
+          ),
         ),
       ],
     );

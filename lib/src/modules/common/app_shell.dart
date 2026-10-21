@@ -1,14 +1,11 @@
-import 'dart:io';
-
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import '../../components/mdi_icons.dart';
 import 'package:sidekick/src/components/organisms/app_bottom_bar.dart';
-import 'package:sidekick/src/modules/common/utils/helpers.dart';
 import 'package:sidekick/src/modules/common/utils/indexed_transition_switcher.dart';
+import 'package:sidekick/src/modules/common/utils/layout_size.dart';
 import 'package:sidekick/src/modules/common/utils/notify.dart';
 import 'package:sidekick/src/modules/compatibility_checks/compat.provider.dart';
 import 'package:sidekick/src/modules/compatibility_checks/compat.screen.dart';
@@ -17,7 +14,6 @@ import 'package:sidekick/src/modules/selected_detail/components/info_drawer.dart
 
 import '../../components/molecules/top_app_bar.dart';
 import '../../components/organisms/shortcut_manager.dart';
-import '../../modules/common/utils/layout_size.dart';
 import '../../theme.dart';
 import '../fvm/fvm.screen.dart';
 import '../navigation/navigation.provider.dart';
@@ -25,7 +21,7 @@ import '../ohos/ohos.screen.dart';
 import '../projects/projects.screen.dart';
 import '../releases/releases.screen.dart';
 import '../selected_detail/selected_detail.provider.dart';
-import 'constants.dart';
+import 'app_sidebar.dart';
 
 final _scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -43,22 +39,6 @@ class AppShell extends HookConsumerWidget {
     super.key,
   });
 
-  NavigationRailDestination renderNavButton(
-    BuildContext context,
-    String label,
-    IconData iconData,
-  ) {
-    return NavigationRailDestination(
-      icon: Icon(iconData, size: 20),
-      selectedIcon: Icon(
-        iconData,
-        size: 20,
-        color: Theme.of(context).colorScheme.secondary,
-      ),
-      label: Text(label),
-    );
-  }
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     LayoutSize.init(context);
@@ -74,7 +54,8 @@ class AppShell extends HookConsumerWidget {
     // Side effect when route changes
     useEffect(() {
       // Do not set index if its search
-      if (currentRoute != NavigationRoutes.searchScreen) {
+      if (currentRoute != NavigationRoutes.searchScreen &&
+          currentRoute.index < pages.length) {
         selectedIndex.value = currentRoute.index;
       }
       return;
@@ -119,96 +100,38 @@ class AppShell extends HookConsumerWidget {
         key: _scaffoldKey,
         body: Row(
           children: [
-            NavigationRail(
-              key: Key("NavigationRail${selectedIndex.value}"),
-              backgroundColor: platformBackgroundColor(context),
-              selectedIndex: selectedIndex.value,
-              minWidth: kNavigationWidth,
-              minExtendedWidth: kNavigationWidthExtended,
-              extended: !LayoutSize.isSmall,
-              onDestinationSelected: (index) {
-                navigation.goTo(NavigationRoutes.values[index]);
-              },
-              destinations: [
-                renderNavButton(
-                  context,
-                  context.i18n('modules:common.navButtonDashboard'),
-                  Icons.category,
-                ),
-                renderNavButton(
-                  context,
-                  context.i18n('modules:common.navButtonProjects'),
-                  MdiIcons.folderMultiple,
-                ),
-                renderNavButton(
-                  context,
-                  context.i18n('modules:common.navButtonExplore'),
-                  Icons.explore,
-                ),
-                renderNavButton(
-                  context,
-                  context.i18n('modules:ohos.navButtonOhos'),
-                  Icons.phone_android,
-                ),
-              ],
+            AppSidebar(
+              currentRoute: currentRoute,
+              onNavigate: navigation.goTo,
             ),
-            if (!Platform.isWindows)
-              const VerticalDivider(
-                thickness: 1,
-                width: 1,
-              ),
             Expanded(
               child: Stack(
                 fit: StackFit.expand,
                 children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Colors.transparent,
-                      borderRadius: Platform.isWindows
-                          ? const BorderRadius.only(
-                              topLeft: Radius.circular(12),
-                            )
-                          : null,
-                      border: Platform.isWindows
-                          ? Border.all(
-                              color: Theme.of(context).dividerColor,
-                            )
-                          : null,
-                    ),
-                    clipBehavior: Clip.antiAliasWithSaveLayer,
-                    child: ClipRRect(
-                      // This is the main content.
-                      borderRadius: Platform.isWindows
-                          ? const BorderRadius.only(
-                              topLeft: Radius.circular(12),
-                            )
-                          : BorderRadius.zero,
-                      child: IndexedTransitionSwitcher(
-                        // Need to update IndexTransitionSwitcher on theme change
-                        key: Key(Theme.of(context).brightness.toString()),
-                        duration: const Duration(milliseconds: 250),
-                        reverse:
-                            selectedIndex.value < (navigation.previous.index),
-                        transitionBuilder: (
-                          child,
-                          animation,
-                          secondaryAnimation,
-                        ) {
-                          return SharedAxisTransition(
-                            fillColor:
-                                Theme.of(context).brightness == Brightness.light
-                                    ? lightTheme.scaffoldBackgroundColor
-                                    : darkTheme.scaffoldBackgroundColor,
-                            animation: animation,
-                            secondaryAnimation: secondaryAnimation,
-                            transitionType: SharedAxisTransitionType.vertical,
-                            child: child,
-                          );
-                        },
-                        index: selectedIndex.value,
-                        children: pages,
-                      ),
-                    ),
+                  IndexedTransitionSwitcher(
+                    // Need to update IndexTransitionSwitcher on theme change
+                    key: Key(Theme.of(context).brightness.toString()),
+                    duration: const Duration(milliseconds: 250),
+                    reverse:
+                        selectedIndex.value < (navigation.previous.index),
+                    transitionBuilder: (
+                      child,
+                      animation,
+                      secondaryAnimation,
+                    ) {
+                      return SharedAxisTransition(
+                        fillColor:
+                            Theme.of(context).brightness == Brightness.light
+                                ? lightTheme.scaffoldBackgroundColor
+                                : darkTheme.scaffoldBackgroundColor,
+                        animation: animation,
+                        secondaryAnimation: secondaryAnimation,
+                        transitionType: SharedAxisTransitionType.vertical,
+                        child: child,
+                      );
+                    },
+                    index: selectedIndex.value,
+                    children: pages,
                   ),
                   const sb.SearchBar(),
                 ],

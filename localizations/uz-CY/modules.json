@@ -2,7 +2,6 @@
   "common": {
     "navButtonDashboard": "Бошқарув панели",
     "navButtonProjects": "Лойиҳалар",
-    "navButtonExplore": "Ўрганиш",
     "navButtonPackages": "Тўпламлар",
     "stableChannelDescription": "Ушбу канални ҳар қандай иловаларни тузиш учун ишлатишингизни тавсия қиламиз. Тахминан чоракда бир марта бета версияга барқарорлаштирилган бранч бизнинг кейинги барқарор бранчимизга айланади ва биз бу бранчнинг барқарор версиясини яратамиз.",
     "betaChannelDescription": "Branch yangi beta versiya uchun oyning boshida, odatda birinchi dushanba kuni, usta(master) tomonidan tuziladi. Bu Dart, tizim(engine) va framework uchun branchlarni o'z ichiga oladi.",
@@ -10,7 +9,14 @@
     "masterChannelDescription": "Дастурий таъминотнинг энг сўнгги версияси мавжуд бўлган энг илғор ва энг сўнгги версиясидир, лекин ҳали ҳам тузатилиши керак бўлган баъзи хатолар ёки муаммолар мавжуд бўлиши мумкин.",
     "utils": {
       "couldNotLaunchUrl": "{{url}} манзиини очиб бўлмади."
-    }
+    },
+    "navGroupWorkspace": "Иш жәри",
+    "navButtonInstalled": "Орындалған",
+    "navButtonReleases": "Версиялар",
+    "navButtonSettings": "Баптаулар",
+    "sidebarReady": "Дайын",
+    "sidebarChecking": "Текширилүүдө",
+    "sidebarMissingComponents": "Компоненттер жоқ"
   },
   "fvm": {
     "installedVersions": "Ўрнатилган версиялар",
@@ -52,7 +58,17 @@
       "couldNotUpgradeVersionname": "{{versionName}} янгиланмади",
       "forceUpgradeDiscardsChanges": "Мажбурий янгилаш ушбу SDK даги барча маҳаллий ўзгаришларни бекор қилади ва кейин уни янгилайди. Лойиҳаларингизга таъсир қилмайди.",
       "forceUpgrade": "Мажбурий янгилаш"
-    }
+    },
+    "allInstalledVersions": "All installed versions · {{count}}",
+    "globalVersion": "Global version",
+    "globalVersionPathHint": "The flutter command currently points to {{path}}",
+    "installedVersionsDescription": "Every Flutter SDK in your local FVM cache. Click any row to see version details.",
+    "sortedByInstallTime": "Sorted by install time",
+    "statsCacheSize": "Disk usage",
+    "statsInstalled": "Installed versions",
+    "statsOutdated": "Outdated",
+    "statsUnused": "Unused",
+    "viewPath": "View path"
   },
   "projects": {
     "projectsRefreshed": "Лойихалар янгиланди",
@@ -129,7 +145,8 @@
       "setVersion": "Версияни ўрнатиш",
       "save": "Сақлаш",
       "versionUpdated": "Версия {{version}} га ўзгартирилди"
-    }
+    },
+    "flutterProject": "Flutter project"
   },
   "pubPackages": {
     "trending": "Машҳур",
@@ -153,7 +170,11 @@
     "all": "Барчаси",
     "releases": "Нашрлар",
     "versions": "Версиялар",
-    "theCurrentTipoftreeAbsoluteLatestCuttingEdgeBuildUsuallyFunctional": "Дастурий таъминотнинг энг соҳиб версияси мавжуд бўлган энг илгор ва энг соҳиб версиясидир, лекин ҳали ҳам тузатилиши керак бўлган баъзи хатолар ёки муаммолар мавжуд бўлиши мумкин."
+    "theCurrentTipoftreeAbsoluteLatestCuttingEdgeBuildUsuallyFunctional": "Дастурий таъминотнинг энг соҳиб версияси мавжуд бўлган энг илгор ва энг соҳиб версиясидир, лекин ҳали ҳам тузатилиши керак бўлган баъзи хатолар ёки муаммолар мавжуд бўлиши мумкин.",
+    "releasesDescription": "Browse the official Flutter channels and every past release.",
+    "loading": "Loading releases…",
+    "empty": "No releases available",
+    "emptyMessage": "Could not fetch the release list from Flutter. Check your connection and retry."
   },
   "sandbox": {
     "playground": "Майдонча",
@@ -184,7 +205,10 @@
       "channel": "Канал",
       "releaseNotes": "Нақш бўйича қайдлар",
       "version": "Версия",
-      "releaseDate": "Нақш санаси"
+      "releaseDate": "Нақш санаси",
+      "close": "Close",
+      "referenceInformation": "Reference information",
+      "releaseDetails": "Release details"
     }
   },
   "settings": {
@@ -218,7 +242,10 @@
       "ideNotFound": "{{ideName}} (топилмади)",
       "ideNotFoundDescription": "{{ideName}} бу компьютерда топилмади. Бошқа БРМ(IDE)ни танланг.",
       "detectIdesAgain": "Ўрнатилган БРМ(IDE)ларни қайта аниқлаш",
-      "detectingIdes": "Ўрнатилган БРМ(IDE)лар аниқланмоқда..."
+      "detectingIdes": "Ўрнатилган БРМ(IDE)лар аниқланмоқда...",
+      "changesAreSavedImmediately": "Changes are saved immediately.",
+      "languageDescription": "Choose the interface language.",
+      "settingsDescription": "Manage Sidekick's general, Flutter and FVM preferences."
     },
     "updater": {
       "components": {
@@ -271,6 +298,15 @@
     "orphanBranch": "Remote branch no longer exists",
     "ohosTag": "OHOS",
     "openOhosRepo": "Open the OHOS Flutter repository",
-    "openOhosRelease": "Open this version's OHOS release page"
+    "openOhosRelease": "Open this version's OHOS release page",
+    "openRepo": "Open repo",
+    "statInstalled": "Installed",
+    "statRemoteBranches": "Remote branches",
+    "statUpdatePending": "Update available"
+  },
+  "updater": {
+    "components": {
+      "checkForUpdates": "Жаңартууларды текшеруү"
+    }
   }
 }

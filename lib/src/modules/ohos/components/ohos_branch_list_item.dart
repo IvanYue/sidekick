@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:sidekick/src/design/colors.dart';
+import 'package:sidekick/src/design/kit/kit.dart';
+import 'package:sidekick/src/design/tokens.dart';
 import 'package:sidekick/src/modules/common/utils/helpers.dart';
 
 import '../../../components/mdi_icons.dart';
-import '../../../components/atoms/typography.dart';
-import '../../../components/molecules/list_tile.dart';
 import '../../fvm/components/fvm_release_actions.dart';
 import '../../fvm/components/fvm_setup_button.dart';
 import '../../fvm/dialogs/fvm_global_dialog.dart';
@@ -14,17 +15,22 @@ import '../../selected_detail/selected_detail.provider.dart';
 import '../ohos.dto.dart';
 import '../ohos.service.dart';
 
-/// List item for an OHOS branch: install, update and manage it.
+/// OHOS 分支列表行：安装、更新与后续管理。
+///
+/// 对应 design/index.html `#page-ohos` 的 `.list-item`：等宽分支名 +
+/// 类型 chip + 已安装 / 待更新状态 + 右侧操作按钮。
 class OhosBranchListItem extends ConsumerWidget {
+  /// 构造函数
   const OhosBranchListItem(
     this.item, {
     super.key,
   });
 
+  /// 分支与本地安装状态
   final OhosBranchItem item;
 
-  // Queue matching is by name: provider rebuilds recreate DTO instances, so
-  // object identity (used by VersionInstallButton) would lose the spinner.
+  // 队列匹配按名称：provider 重建会重新创建 DTO 实例，
+  // 对象标识（VersionInstallButton 用的方式）会丢掉 spinner。
   bool _isInQueue(WidgetRef ref, String name) {
     final queue = ref.watch(fvmQueueProvider);
     if (queue.activeItem?.version.name == name) return true;
@@ -34,64 +40,102 @@ class OhosBranchListItem extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final c = SkColors.of(context);
+    final theme = Theme.of(context);
+
     final dto = item.toVersionDto();
     final isQueued = _isInQueue(ref, dto.name);
     final branch = item.branch;
+    final isDev = branch?.type == OhosBranchType.dev;
 
-    return SkListTile(
-      leading: Icon(
-        branch?.type == OhosBranchType.dev ? Icons.bolt : MdiIcons.alphaRCircle,
+    return SkListRow(
+      leading: Container(
+        width: SkTokens.tileSize,
+        height: SkTokens.tileSize,
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          color: isDev ? c.infoSoft : c.okSoft,
+          borderRadius: SkTokens.radiusLg,
+          border: Border.all(color: isDev ? c.infoLine : c.okLine),
+        ),
+        child: Icon(
+          isDev ? Icons.bolt : Icons.phone_android,
+          size: 18,
+          color: isDev ? c.info : c.ok,
+        ),
       ),
       title: Row(
         children: [
-          // Short display name: the type shows as a badge next to it
-          Subheading(ohosDisplayName(branch?.name ?? item.cache!.name)),
-          const SizedBox(width: 10),
+          Flexible(
+            child: Text(
+              ohosDisplayName(branch?.name ?? item.cache!.name),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: SkText.monoLg(context, color: c.ink1),
+            ),
+          ),
+          const SizedBox(width: SkTokens.sp3),
+          // 类型徽章：远端分支才有；孤立安装没有类型可标
           if (branch != null)
-            Chip(
-              label: Caption(
-                branch.type == OhosBranchType.release
-                    ? context.i18n('modules:ohos.release')
-                    : context.i18n('modules:ohos.dev'),
-              ),
-              visualDensity: VisualDensity.compact,
+            SkChip(
+              label: branch.type == OhosBranchType.release
+                  ? context.i18n('modules:ohos.release')
+                  : context.i18n('modules:ohos.dev'),
+              tone: isDev ? SkChipTone.info : SkChipTone.ok,
+              mono: true,
             ),
-          const SizedBox(width: 10),
+          const SizedBox(width: SkTokens.sp3),
           if (item.isGlobal)
-            ActionChip(
-              avatar: Icon(MdiIcons.information, size: 20),
-              label: Caption(context.i18n('modules:fvm.components.global')),
-              onPressed: () => showGlobalInfoDialog(context),
-            ),
-          const Spacer(),
-          if (item.updateAvailable)
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Icon(Icons.arrow_upward, size: 16),
-                const SizedBox(width: 4),
-                Caption(context.i18n('modules:ohos.updateAvailable')),
-              ],
+            Tooltip(
+              message: context.i18n('modules:fvm.components.global'),
+              child: Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  onTap: () => showGlobalInfoDialog(context),
+                  borderRadius: SkTokens.radiusSm,
+                  child: SkChip(
+                    label: context.i18n('modules:fvm.components.global'),
+                    tone: SkChipTone.accent,
+                    icon: MdiIcons.earth,
+                  ),
+                ),
+              ),
             ),
         ],
       ),
-      subtitle: Caption(
-        branch != null
-            ? '${branch.sha.substring(0, 7)}'
-                '${branch.extra != null ? ' · ${branch.extra}' : ''}'
-            : context.i18n('modules:ohos.orphanBranch'),
+      subtitle: Row(
+        children: [
+          Flexible(
+            child: Text(
+              branch != null
+                  ? '${branch.sha.substring(0, 7)}'
+                      '${branch.extra != null ? ' · ${branch.extra}' : ''}'
+                  : context.i18n('modules:ohos.orphanBranch'),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: theme.textTheme.labelSmall,
+            ),
+          ),
+          if (item.updateAvailable) ...[
+            const SizedBox(width: SkTokens.sp4),
+            Text(
+              context.i18n('modules:ohos.updateAvailable'),
+              style: theme.textTheme.labelSmall?.copyWith(color: c.warn),
+            ),
+          ],
+        ],
       ),
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           if (item.isInstalled) ...[
             if (item.cache!.isNotSetup) SetupButton(release: dto),
-            IconButton(
-              icon: Icon(MdiIcons.update, size: 20),
+            SkIconButton(
+              icon: MdiIcons.update,
               tooltip: branch != null
                   ? context.i18n('modules:ohos.updateOhosVersion')
                   : context.i18n('modules:ohos.orphanBranch'),
-              // Orphaned installs have no remote branch to pull from
+              // 孤立安装没有可拉取的远端分支
               onPressed: branch == null
                   ? null
                   : () => ref
@@ -99,23 +143,19 @@ class OhosBranchListItem extends ConsumerWidget {
                       .ohosUpdate(context, dto),
             ),
             FvmReleaseActions(dto),
-          ] else
-            isQueued
-                ? SizedBox(
-                    height: 20,
-                    width: 20,
-                    child: SpinKitFadingFour(
-                      size: 15,
-                      color: Theme.of(context).colorScheme.secondary,
-                    ),
-                  )
-                : IconButton(
-                    icon: const Icon(Icons.arrow_downward, size: 20),
-                    tooltip: context.i18n('modules:ohos.installOhosVersion'),
-                    onPressed: () => ref
-                        .read(fvmQueueProvider.notifier)
-                        .install(context, dto),
-                  ),
+          ] else if (isQueued)
+            SizedBox(
+              width: 20,
+              height: 20,
+              child: SpinKitFadingFour(size: 15, color: c.accent),
+            )
+          else
+            SkIconButton(
+              icon: Icons.arrow_downward,
+              tooltip: context.i18n('modules:ohos.installOhosVersion'),
+              onPressed: () =>
+                  ref.read(fvmQueueProvider.notifier).install(context, dto),
+            ),
         ],
       ),
       onTap: () {

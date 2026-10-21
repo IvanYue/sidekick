@@ -2,7 +2,6 @@
   "common": {
     "navButtonDashboard": "概览",
     "navButtonProjects": "项目",
-    "navButtonExplore": "探索",
     "navButtonPackages": "Packages",
     "stableChannelDescription": "我们推荐你使用这个渠道来发布所有的生产应用。大约每季度一次，一个已经稳定到 beta 版的分支会成为我们的下一个 stable 分支，我们会在这个分支上创建一个 stable 版本。",
     "betaChannelDescription": "在月初，通常是第一个星期一，从 master 创建的新的 beta 分支。这将包含一个Dart、引擎和框架的分支。",
@@ -10,7 +9,14 @@
     "masterChannelDescription": "当前代码树的顶端，最新的版本。通常是功能性的，但有时会被砍掉。",
     "utils": {
       "couldNotLaunchUrl": "不能打开 {{url}}"
-    }
+    },
+    "navGroupWorkspace": "工作区",
+    "navButtonInstalled": "已安装",
+    "navButtonReleases": "发行版",
+    "navButtonSettings": "设置",
+    "sidebarReady": "就绪",
+    "sidebarChecking": "检查中",
+    "sidebarMissingComponents": "缺少组件"
   },
   "fvm": {
     "installedVersions": "已安装的版本",
@@ -52,7 +58,17 @@
       "couldNotUpgradeVersionname": "无法升级 {{versionName}}",
       "forceUpgradeDiscardsChanges": "强制升级会丢弃此 SDK 中的所有本地更改，然后进行升级。你的项目不受影响。",
       "forceUpgrade": "强制升级"
-    }
+    },
+    "allInstalledVersions": "所有已安装版本 · {{count}}",
+    "globalVersion": "全局版本",
+    "globalVersionPathHint": "flutter 命令当前指向 {{path}}",
+    "installedVersionsDescription": "本机 FVM 缓存中的全部 Flutter SDK。点击任意一行查看版本详情。",
+    "sortedByInstallTime": "按安装时间排序",
+    "statsCacheSize": "占用空间",
+    "statsInstalled": "已安装版本",
+    "statsOutdated": "待更新",
+    "statsUnused": "可清理",
+    "viewPath": "查看路径"
   },
   "projects": {
     "projectsRefreshed": "项目已刷新",
@@ -129,7 +145,8 @@
       "setVersion": "设置版本",
       "save": "保存",
       "versionUpdated": "版本已更改为 {{version}}"
-    }
+    },
+    "flutterProject": "Flutter 项目"
   },
   "pubPackages": {
     "trending": "热门",
@@ -153,7 +170,11 @@
     "all": "所有",
     "releases": "发行版",
     "versions": "版本库",
-    "theCurrentTipoftreeAbsoluteLatestCuttingEdgeBuildUsuallyFunctional": "当前代码树的顶端，最新的版本。通常是功能性的，但有时会被砍掉。"
+    "theCurrentTipoftreeAbsoluteLatestCuttingEdgeBuildUsuallyFunctional": "当前代码树的顶端，最新的版本。通常是功能性的，但有时会被砍掉。",
+    "releasesDescription": "浏览 Flutter 官方渠道与全部历史发行版。",
+    "loading": "正在加载发行版…",
+    "empty": "没有可用的发行版",
+    "emptyMessage": "无法从 Flutter 官方获取发行列表。检查网络后重试。"
   },
   "sandbox": {
     "playground": "Playground",
@@ -184,7 +205,10 @@
       "channel": "渠道",
       "releaseNotes": "发布说明",
       "version": "版本",
-      "releaseDate": "发布日期"
+      "releaseDate": "发布日期",
+      "close": "关闭",
+      "referenceInformation": "参考信息",
+      "releaseDetails": "发布详情"
     }
   },
   "settings": {
@@ -218,7 +242,10 @@
       "ideNotFound": "{{ideName}}（未找到）",
       "ideNotFoundDescription": "在此电脑上未找到 {{ideName}}。请选择其他 IDE。",
       "detectIdesAgain": "重新检测已安装的 IDE",
-      "detectingIdes": "正在检测已安装的 IDE..."
+      "detectingIdes": "正在检测已安装的 IDE...",
+      "changesAreSavedImmediately": "改动会立即保存。",
+      "languageDescription": "选择界面语言。",
+      "settingsDescription": "管理 Sidekick 的通用偏好、Flutter 与 FVM 选项。"
     }
   },
   "updater": {
@@ -228,7 +255,8 @@
       "later": "以后",
       "updateNow": "立即更新",
       "clickHereToDownload": "点击下载",
-      "aNewVersionOfSidekickIsAvailableUpdateinfolatest": "新版本的 Sidekick 已经可用  ({{updateInfoLatest}})."
+      "aNewVersionOfSidekickIsAvailableUpdateinfolatest": "新版本的 Sidekick 已经可用  ({{updateInfoLatest}}).",
+      "checkForUpdates": "检查更新"
     }
   },
   "compatibility": {
@@ -271,6 +299,10 @@
     "orphanBranch": "远端分支已不存在",
     "ohosTag": "OHOS",
     "openOhosRepo": "打开 OHOS Flutter 仓库",
-    "openOhosRelease": "打开该版本在 OHOS 仓库的发布页"
+    "openOhosRelease": "打开该版本在 OHOS 仓库的发布页",
+    "openRepo": "打开仓库",
+    "statInstalled": "已安装",
+    "statRemoteBranches": "远端分支",
+    "statUpdatePending": "待更新"
   }
 }

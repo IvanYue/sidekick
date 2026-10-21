@@ -1,12 +1,13 @@
 {
-    "atoms": {
-        "copiedToClipboard": "Copied to Clipboard",
-        "refresh": "Refresh",
-        "countFound": "{{count}} found"
-    },
-    "molecules": {
-        "master": "Master",
-        "versionIsInstalled": "Version is installed",
-        "versionNotInstalledClickToInstall": "Version not installed. Click to install."
-    }
+  "atoms": {
+    "copiedToClipboard": "Copied to Clipboard",
+    "refresh": "Refresh",
+    "countFound": "{{count}} found"
+  },
+  "molecules": {
+    "master": "Master",
+    "versionIsInstalled": "Version is installed",
+    "versionNotInstalledClickToInstall": "Version not installed. Click to install.",
+    "install": "Install"
+  }
 }

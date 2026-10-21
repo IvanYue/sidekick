@@ -7,6 +7,7 @@ import 'package:hive/hive.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
 import 'package:path/path.dart' as p;
+import 'package:sidekick/src/design/kit/kit.dart';
 import 'package:sidekick/src/modules/projects/detail/project_detail.provider.dart';
 import 'package:sidekick/src/modules/projects/detail/project_detail.screen.dart';
 import 'package:sidekick/src/modules/projects/detail/pub_dev_client.dart';
@@ -171,7 +172,13 @@ flutter:
 
     await takeScreenshot(tester, 'project_detail_packages_upgrade');
 
-    await tester.tap(find.widgetWithText(ElevatedButton, 'Upgrade'));
+    // The confirm button inside the dialog, not the row action behind it
+    await tester.tap(
+      find.descendant(
+        of: find.byType(AlertDialog),
+        matching: find.widgetWithText(SkButton, 'Upgrade'),
+      ),
+    );
     await settle(tester);
 
     expect(pubspec(), contains('  http: ^1.2.2 # networking\n'));

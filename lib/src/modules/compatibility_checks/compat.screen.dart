@@ -2,7 +2,9 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:sidekick/src/components/atoms/typography.dart';
+import 'package:sidekick/src/design/colors.dart';
+import 'package:sidekick/src/design/kit/kit.dart';
+import 'package:sidekick/src/design/tokens.dart';
 import 'package:sidekick/src/components/molecules/top_app_bar.dart';
 import 'package:sidekick/src/modules/common/app_shell.dart';
 import 'package:sidekick/src/modules/common/utils/helpers.dart';
@@ -11,152 +13,151 @@ import 'package:sidekick/src/modules/compatibility_checks/compat.provider.dart';
 import '../../theme.dart';
 import 'compat.dialog.dart';
 
-/// Settings screen
+/// 缺少系统必需组件时的检查页。
+///
+/// 列出 Git（以及 Windows 的 Chocolatey / macOS·Linux 的 Brew）的检测结果，
+/// 底部提供「忽略」与「安装缺失组件」两个出口。
 class CompatCheckScreen extends ConsumerWidget {
-  /// Constructor
+  /// 构造函数
   const CompatCheckScreen({
     super.key,
   });
 
-  /// Current nav section
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    var provider = ref.watch(compatProvider);
-    var providerState = ref.watch(compatProvider.notifier);
+    final provider = ref.watch(compatProvider);
+    final providerState = ref.watch(compatProvider.notifier);
+
+    final theme = Theme.of(context);
+    final c = SkColors.of(context);
+
+    /// 一个组件的检测结果行。
+    Widget checkRow({
+      required String name,
+      required String description,
+      required bool ok,
+    }) {
+      return Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: SkTokens.sp5,
+          vertical: SkTokens.sp4,
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Icon(
+              ok ? Icons.check_circle_outline_rounded : Icons.error_outline_rounded,
+              size: 18,
+              color: ok ? c.ok : c.danger,
+            ),
+            const SizedBox(width: SkTokens.sp4),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(name, style: theme.textTheme.titleSmall),
+                  const SizedBox(height: SkTokens.sp1),
+                  Text(description, style: theme.textTheme.bodySmall),
+                ],
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
+    final isWindows = Platform.isWindows;
+    final otherName = isWindows ? 'Chocolatey' : 'Brew';
+    final otherDescription = context.i18n(
+      isWindows
+          ? 'modules:compatibility.screen.chocoDescription'
+          : 'modules:compatibility.screen.brewDescription',
+    );
+    final otherOk = isWindows ? provider.choco : provider.brew;
 
     return Scaffold(
-      extendBodyBehindAppBar: false,
-      extendBody: true,
       appBar: const SkAppBar(),
       backgroundColor: platformBackgroundColor(context),
       body: Center(
-        //padding: const EdgeInsets.all(16),
         child: Padding(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(SkTokens.sp5),
           child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 800, maxHeight: 500),
+            constraints: const BoxConstraints(maxWidth: 800, maxHeight: 560),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Heading(context.i18n('modules:compatibility.screen.title')),
-                const SizedBox(
-                  height: 5,
+                Text(
+                  context.i18n('modules:compatibility.screen.title'),
+                  style: theme.textTheme.displaySmall,
                 ),
-                Subheading(
-                    context.i18n('modules:compatibility.screen.subtitle')),
-                const SizedBox(
-                  height: 15,
+                const SizedBox(height: SkTokens.sp2),
+                Text(
+                  context.i18n('modules:compatibility.screen.subtitle'),
+                  style: theme.textTheme.bodySmall,
                 ),
+                const SizedBox(height: SkTokens.sp5),
                 Expanded(
-                  child: Card(
-                    child: Padding(
-                      padding: const EdgeInsets.all(15),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            mainAxisSize: MainAxisSize.max,
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              const Heading("Git"),
-                              Icon(provider.git
-                                  ? Icons.check_circle_outline_rounded
-                                  : Icons.error_outline_rounded)
-                            ],
+                  child: SkPanel(
+                    padding: EdgeInsets.zero,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        checkRow(
+                          name: 'Git',
+                          description: context.i18n(
+                            'modules:compatibility.screen.gitDescription',
                           ),
-                          const SizedBox(
-                            height: 5,
-                          ),
-                          Subheading(context.i18n(
-                              'modules:compatibility.screen.gitDescription')),
-                          const SizedBox(
-                            height: 15,
-                          ),
-                          if (Platform.isWindows)
-                            Row(
-                              mainAxisSize: MainAxisSize.max,
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                const Heading("Chocolatey"),
-                                Icon(provider.choco
-                                    ? Icons.check_circle_outline_rounded
-                                    : Icons.error_outline_rounded)
-                              ],
-                            ),
-                          if (Platform.isLinux || Platform.isMacOS)
-                            Row(
-                              mainAxisSize: MainAxisSize.max,
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                const Heading("Brew"),
-                                Icon(provider.brew
-                                    ? Icons.check_circle_outline_rounded
-                                    : Icons.error_outline_rounded)
-                              ],
-                            ),
-                          const SizedBox(
-                            height: 5,
-                          ),
-                          if (Platform.isWindows)
-                            Subheading(context.i18n(
-                                'modules:compatibility.screen.chocoDescription')),
-                          if (Platform.isLinux || Platform.isMacOS)
-                            Subheading(context.i18n(
-                                'modules:compatibility.screen.brewDescription')),
-                          const SizedBox(
-                            height: 5,
-                          ),
-                        ],
-                      ),
+                          ok: provider.git,
+                        ),
+                        const SkDivider(),
+                        checkRow(
+                          name: otherName,
+                          description: otherDescription,
+                          ok: otherOk,
+                        ),
+                      ],
                     ),
                   ),
                 ),
-                const SizedBox(
-                  height: 15,
-                ),
+                const SizedBox(height: SkTokens.sp5),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Expanded(
-                      child: Subheading(context
-                          .i18n('modules:compatibility.screen.pleaseInstall')),
+                      child: Text(
+                        context.i18n(
+                          'modules:compatibility.screen.pleaseInstall',
+                        ),
+                        style: theme.textTheme.bodySmall,
+                      ),
                     ),
-                    Row(
-                      children: [
-                        OutlinedButton(
-                          onPressed: () {
-                            providerState.applyValid();
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const AppShell(),
-                              ),
-                            );
-                          },
-                          child: Text(context
-                              .i18n('modules:compatibility.screen.ignore')),
-                        ),
-                        const SizedBox(
-                          width: 15,
-                        ),
-                        ElevatedButton(
-                          onPressed: () {
-                            showDialog(
-                              context: context,
-                              builder: (context) => const CompatDialog(),
-                            );
-                          },
-                          child: Text(context.i18n(
-                              'modules:compatibility.screen.installmissing')),
-                        )
-                      ],
+                    const SizedBox(width: SkTokens.sp4),
+                    SkButton(
+                      label:
+                          context.i18n('modules:compatibility.screen.ignore'),
+                      onPressed: () {
+                        providerState.applyValid();
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const AppShell(),
+                          ),
+                        );
+                      },
+                    ),
+                    const SizedBox(width: SkTokens.sp3),
+                    SkButton(
+                      label: context.i18n(
+                        'modules:compatibility.screen.installmissing',
+                      ),
+                      variant: SkButtonVariant.primary,
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          builder: (context) => const CompatDialog(),
+                        );
+                      },
                     ),
                   ],
-                ),
-                const SizedBox(
-                  height: 15,
                 ),
               ],
             ),

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../../../../components/atoms/typography.dart';
+import 'package:sidekick/src/design/colors.dart';
+import 'package:sidekick/src/design/kit/kit.dart';
+import 'package:sidekick/src/design/tokens.dart';
 import '../../../common/utils/helpers.dart';
 import '../../project.dto.dart';
 import '../project_details.dart';
@@ -31,14 +33,17 @@ class OverviewTab extends StatelessWidget {
     final devDependencies = details.packages.length - dependencies;
     final description = details.description ?? '';
 
+    final theme = Theme.of(context);
+    final c = SkColors.of(context);
+
     return ListView(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(SkTokens.sp6),
       children: [
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             ClipRRect(
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: SkTokens.radiusLg,
               child: SizedBox(
                 width: 72,
                 height: 72,
@@ -50,47 +55,57 @@ class OverviewTab extends StatelessWidget {
                 ),
               ),
             ),
-            const SizedBox(width: 20),
+            const SizedBox(width: SkTokens.sp6),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     project.name,
-                    style: Theme.of(context).textTheme.headlineSmall,
+                    style: theme.textTheme.headlineSmall,
                   ),
-                  const SizedBox(height: 5),
-                  Caption(details.rawVersion ??
-                      context.i18n('modules:projects.detail.noVersion')),
+                  const SizedBox(height: SkTokens.sp1),
+                  Text(
+                    details.rawVersion ??
+                        context.i18n('modules:projects.detail.noVersion'),
+                    style: theme.textTheme.bodySmall,
+                  ),
                   if (description.isNotEmpty) ...[
-                    const SizedBox(height: 10),
-                    Paragraph(description),
+                    const SizedBox(height: SkTokens.sp3),
+                    Text(description, style: theme.textTheme.bodyMedium),
                   ],
                 ],
               ),
             ),
           ],
         ),
-        const SizedBox(height: 20),
-        const Divider(height: 1),
-        const SizedBox(height: 10),
+        const SizedBox(height: SkTokens.sp6),
+        SkDivider(strong: true),
+        const SizedBox(height: SkTokens.sp3),
         InfoRow(
           label: context.i18n('modules:projects.detail.flutterVersion'),
           child: Text(
             pinned ?? context.i18n('modules:projects.detail.notPinned'),
+            style: theme.textTheme.bodyMedium?.copyWith(color: c.ink1),
           ),
         ),
         InfoRow(
           label: context.i18n('modules:projects.detail.dartSdk'),
-          child: Text(details.dartSdk ?? '-'),
+          child: Text(
+            details.dartSdk ?? '-',
+            style: theme.textTheme.bodyMedium?.copyWith(color: c.ink1),
+          ),
         ),
         InfoRow(
           label: context.i18n('modules:projects.detail.platforms'),
           child: details.platforms.isEmpty
-              ? Text(context.i18n('modules:projects.detail.noPlatforms'))
+              ? Text(
+                  context.i18n('modules:projects.detail.noPlatforms'),
+                  style: theme.textTheme.bodyMedium,
+                )
               : Wrap(
-                  spacing: 8,
-                  runSpacing: 8,
+                  spacing: SkTokens.sp3,
+                  runSpacing: SkTokens.sp3,
                   children: [
                     for (final platform in details.platforms)
                       PlatformChip(platform),
@@ -99,65 +114,25 @@ class OverviewTab extends StatelessWidget {
         ),
         InfoRow(
           label: context.i18n('modules:projects.detail.packages'),
-          child: Text(context.i18n(
-            'modules:projects.detail.dependencyCount',
-            variables: {
-              'dependencies': dependencies,
-              'devDependencies': devDependencies,
-            },
-          )),
+          child: Text(
+            context.i18n(
+              'modules:projects.detail.dependencyCount',
+              variables: {
+                'dependencies': dependencies,
+                'devDependencies': devDependencies,
+              },
+            ),
+            style: theme.textTheme.bodyMedium?.copyWith(color: c.ink1),
+          ),
         ),
         InfoRow(
           label: context.i18n('modules:projects.detail.location'),
-          child: SelectableText(project.path),
+          child: SelectableText(
+            project.path,
+            style: SkText.mono(context, fontSize: 11, color: c.ink1),
+          ),
         ),
       ],
-    );
-  }
-}
-
-/// Chip with the icon and name of a platform
-class PlatformChip extends StatelessWidget {
-  /// Constructor
-  const PlatformChip(this.platform, {super.key});
-
-  /// Platform
-  final ProjectPlatform platform;
-
-  static const _labels = {
-    ProjectPlatform.android: 'Android',
-    ProjectPlatform.ios: 'iOS',
-    ProjectPlatform.macos: 'macOS',
-    ProjectPlatform.web: 'Web',
-    ProjectPlatform.windows: 'Windows',
-    ProjectPlatform.linux: 'Linux',
-  };
-
-  static const _icons = {
-    ProjectPlatform.android: Icons.android,
-    ProjectPlatform.ios: Icons.phone_iphone,
-    ProjectPlatform.macos: Icons.laptop_mac,
-    ProjectPlatform.web: Icons.language,
-    ProjectPlatform.windows: Icons.desktop_windows_outlined,
-    ProjectPlatform.linux: Icons.terminal,
-  };
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-      decoration: BoxDecoration(
-        color: Colors.white10,
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(_icons[platform], size: 15),
-          const SizedBox(width: 6),
-          Caption(_labels[platform]!),
-        ],
-      ),
     );
   }
 }

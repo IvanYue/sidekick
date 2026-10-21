@@ -7,6 +7,7 @@
   "molecules": {
     "master": "Master",
     "versionIsInstalled": "تم تثبيت الإصدار",
-    "versionNotInstalledClickToInstall": "الإصدار غير مثبت. انقر للتثبيت."
+    "versionNotInstalledClickToInstall": "الإصدار غير مثبت. انقر للتثبيت.",
+    "install": "تثبيت"
   }
 }

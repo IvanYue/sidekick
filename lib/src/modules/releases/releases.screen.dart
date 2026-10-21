@@ -1,157 +1,135 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:sidekick/src/design/colors.dart';
+import 'package:sidekick/src/design/kit/kit.dart';
+import 'package:sidekick/src/design/tokens.dart';
 
-import '../../components/atoms/sliver_animated_switcher.dart';
-import '../../components/atoms/typography.dart';
-import '../../components/molecules/version_install_button.dart';
-import '../../components/organisms/screen.dart';
 import '../../modules/common/utils/helpers.dart';
+import '../fvm/fvm.provider.dart';
 import '../ohos/components/ohos_channel_card.dart';
 import 'components/channel_showcase_item.dart';
 import 'components/release_list_item.dart';
 import 'releases.provider.dart';
 
+/// 发行版页。
+///
+/// 对应 design/index.html 的 `#page-releases`：页头 + 渠道卡（stable / beta /
+/// master / OHOS）+ 版本库筛选栏 + 版本列表。
 class ReleasesScreen extends ConsumerWidget {
+  /// 构造函数
   const ReleasesScreen({
     super.key,
   });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final filter = ref.watch(filterProvider.notifier);
-    final versions = ref.watch(filterableReleasesProvider);
     final releases = ref.watch(releasesStateProvider);
+    final versions = ref.watch(filterableReleasesProvider);
+    final filter = ref.watch(filterProvider.notifier);
 
-    return SkScreen(
-      extendBody: false,
+    final c = SkColors.of(context);
+
+    // 渠道筛选：展示名 -> 枚举值
+    final filterLabels = <Filter, String>{
+      Filter.all: context.i18n('modules:releases.all'),
+      Filter.stable: Filter.stable.name.capitalize(),
+      Filter.beta: Filter.beta.name.capitalize(),
+    };
+    final currentLabel = filterLabels[ref.watch(filterProvider)]!;
+
+    return SkPage(
       title: context.i18n('modules:releases.releases'),
-      child: CustomScrollView(
-        primary: false,
-        slivers: [
-          SliverToBoxAdapter(
-            child: AnimatedContainer(
-              duration: const Duration(milliseconds: 200),
-              // TODO: Check if need to add the height
-              height: 80,
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(12, 8, 12, 0),
-                child: Container(
-                  padding: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    color: Colors.deepOrange.withAlpha((255 * 0.1).round()),
-                    border: Border.all(
-                      color: Colors.deepOrange,
-                      width: 0.5,
-                    ),
-                  ),
-                  child: Row(
-                    children: [
-                      const SizedBox(width: 10),
-                      Subheading(
-                        context.i18n('components:molecules.master'),
-                      ),
-                      const SizedBox(width: 20),
-                      Expanded(
-                        child: Caption(
-                          context.i18n(
-                              'modules:releases.theCurrentTipoftreeAbsoluteLatestCuttingEdgeBuildUsuallyFunctional'),
-                        ),
-                      ),
-                      const SizedBox(width: 20),
-                      releases.master != null
-                          ? VersionInstallButton(releases.master!)
-                          : Container(),
-                      const SizedBox(width: 10),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ),
-          SliverAppBar(
-            automaticallyImplyLeading: false,
-            expandedHeight: 140.0,
-            elevation: 1,
-            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-            pinned: true,
-            excludeHeaderSemantics: true,
-            actions: [Container()],
-            flexibleSpace: FlexibleSpaceBar(
-              collapseMode: CollapseMode.pin,
-              background: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    ...releases.channels.map(
-                      (channel) =>
-                          Expanded(child: ChannelShowcaseItem(channel)),
-                    ),
-                    const Expanded(child: OhosChannelCard()),
-                  ],
-                ),
-              ),
-            ),
-            title: SliverAnimatedSwitcher(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: releases.channels.map((channel) {
-                  return Expanded(child: ReleaseListItem(channel));
-                }).toList(),
-              ),
-            ),
-          ),
-          SliverAppBar(
-            pinned: true,
-            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-            bottom: const PreferredSize(
-              preferredSize: Size.fromHeight(1),
-              child: Divider(height: 0),
-            ),
-            automaticallyImplyLeading: false,
-            // actions: [Container()],
-            title: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
+      description: context.i18n('modules:releases.releasesDescription'),
+      processing: releases.fetching,
+      actions: SkIconButton(
+        icon: Icons.refresh,
+        tooltip: context.i18n('components:atoms.refresh'),
+        // 重新扫描本地缓存（远程发行版列表由 provider 自行拉取）
+        onPressed: () => ref.read(fvmCacheProvider.notifier).reloadState(),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          // 渠道卡：stable / beta / master / OHOS
+          IntrinsicHeight(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Row(
-                  children: [
-                    Heading(
-                      context.i18n('modules:releases.versions'),
-                    ),
-                    const SizedBox(width: 10),
-                    Chip(label: Text(versions.length.toString())),
-                  ],
-                ),
-                DropdownButton<String>(
-                  value: filter.state.name,
-                  icon: const Icon(Icons.filter_list),
-                  underline: Container(),
-                  items: Filter.values.map((Filter filter) {
-                    final text = filter != Filter.all
-                        ? filter.name.capitalize()
-                        : context.i18n('modules:releases.all');
+                for (final channel in releases.channels) ...[
+                  Expanded(child: ChannelShowcaseItem(channel)),
+                  const SizedBox(width: SkTokens.sp4),
+                ],
+                if (releases.master != null) ...[
+                  Expanded(child: ChannelShowcaseItem(releases.master!)),
+                  const SizedBox(width: SkTokens.sp4),
+                ],
+                const Expanded(child: OhosChannelCard()),
+              ],
+            ),
+          ),
+          const SizedBox(height: SkTokens.sp7),
 
-                    return DropdownMenuItem(
-                      value: filter.name,
-                      child: Text(text),
-                    );
-                  }).toList(),
-                  onChanged: (value) {
-                    filter.state = filterFromName(value!);
+          // 版本库筛选栏
+          Container(
+            padding: const EdgeInsets.symmetric(
+              horizontal: SkTokens.sp4,
+              vertical: SkTokens.sp3,
+            ),
+            decoration: BoxDecoration(
+              color: c.bgPanel,
+              borderRadius: SkTokens.radiusMd,
+              border: Border.all(color: c.lineSoft),
+            ),
+            child: Row(
+              children: [
+                Text(
+                  context.i18n('modules:releases.versions').toUpperCase(),
+                  style: SkText.overline(context, color: c.ink2),
+                ),
+                const SizedBox(width: SkTokens.sp3),
+                SkChip(label: '${versions.length}'),
+                const Spacer(),
+                SkSelect(
+                  value: currentLabel,
+                  width: 150,
+                  items: filterLabels.values.toList(),
+                  onChanged: (label) {
+                    final entry =
+                        filterLabels.entries.firstWhere((e) => e.value == label);
+                    filter.state = entry.key;
                   },
                 ),
               ],
             ),
           ),
-          SliverList(
-            delegate: SliverChildBuilderDelegate(
-              (context, index) {
-                return ReleaseListItem(versions[index]);
-              },
-              childCount: versions.length,
+          const SizedBox(height: SkTokens.sp4),
+
+          // 版本列表 / 空态 / 加载中
+          if (releases.fetching || versions.isEmpty)
+            SkPanel(
+              child: SkEmptyState(
+                icon: releases.fetching
+                    ? Icons.downloading_outlined
+                    : Icons.inbox_outlined,
+                title: releases.fetching
+                    ? context.i18n('modules:releases.loading')
+                    : context.i18n('modules:releases.empty'),
+                description: releases.fetching
+                    ? null
+                    : context.i18n('modules:releases.emptyMessage'),
+              ),
+            )
+          else
+            SkPanel(
+              flush: true,
+              padding: EdgeInsets.zero,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  for (final version in versions) ReleaseListItem(version),
+                ],
+              ),
             ),
-          ),
         ],
       ),
     );

@@ -52,6 +52,10 @@ class SkShortcutManager extends ConsumerWidget {
           LogicalKeyboardKey.metaLeft,
           LogicalKeyboardKey.keyF,
         ): const NavigationIntent(route: NavigationRoutes.searchScreen),
+        LogicalKeySet(
+          LogicalKeyboardKey.metaLeft,
+          LogicalKeyboardKey.keyK,
+        ): const NavigationIntent(route: NavigationRoutes.searchScreen),
       },
       actions: <Type, Action<Intent>>{
         NavigationIntent: CallbackAction<NavigationIntent>(

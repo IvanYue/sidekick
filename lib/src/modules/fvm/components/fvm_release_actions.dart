@@ -1,91 +1,92 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:sidekick/src/design/colors.dart';
+import 'package:sidekick/src/design/tokens.dart';
+
 import '../../../components/mdi_icons.dart';
 import 'package:sidekick/src/modules/common/utils/helpers.dart';
 
-import '../../../components/atoms/typography.dart';
 import '../../../modules/common/dto/release.dto.dart';
 import '../../selected_detail/selected_detail.provider.dart';
 import '../dialogs/fvm_delete_dialog.dart';
 import '../fvm_queue.provider.dart';
 
-/// Possible actions for installed release
+/// 已安装版本可执行的操作。
 enum FvmReleaseActionOptions {
-  /// Remove release
+  /// 删除版本
   remove,
 
-  /// View details
+  /// 查看详情
   detail,
 
-  /// Set as global
+  /// 设为全局
   global,
 
-  /// Upgrade
+  /// 更新渠道
   upgrade,
 }
 
-/// Displays actions for a cached release
+/// 已缓存版本的操作菜单。
+///
+/// 对应 design/tokens.css 的 `.icon-btn`：一个竖向三点图标按钮，
+/// 点开是带图标与文案的下拉菜单。
 class FvmReleaseActions extends ConsumerWidget {
-  /// Constructor
+  /// 构造函数
   const FvmReleaseActions(
     this.release, {
     super.key,
   });
 
-  /// Release
+  /// 版本
   final ReleaseDto release;
 
-  /// Render menu button
-  Widget renderMenuButton({
-    required IconData icon,
-    required String label,
-  }) {
-    return Row(
-      children: [
-        Icon(icon, size: 15),
-        const SizedBox(width: 10),
-        Caption(label),
-      ],
-    );
-  }
-
-  /// Renders menu options
+  /// 渲染菜单项
   List<PopupMenuEntry<FvmReleaseActionOptions>> renderMenuOptions(
       BuildContext context) {
+    PopupMenuItem<FvmReleaseActionOptions> item({
+      required FvmReleaseActionOptions value,
+      required IconData icon,
+      required String label,
+    }) {
+      return PopupMenuItem(
+        value: value,
+        height: 34,
+        child: Row(
+          children: [
+            Icon(icon, size: 15),
+            const SizedBox(width: SkTokens.sp3),
+            Text(label, style: Theme.of(context).textTheme.bodySmall),
+          ],
+        ),
+      );
+    }
+
     final menus = <PopupMenuEntry<FvmReleaseActionOptions>>[
-      PopupMenuItem(
+      item(
         value: FvmReleaseActionOptions.global,
-        child: renderMenuButton(
-          label: context.i18n('modules:fvm.components.setAsGlobal'),
-          icon: MdiIcons.earth,
-        ),
+        label: context.i18n('modules:fvm.components.setAsGlobal'),
+        icon: MdiIcons.earth,
       ),
-      PopupMenuItem(
+      item(
         value: FvmReleaseActionOptions.detail,
-        child: renderMenuButton(
-          label: context.i18n('modules:pubPackages.components.details'),
-          icon: MdiIcons.information,
-        ),
+        label: context.i18n('modules:pubPackages.components.details'),
+        icon: MdiIcons.information,
       ),
-      PopupMenuItem(
+      item(
         value: FvmReleaseActionOptions.remove,
-        child: renderMenuButton(
-          label: context.i18n('modules:projects.components.remove'),
-          icon: MdiIcons.delete,
-        ),
+        label: context.i18n('modules:projects.components.remove'),
+        icon: MdiIcons.delete,
       ),
     ];
 
-    // Only display upgrade if option is channel
+    // 只有渠道版本才能「更新」
     if (release.isChannel) {
       menus.insert(
         0,
-        PopupMenuItem(
+        item(
           value: FvmReleaseActionOptions.upgrade,
-          child: renderMenuButton(
-            label: context.i18n('modules:fvm.components.upgrade'),
-            icon: MdiIcons.update,
-          ),
+          label: context.i18n('modules:fvm.components.upgrade'),
+          icon: MdiIcons.update,
         ),
       );
     }
@@ -95,7 +96,10 @@ class FvmReleaseActions extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final c = SkColors.of(context);
+
     return PopupMenuButton<FvmReleaseActionOptions>(
+      tooltip: '',
       onSelected: (result) {
         if (result == FvmReleaseActionOptions.remove) {
           showDeleteDialog(context, item: release, onDelete: () {
@@ -117,10 +121,12 @@ class FvmReleaseActions extends ConsumerWidget {
           ref.read(fvmQueueProvider.notifier).upgrade(context, release);
         }
       },
-      itemBuilder: (context) {
-        return renderMenuOptions(context);
-      },
-      child: Icon(MdiIcons.dotsVertical),
+      itemBuilder: (context) => renderMenuOptions(context),
+      child: SizedBox(
+        width: SkTokens.iconButtonSize,
+        height: SkTokens.iconButtonSize,
+        child: Icon(MdiIcons.dotsVertical, size: 18, color: c.ink2),
+      ),
     );
   }
 }

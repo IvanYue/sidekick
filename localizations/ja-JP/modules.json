@@ -2,7 +2,6 @@
   "common": {
     "navButtonDashboard": "ダッシュボード",
     "navButtonProjects": "プロジェクト",
-    "navButtonExplore": "探索",
     "navButtonPackages": "パッケージ",
     "stableChannelDescription": "すべてのプロダクションアプリのリリースにはこのチャンネルを使用することをお勧めします。ほぼ四半期に一度、beta版に安定化したブランチが次のstableブランチとなり、そのブランチの安定版が作成されます。",
     "betaChannelDescription": "月の初め、通常は第一月曜日に、masterブランチからbeta版リリースのために作成されるブランチです。このブランチには、Dartのエンジンとフレームワークが含まれます。",
@@ -10,7 +9,14 @@
     "masterChannelDescription": "現在のコードツリーの一番上、最新のバージョンです。 通常は機能的ですが、時には破壊的な内容も含まれます。",
     "utils": {
       "couldNotLaunchUrl": "{{url}}を開けませんでした"
-    }
+    },
+    "navGroupWorkspace": "ワークスペース",
+    "navButtonInstalled": "インストール済み",
+    "navButtonReleases": "リリース",
+    "navButtonSettings": "設定",
+    "sidebarReady": "準備完了",
+    "sidebarChecking": "確認中",
+    "sidebarMissingComponents": "コンポーネント不足"
   },
   "fvm": {
     "installedVersions": "インストール済みのバージョン",
@@ -52,7 +58,17 @@
       "couldNotUpgradeVersionname": "{{versionName}} をアップグレードできませんでした",
       "forceUpgradeDiscardsChanges": "強制アップグレードは、この SDK のローカルの変更をすべて破棄してからアップグレードします。プロジェクトには影響しません。",
       "forceUpgrade": "強制アップグレード"
-    }
+    },
+    "allInstalledVersions": "All installed versions · {{count}}",
+    "globalVersion": "Global version",
+    "globalVersionPathHint": "The flutter command currently points to {{path}}",
+    "installedVersionsDescription": "Every Flutter SDK in your local FVM cache. Click any row to see version details.",
+    "sortedByInstallTime": "Sorted by install time",
+    "statsCacheSize": "Disk usage",
+    "statsInstalled": "Installed versions",
+    "statsOutdated": "Outdated",
+    "statsUnused": "Unused",
+    "viewPath": "View path"
   },
   "projects": {
     "projectsRefreshed": "プロジェクトを再読み込みしました",
@@ -129,7 +145,8 @@
       "setVersion": "バージョンを設定",
       "save": "保存",
       "versionUpdated": "バージョンを {{version}} に変更しました"
-    }
+    },
+    "flutterProject": "Flutter project"
   },
   "pubPackages": {
     "trending": "人気",
@@ -153,7 +170,11 @@
     "all": "All",
     "releases": "リリース",
     "versions": "バージョン",
-    "theCurrentTipoftreeAbsoluteLatestCuttingEdgeBuildUsuallyFunctional": "現在のコードツリーの一番上、最新のバージョンです。 通常は機能的ですが、時には破壊的な内容も含まれます。"
+    "theCurrentTipoftreeAbsoluteLatestCuttingEdgeBuildUsuallyFunctional": "現在のコードツリーの一番上、最新のバージョンです。 通常は機能的ですが、時には破壊的な内容も含まれます。",
+    "releasesDescription": "Browse the official Flutter channels and every past release.",
+    "loading": "Loading releases…",
+    "empty": "No releases available",
+    "emptyMessage": "Could not fetch the release list from Flutter. Check your connection and retry."
   },
   "sandbox": {
     "playground": "Playground",
@@ -184,7 +205,10 @@
       "channel": "チャンネル",
       "releaseNotes": "リリースノート",
       "version": "バージョン",
-      "releaseDate": "リリース日"
+      "releaseDate": "リリース日",
+      "close": "Close",
+      "referenceInformation": "Reference information",
+      "releaseDetails": "Release details"
     }
   },
   "settings": {
@@ -218,7 +242,10 @@
       "ideNotFound": "{{ideName}}（見つかりません）",
       "ideNotFoundDescription": "このコンピューターで{{ideName}}が見つかりませんでした。別のIDEを選択してください。",
       "detectIdesAgain": "インストール済みのIDEを再検出",
-      "detectingIdes": "インストール済みのIDEを検出しています..."
+      "detectingIdes": "インストール済みのIDEを検出しています...",
+      "changesAreSavedImmediately": "Changes are saved immediately.",
+      "languageDescription": "Choose the interface language.",
+      "settingsDescription": "Manage Sidekick's general, Flutter and FVM preferences."
     }
   },
   "updater": {
@@ -228,7 +255,8 @@
       "later": "後で",
       "updateNow": "今すぐ更新",
       "clickHereToDownload": "クリックしてダウンロード",
-      "aNewVersionOfSidekickIsAvailableUpdateinfolatest": "Sidekickの新しいバージョン({{updateInfoLatest}})が利用可能です"
+      "aNewVersionOfSidekickIsAvailableUpdateinfolatest": "Sidekickの新しいバージョン({{updateInfoLatest}})が利用可能です",
+      "checkForUpdates": "更新を確認"
     }
   },
   "compatibility": {
@@ -271,6 +299,10 @@
     "orphanBranch": "Remote branch no longer exists",
     "ohosTag": "OHOS",
     "openOhosRepo": "Open the OHOS Flutter repository",
-    "openOhosRelease": "Open this version's OHOS release page"
+    "openOhosRelease": "Open this version's OHOS release page",
+    "openRepo": "Open repo",
+    "statInstalled": "Installed",
+    "statRemoteBranches": "Remote branches",
+    "statUpdatePending": "Update available"
   }
 }

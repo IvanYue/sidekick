@@ -2,8 +2,11 @@ import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import '../../components/mdi_icons.dart';
+import 'package:sidekick/src/design/colors.dart';
+import 'package:sidekick/src/design/kit/kit.dart';
+import 'package:sidekick/src/design/tokens.dart';
 
+import '../../components/mdi_icons.dart';
 import '../../modules/common/utils/helpers.dart';
 import '../../modules/common/utils/notify.dart';
 import 'scenes/flutter_settings.scene.dart';
@@ -31,6 +34,9 @@ final _sectionIcons = [
 ];
 
 /// Settings screen
+///
+/// 对应 design/index.html 的 `#page-settings`：左侧是分区导航（通用 / FVM /
+/// Flutter，选中项用 accent 底色），右侧是设置内容面板。
 class SettingsScreen extends HookConsumerWidget {
   /// Constructor
   const SettingsScreen({
@@ -47,8 +53,6 @@ class SettingsScreen extends HookConsumerWidget {
 
     final currentSection = useState(section.index);
 
-    final controller = usePageController(initialPage: section.index);
-
     final sections = [
       context.i18n('modules:settings.scenes.general'),
       'FVM',
@@ -57,7 +61,6 @@ class SettingsScreen extends HookConsumerWidget {
 
     void changeSection(int idx) {
       currentSection.value = idx;
-      controller.jumpToPage(idx);
     }
 
     Future<void> handleSave() async {
@@ -74,9 +77,12 @@ class SettingsScreen extends HookConsumerWidget {
       }
     }
 
+    final c = SkColors.of(context);
+
     return Scaffold(
       extendBodyBehindAppBar: true,
       extendBody: true,
+      backgroundColor: c.bgApp,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         automaticallyImplyLeading: false,
@@ -86,50 +92,46 @@ class SettingsScreen extends HookConsumerWidget {
         ],
         flexibleSpace: MoveWindow(),
       ),
-      body: Row(
-        children: [
-          const SizedBox(width: 50),
-          Expanded(
-            flex: 1,
-            child: Padding(
-              padding: const EdgeInsets.only(top: 10),
-              child: ListView(
-                children: sections.mapIndexed(
-                  (section, idx) {
-                    return ListTile(
-                      leading: Icon(
-                        _sectionIcons[idx],
-                        size: 20,
+      body: Padding(
+        // 让内容避开可拖拽的标题栏
+        padding: const EdgeInsets.only(top: SkTokens.titleBarHeight),
+        child: SkPage(
+          title: context.i18n('modules:common.navButtonSettings'),
+          description:
+              context.i18n('modules:settings.scenes.settingsDescription'),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // 左侧分区导航
+              SizedBox(
+                width: 180,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    for (var i = 0; i < sections.length; i++)
+                      SkNavButton(
+                        item: SkNavItem(
+                          label: sections[i],
+                          icon: _sectionIcons[i],
+                          selected: currentSection.value == i,
+                          onTap: () => changeSection(i),
+                        ),
                       ),
-                      title: Text(
-                        section,
-                        style: Theme.of(context).textTheme.titleMedium,
-                      ),
-                      selectedTileColor: Theme.of(context).hoverColor,
-                      selected: currentSection.value == idx,
-                      onTap: () => changeSection(idx),
-                    );
-                  },
-                ).toList(),
+                  ],
+                ),
               ),
-            ),
+              const SizedBox(width: SkTokens.sp6),
+              // 右侧设置内容
+              Expanded(
+                child: switch (currentSection.value) {
+                  1 => FvmSettingsScene(settings, handleSave),
+                  2 => SettingsSectionFlutter(settings, handleSave),
+                  _ => SettingsSectionGeneral(settings, handleSave),
+                },
+              ),
+            ],
           ),
-          const SizedBox(width: 60),
-          Expanded(
-            flex: 3,
-            child: PageView(
-              physics: const NeverScrollableScrollPhysics(),
-              scrollDirection: Axis.vertical,
-              controller: controller,
-              children: [
-                SettingsSectionGeneral(settings, handleSave),
-                FvmSettingsScene(settings, handleSave),
-                SettingsSectionFlutter(settings, handleSave),
-              ],
-            ),
-          ),
-          const SizedBox(width: 50),
-        ],
+        ),
       ),
     );
   }

@@ -1,12 +1,13 @@
 {
-    "atoms": {
-        "copiedToClipboard": "Скопійовано в буфер обміну",
-        "refresh": "Оновити",
-        "countFound": "{{count}} знайдено"
-    },
-    "molecules": {
-        "master": "Master",
-        "versionIsInstalled": "Версія встановлена",
-        "versionNotInstalledClickToInstall": "Версія не встановлена. Натисніть, щоб встановити."
-    }
+  "atoms": {
+    "copiedToClipboard": "Скопійовано в буфер обміну",
+    "refresh": "Оновити",
+    "countFound": "{{count}} знайдено"
+  },
+  "molecules": {
+    "master": "Master",
+    "versionIsInstalled": "Версія встановлена",
+    "versionNotInstalledClickToInstall": "Версія не встановлена. Натисніть, щоб встановити.",
+    "install": "Встановити"
+  }
 }

@@ -1,0 +1,2433 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Sidekick — UI 重设计稿 v2</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Poppins:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="tokens.css" />
+    <style>
+      /* 评审工具条（不属于 App 本身） */
+      .stage-note {
+        max-width: 1240px;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ======================= SVG 图标精灵 ======================= -->
+    <svg style="display: none" aria-hidden="true">
+      <symbol
+        id="i-package"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.7"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path d="M12 2.5 3.5 7v10L12 21.5 20.5 17V7z" />
+        <path d="M3.5 7 12 11.5 20.5 7" />
+        <path d="M12 11.5v10" />
+      </symbol>
+      <symbol
+        id="i-folder"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.7"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path
+          d="M3 7a2 2 0 0 1 2-2h3.6a2 2 0 0 1 1.5.7L11.6 7H19a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"
+        />
+      </symbol>
+      <symbol
+        id="i-folder-off"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.7"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path
+          d="M3 7a2 2 0 0 1 2-2h3.6a2 2 0 0 1 1.5.7L11.6 7H19a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"
+        />
+        <path d="M3 3l18 18" />
+      </symbol>
+      <symbol
+        id="i-phone"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.7"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <rect x="6.5" y="2.5" width="11" height="19" rx="2.4" />
+        <path d="M10.6 5.6h2.8" />
+        <path d="M10.8 18.6h2.4" />
+      </symbol>
+      <symbol
+        id="i-gear"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.7"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <circle cx="12" cy="12" r="3.1" />
+        <path
+          d="M19.3 14.2a1.6 1.6 0 0 0 .32 1.76l.06.06a1.95 1.95 0 1 1-2.76 2.76l-.06-.06a1.6 1.6 0 0 0-1.76-.32 1.6 1.6 0 0 0-.97 1.47v.17a1.95 1.95 0 0 1-3.9 0v-.09a1.6 1.6 0 0 0-1.05-1.47 1.6 1.6 0 0 0-1.76.32l-.06.06a1.95 1.95 0 1 1-2.76-2.76l.06-.06a1.6 1.6 0 0 0 .32-1.76 1.6 1.6 0 0 0-1.47-.97h-.17a1.95 1.95 0 1 1 0-3.9h.09a1.6 1.6 0 0 0 1.47-1.05 1.6 1.6 0 0 0-.32-1.76l-.06-.06A1.95 1.95 0 1 1 7.2 3.68l.06.06a1.6 1.6 0 0 0 1.76.32h.08a1.6 1.6 0 0 0 .97-1.47v-.17a1.95 1.95 0 0 1 3.9 0v.09a1.6 1.6 0 0 0 .97 1.47 1.6 1.6 0 0 0 1.76-.32l.06-.06a1.95 1.95 0 1 1 2.76 2.76l-.06.06a1.6 1.6 0 0 0-.32 1.76v.08a1.6 1.6 0 0 0 1.47.97h.17a1.95 1.95 0 0 1 0 3.9h-.09a1.6 1.6 0 0 0-1.47.97z"
+        />
+      </symbol>
+      <symbol
+        id="i-search"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.8"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <circle cx="11" cy="11" r="7" />
+        <path d="M20 20l-3.9-3.9" />
+      </symbol>
+      <symbol
+        id="i-refresh"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.8"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path d="M20.5 11a8.5 8.5 0 0 0-15-4.3" />
+        <path d="M3.5 13a8.5 8.5 0 0 0 15 4.3" />
+        <path d="M5.2 2.2v4.5h4.5" />
+        <path d="M18.8 21.8v-4.5h-4.5" />
+      </symbol>
+      <symbol
+        id="i-download"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.8"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path d="M12 3.5v11" />
+        <path d="M7.5 10.5 12 15l4.5-4.5" />
+        <path d="M4 19.5h16" />
+      </symbol>
+      <symbol
+        id="i-upload"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.8"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path d="M12 20.5v-11" />
+        <path d="M7.5 13.5 12 9l4.5 4.5" />
+        <path d="M4 4.5h16" />
+      </symbol>
+      <symbol
+        id="i-trash"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.8"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path d="M3.5 6.5h17" />
+        <path
+          d="M8.5 6.5V4.8a1.3 1.3 0 0 1 1.3-1.3h4.4a1.3 1.3 0 0 1 1.3 1.3v1.7"
+        />
+        <path
+          d="M18.3 6.5 17.2 20a1.6 1.6 0 0 1-1.6 1.5H8.4A1.6 1.6 0 0 1 6.8 20L5.7 6.5"
+        />
+        <path d="M10.3 11v6M13.7 11v6" />
+      </symbol>
+      <symbol
+        id="i-external"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.8"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path
+          d="M17.5 12.5V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8.5a2 2 0 0 1 2-2h6.5"
+        />
+        <path d="M14.5 3.5H20.5V9.5" />
+        <path d="M10 14 20.5 3.5" />
+      </symbol>
+      <symbol
+        id="i-terminal"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.8"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <rect x="2.5" y="4" width="19" height="16" rx="2.4" />
+        <path d="M7 9.5 10 12l-3 2.5" />
+        <path d="M12.5 15.5H17" />
+      </symbol>
+      <symbol
+        id="i-code"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.8"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path d="M16 18.5 21 12l-5-6.5" />
+        <path d="M8 5.5 3 12l5 6.5" />
+      </symbol>
+      <symbol
+        id="i-info"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.8"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <circle cx="12" cy="12" r="9.2" />
+        <path d="M12 11v5.2" />
+        <path d="M12 7.6h.01" />
+      </symbol>
+      <symbol
+        id="i-check"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2.2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path d="M20 6.5 9.2 17.3 4 12.1" />
+      </symbol>
+      <symbol
+        id="i-check-circle"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.8"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <circle cx="12" cy="12" r="9.2" />
+        <path d="M8 12.2l2.8 2.8L16 9.8" />
+      </symbol>
+      <symbol
+        id="i-chev-right"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.8"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path d="M9 5l7 7-7 7" />
+      </symbol>
+      <symbol
+        id="i-chev-down"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.8"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path d="M5 9l7 7 7-7" />
+      </symbol>
+      <symbol
+        id="i-x"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.9"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path d="M18 6 6 18M6 6l12 12" />
+      </symbol>
+      <symbol
+        id="i-sun"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.8"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <circle cx="12" cy="12" r="4.2" />
+        <path
+          d="M12 1.8v2.4M12 19.8v2.4M4.2 4.2l1.7 1.7M18.1 18.1l1.7 1.7M1.8 12h2.4M19.8 12h2.4M4.2 19.8l1.7-1.7M18.1 5.9l1.7-1.7"
+        />
+      </symbol>
+      <symbol
+        id="i-moon"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.8"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path d="M21 13.2A9.2 9.2 0 1 1 10.8 3a7.2 7.2 0 0 0 10.2 10.2z" />
+      </symbol>
+      <symbol id="i-more" viewBox="0 0 24 24" fill="currentColor" stroke="none">
+        <circle cx="5" cy="12" r="1.7" />
+        <circle cx="12" cy="12" r="1.7" />
+        <circle cx="19" cy="12" r="1.7" />
+      </symbol>
+      <symbol
+        id="i-copy"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.7"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <rect x="8.5" y="8.5" width="12" height="12" rx="2.2" />
+        <path
+          d="M15.5 8.5v-2a2 2 0 0 0-2-2h-7a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h2"
+        />
+      </symbol>
+      <symbol
+        id="i-alert"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.8"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path
+          d="M10.3 3.9 2 18a2 2 0 0 0 1.7 3h16.6a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"
+        />
+        <path d="M12 9.4v4.2" />
+        <path d="M12 17.4h.01" />
+      </symbol>
+      <symbol
+        id="i-git-branch"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.8"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <circle cx="6" cy="5" r="2.4" />
+        <circle cx="6" cy="19" r="2.4" />
+        <circle cx="18" cy="9" r="2.4" />
+        <path d="M6 7.4v9.2" />
+        <path d="M15.6 9H12a4 4 0 0 0-4 4v1.6" />
+      </symbol>
+      <symbol
+        id="i-link"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.8"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path
+          d="M10.2 13.8a4.4 4.4 0 0 0 6.6.5l2.6-2.6a4.4 4.4 0 0 0-6.2-6.2l-1.5 1.5"
+        />
+        <path
+          d="M13.8 10.2a4.4 4.4 0 0 0-6.6-.5l-2.6 2.6a4.4 4.4 0 0 0 6.2 6.2l1.5-1.5"
+        />
+      </symbol>
+      <symbol
+        id="i-filter"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.8"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path d="M3.5 6h17M7 12h10M11 18h2" />
+      </symbol>
+      <symbol
+        id="i-globe"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.8"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <circle cx="12" cy="12" r="9.2" />
+        <path d="M2.8 12h18.4" />
+        <path
+          d="M12 2.8a14 14 0 0 1 3.9 9.2 14 14 0 0 1-3.9 9.2 14 14 0 0 1-3.9-9.2A14 14 0 0 1 12 2.8z"
+        />
+      </symbol>
+      <symbol
+        id="i-star"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.7"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path
+          d="M12 2.8 15 9.2l6.9.7-5.1 4.6 1.4 6.8L12 17.9 5.8 21.3l1.4-6.8L2.1 9.9 9 9.2z"
+        />
+      </symbol>
+      <symbol
+        id="i-clock"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.8"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <circle cx="12" cy="12" r="9.2" />
+        <path d="M12 6.6V12l3.6 2.1" />
+      </symbol>
+      <symbol
+        id="i-cube"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.7"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path d="M12 2.6 21 7.4v9.2L12 21.4 3 16.6V7.4z" />
+        <path d="M3 7.4 12 12.2l9-4.8" />
+        <path d="M12 12.2v9.2" />
+      </symbol>
+      <symbol
+        id="i-arrow-up"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.9"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path d="M12 19.5V5" />
+        <path d="M5.5 11.5 12 5l6.5 6.5" />
+      </symbol>
+      <symbol
+        id="i-arrow-down"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.9"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path d="M12 4.5V19" />
+        <path d="M5.5 12.5 12 19l6.5-6.5" />
+      </symbol>
+      <symbol
+        id="i-hash"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.8"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path d="M4.5 9h15M4.5 15h15M10 3.5 8 20.5M16 3.5l-2 17" />
+      </symbol>
+      <symbol
+        id="i-layers"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.7"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path d="M12 2.8 21.5 7.4 12 12 2.5 7.4z" />
+        <path d="M2.5 12 12 16.6 21.5 12" />
+        <path d="M2.5 16.6 12 21.2 21.5 16.6" />
+      </symbol>
+      <symbol
+        id="i-tune"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.8"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path d="M4 7h10M18 7h2M4 17h4M12 17h8" />
+        <circle cx="16" cy="7" r="2.2" />
+        <circle cx="10" cy="17" r="2.2" />
+      </symbol>
+      <symbol
+        id="i-plus"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.9"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path d="M12 5v14M5 12h14" />
+      </symbol>
+      <symbol
+        id="i-zap"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.7"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path d="M13.5 2.5 4 14h7l-.5 7.5L20 10h-7z" />
+      </symbol>
+      <symbol
+        id="i-image"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.7"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <rect x="3" y="4.5" width="18" height="15" rx="2.4" />
+        <circle cx="8.6" cy="10" r="1.6" />
+        <path d="M3.5 17.5 9 12.4l4 3.6 3-2.4 4.5 4" />
+      </symbol>
+      <symbol
+        id="i-file"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.7"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path
+          d="M13.5 2.8H7a2 2 0 0 0-2 2v14.4a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8.3z"
+        />
+        <path d="M13.5 2.8v5.5H19" />
+        <path d="M8.5 13h7M8.5 16.5h5" />
+      </symbol>
+      <symbol
+        id="i-play"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.7"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <circle cx="12" cy="12" r="9.2" />
+        <path d="M10 8.4 16 12l-6 3.6z" />
+      </symbol>
+      <symbol
+        id="i-loc"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.7"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path d="M20 10.5c0 5.4-8 12-8 12s-8-6.6-8-12a8 8 0 0 1 16 0z" />
+        <circle cx="12" cy="10.3" r="2.8" />
+      </symbol>
+      <symbol
+        id="i-flutter"
+        viewBox="0 0 24 24"
+        fill="currentColor"
+        stroke="none"
+      >
+        <path
+          d="M14.4 2 4 12.4l3.6 3.6L21.6 2zM14.4 10.6 8.6 16.4l3.6 3.6 8.4-8.4z"
+        />
+      </symbol>
+    </svg>
+
+    <!-- ======================= 评审工具条 ======================= -->
+    <header class="review-bar">
+      <div class="review-brand">Sidekick <em>UI 重设计稿 v2</em></div>
+      <nav class="review-tabs" id="reviewTabs">
+        <button class="review-tab active" data-page="installed">已安装</button>
+        <button class="review-tab" data-page="projects">项目</button>
+        <button class="review-tab" data-page="releases">发行版</button>
+        <button class="review-tab" data-page="ohos">OHOS</button>
+        <button class="review-tab" data-page="detail">版本详情</button>
+        <button class="review-tab" data-page="settings">设置</button>
+        <button class="review-tab" data-page="search">搜索</button>
+        <button class="review-tab" data-page="states">状态与组件</button>
+      </nav>
+      <div class="theme-toggle" role="group" aria-label="主题切换">
+        <button id="btnDark" aria-pressed="true" title="深色">
+          <span class="ic ic-14"
+            ><svg><use href="#i-moon" /></svg
+          ></span>
+        </button>
+        <button id="btnLight" aria-pressed="false" title="浅色">
+          <span class="ic ic-14"
+            ><svg><use href="#i-sun" /></svg
+          ></span>
+        </button>
+      </div>
+    </header>
+
+    <main class="stage">
+      <!-- ======================= 应用窗口 ======================= -->
+      <div class="win" id="win">
+        <!-- 标题栏 -->
+        <div class="titlebar">
+          <div class="traffic"><i></i><i></i><i></i></div>
+          <div class="row gap-2" style="margin-left: 8px">
+            <span
+              class="brand-mark"
+              style="
+                width: 20px;
+                height: 20px;
+                border-radius: 6px;
+                font-size: 11px;
+              "
+              >S</span
+            >
+            <span class="t-h3">Sidekick</span>
+            <span class="t-cap mono" style="font-size: 10px">1.4.2</span>
+          </div>
+          <div
+            class="field"
+            style="
+              position: absolute;
+              left: 50%;
+              transform: translateX(-50%);
+              width: 300px;
+              height: 28px;
+              background: var(--bg-raised);
+            "
+          >
+            <span class="ic ic-14"
+              ><svg><use href="#i-search" /></svg
+            ></span>
+            <input placeholder="搜索版本、项目…" />
+            <span class="kbd">⌘</span><span class="kbd">K</span>
+          </div>
+          <div class="titlebar-actions">
+            <button class="icon-btn" title="检查更新">
+              <span class="ic ic-18"
+                ><svg><use href="#i-refresh" /></svg
+              ></span>
+            </button>
+            <button class="icon-btn" title="设置">
+              <span class="ic ic-18"
+                ><svg><use href="#i-gear" /></svg
+              ></span>
+            </button>
+          </div>
+        </div>
+
+        <div class="win-body">
+          <!-- 侧边栏 -->
+          <aside class="sidebar">
+            <div class="nav-group">
+              <div class="nav-label">工作区</div>
+              <div class="nav-item" data-nav="installed">
+                <span class="ic ic-18"
+                  ><svg><use href="#i-package" /></svg></span
+                >已安装<span class="nav-count">3</span>
+              </div>
+              <div class="nav-item" data-nav="projects">
+                <span class="ic ic-18"
+                  ><svg><use href="#i-folder" /></svg></span
+                >项目<span class="nav-count">5</span>
+              </div>
+              <div class="nav-item" data-nav="releases">
+                <span class="ic ic-18"
+                  ><svg><use href="#i-layers" /></svg></span
+                >发行版
+              </div>
+              <div class="nav-item" data-nav="ohos">
+                <span class="ic ic-18"
+                  ><svg><use href="#i-phone" /></svg></span
+                >OHOS<span class="nav-count">2</span>
+              </div>
+            </div>
+            <div class="sidebar-foot">
+              <div class="nav-item" data-nav="settings">
+                <span class="ic ic-18"
+                  ><svg><use href="#i-gear" /></svg></span
+                >设置
+              </div>
+              <div class="row gap-2 mt-4" style="padding: 0 12px">
+                <span class="ic ic-14 ic-3"
+                  ><svg><use href="#i-loc" /></svg
+                ></span>
+                <span class="t-cap truncate">~/fvm · v4.3.2</span>
+                <span
+                  class="chip chip-ok chip-dot"
+                  style="height: 16px; padding: 0 6px; margin-left: auto"
+                  >就绪</span
+                >
+              </div>
+            </div>
+          </aside>
+
+          <!-- 内容区 -->
+          <section class="content">
+            <!-- ==================== 已安装 ==================== -->
+            <div class="page" id="page-installed">
+              <div class="page-inner">
+                <div class="page-head">
+                  <div class="page-title-wrap">
+                    <h1 class="t-display">已安装的版本</h1>
+                    <p class="page-desc">
+                      本机 FVM 缓存中的全部 Flutter
+                      SDK。点击任意一行查看版本详情。
+                    </p>
+                  </div>
+                  <div class="page-actions">
+                    <div class="field" style="width: 190px">
+                      <span class="ic ic-14"
+                        ><svg><use href="#i-search" /></svg></span
+                      ><input placeholder="筛选版本" />
+                    </div>
+                    <button class="btn btn-secondary">
+                      <span class="ic ic-14"
+                        ><svg><use href="#i-trash" /></svg></span
+                      >清理未使用
+                    </button>
+                  </div>
+                </div>
+
+                <div class="stat-strip mb-6">
+                  <div class="stat">
+                    <span class="stat-val">3</span
+                    ><span class="stat-key">已安装版本</span>
+                  </div>
+                  <div class="stat">
+                    <span class="stat-val">4.01 GB</span
+                    ><span class="stat-key">占用空间</span>
+                  </div>
+                  <div class="stat">
+                    <span class="stat-val">1</span
+                    ><span class="stat-key">待更新</span>
+                  </div>
+                  <div class="stat">
+                    <span class="stat-val">2</span
+                    ><span class="stat-key">可清理</span>
+                  </div>
+                </div>
+
+                <div
+                  class="row gap-4 mb-6"
+                  style="
+                    padding: 16px 20px;
+                    border-radius: 12px;
+                    background: var(--info-soft);
+                    border: 1px solid var(--info-line);
+                  "
+                >
+                  <span class="tile tile-40 tile-info"
+                    ><svg class="ic ic-22"><use href="#i-star" /></svg
+                  ></span>
+                  <div class="grow">
+                    <div class="row gap-3">
+                      <span class="t-h3">全局版本</span>
+                      <span class="chip chip-info mono">3.41.9</span>
+                      <span class="chip chip-outline">stable</span>
+                    </div>
+                    <div class="t-sm mt-2">
+                      Flutter PATH 指向
+                      <span class="mono">~/fvm/versions/3.41.9/bin</span
+                      >，终端中的 flutter / dart 命令均来自此处。
+                    </div>
+                  </div>
+                  <button class="btn btn-secondary btn-sm shrink0">
+                    <span class="ic ic-14"
+                      ><svg><use href="#i-info" /></svg></span
+                    >查看 PATH
+                  </button>
+                </div>
+
+                <div class="row between baseline mb-3">
+                  <span class="t-over">所有已安装版本 · 3</span>
+                  <span class="t-cap">按安装时间排序</span>
+                </div>
+
+                <div class="panel panel-flush">
+                  <div class="list">
+                    <div class="list-item">
+                      <span class="tile tile-accent"
+                        ><svg class="ic ic-18"><use href="#i-flutter" /></svg
+                      ></span>
+                      <div class="li-main">
+                        <div class="li-title">
+                          <span class="t-mono-lg">3.41.9</span>
+                          <span class="chip chip-info chip-btn"
+                            ><span class="ic"
+                              ><svg><use href="#i-star" /></svg></span
+                            >全局</span
+                          >
+                          <span class="chip chip-ok"
+                            ><span class="ic"
+                              ><svg><use href="#i-check" /></svg></span
+                            >使用中</span
+                          >
+                        </div>
+                        <div class="li-meta">
+                          <span>stable</span><span class="sep"></span
+                          ><span class="mono">Dart 3.11.5</span
+                          ><span class="sep"></span><span>1.24 GB</span>
+                        </div>
+                      </div>
+                      <div class="li-actions">
+                        <button class="icon-btn" title="更新">
+                          <svg class="ic ic-18"><use href="#i-refresh" /></svg>
+                        </button>
+                        <button class="icon-btn" title="更多操作">
+                          <svg class="ic ic-18"><use href="#i-more" /></svg>
+                        </button>
+                      </div>
+                    </div>
+
+                    <div class="list-item">
+                      <span class="tile tile-ok"
+                        ><svg class="ic ic-18"><use href="#i-phone" /></svg
+                      ></span>
+                      <div class="li-main">
+                        <div class="li-title">
+                          <span class="t-mono-lg">oh-3.41.9</span>
+                          <span class="chip chip-ok"
+                            ><span class="ic"
+                              ><svg><use href="#i-phone" /></svg></span
+                            >OHOS</span
+                          >
+                          <span class="chip chip-info chip-btn"
+                            ><span class="ic"
+                              ><svg><use href="#i-star" /></svg></span
+                            >全局</span
+                          >
+                        </div>
+                        <div class="li-meta">
+                          <span>release</span><span class="sep"></span
+                          ><span class="mono">3.41.9+ohos-1.0.2</span
+                          ><span class="sep"></span
+                          ><span class="mono">a1b2c3d</span
+                          ><span class="sep"></span><span>1.51 GB</span>
+                        </div>
+                      </div>
+                      <div class="li-actions">
+                        <button class="icon-btn" title="更新到分支最新提交">
+                          <svg class="ic ic-18"><use href="#i-refresh" /></svg>
+                        </button>
+                        <button class="icon-btn" title="更多操作">
+                          <svg class="ic ic-18"><use href="#i-more" /></svg>
+                        </button>
+                      </div>
+                    </div>
+
+                    <div class="list-item">
+                      <span class="tile"
+                        ><svg class="ic ic-18"><use href="#i-flutter" /></svg
+                      ></span>
+                      <div class="li-main">
+                        <div class="li-title">
+                          <span class="t-mono-lg">3.35.7</span>
+                          <span class="chip">未使用</span>
+                        </div>
+                        <div class="li-meta">
+                          <span>stable</span><span class="sep"></span
+                          ><span class="mono">Dart 3.9.0</span
+                          ><span class="sep"></span><span>986 MB</span>
+                        </div>
+                      </div>
+                      <div class="li-actions">
+                        <button class="icon-btn" title="删除">
+                          <svg class="ic ic-18"><use href="#i-trash" /></svg>
+                        </button>
+                        <button class="icon-btn" title="更多操作">
+                          <svg class="ic ic-18"><use href="#i-more" /></svg>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- ==================== 项目 ==================== -->
+            <div class="page" id="page-projects">
+              <div class="page-inner">
+                <div class="page-head">
+                  <div class="page-title-wrap">
+                    <h1 class="t-display">项目</h1>
+                    <p class="page-desc">
+                      5 个项目，其中 3 个已钉定 Flutter 版本。钉定后可在终端用
+                      <span class="mono">fvm use &lt;项目名&gt;</span> 切换。
+                    </p>
+                  </div>
+                  <div class="page-actions">
+                    <span class="t-sm shrink0">只显示已钉版本</span>
+                    <span class="switch"></span>
+                    <button class="icon-btn" title="刷新项目">
+                      <svg class="ic ic-18"><use href="#i-refresh" /></svg>
+                    </button>
+                    <button class="btn btn-primary">
+                      <span class="ic ic-14"
+                        ><svg><use href="#i-plus" /></svg></span
+                      >添加项目
+                    </button>
+                  </div>
+                </div>
+
+                <div class="grid grid-2">
+                  <div class="proj-card">
+                    <div class="proj-head">
+                      <span class="tile tile-40 tile-accent"
+                        ><svg class="ic ic-22"><use href="#i-flutter" /></svg
+                      ></span>
+                      <div class="grow">
+                        <div class="row gap-3">
+                          <span class="t-h2">my_app</span
+                          ><span class="chip chip-ok"
+                            ><span class="ic"
+                              ><svg><use href="#i-phone" /></svg></span
+                            >OHOS</span
+                          >
+                        </div>
+                        <div class="t-cap">Flutter 应用</div>
+                      </div>
+                      <button class="icon-btn">
+                        <svg class="ic ic-18"><use href="#i-more" /></svg>
+                      </button>
+                    </div>
+                    <p class="proj-desc">
+                      一个跨端示例项目，演示了鸿蒙端与 Android 端共用同一套 Dart
+                      业务逻辑。
+                    </p>
+                    <div class="proj-path">
+                      <span class="ic ic-14 ic-3"
+                        ><svg><use href="#i-loc" /></svg></span
+                      >~/dev/my_app
+                    </div>
+                    <div class="proj-foot">
+                      <button class="icon-btn" title="管理项目">
+                        <svg class="ic ic-18"><use href="#i-tune" /></svg>
+                      </button>
+                      <button class="icon-btn" title="打开 Terminal Playground">
+                        <svg class="ic ic-18"><use href="#i-terminal" /></svg>
+                      </button>
+                      <button class="icon-btn" title="在 VS Code 中打开">
+                        <svg class="ic ic-18"><use href="#i-code" /></svg>
+                      </button>
+                      <span class="proj-version"
+                        ><span class="ic ic-14 ic-ok"
+                          ><svg><use href="#i-phone" /></svg></span
+                        >oh-3.41.9<span class="ic ic-14 ic-3"
+                          ><svg><use href="#i-chev-down" /></svg></span
+                      ></span>
+                    </div>
+                  </div>
+
+                  <div class="proj-card">
+                    <div class="proj-head">
+                      <span class="tile tile-40 tile-info"
+                        ><svg class="ic ic-22"><use href="#i-flutter" /></svg
+                      ></span>
+                      <div class="grow">
+                        <div class="row gap-3">
+                          <span class="t-h2">sidekick</span>
+                        </div>
+                        <div class="t-cap">Flutter 桌面应用</div>
+                      </div>
+                      <button class="icon-btn">
+                        <svg class="ic ic-18"><use href="#i-more" /></svg>
+                      </button>
+                    </div>
+                    <p class="proj-desc">
+                      Sidekick 自身的源码仓库，用于复现与调试版本管理功能。
+                    </p>
+                    <div class="proj-path">
+                      <span class="ic ic-14 ic-3"
+                        ><svg><use href="#i-loc" /></svg></span
+                      >~/Documents/AIGC/sidekick
+                    </div>
+                    <div class="proj-foot">
+                      <button class="icon-btn" title="管理项目">
+                        <svg class="ic ic-18"><use href="#i-tune" /></svg>
+                      </button>
+                      <button class="icon-btn" title="打开 Terminal Playground">
+                        <svg class="ic ic-18"><use href="#i-terminal" /></svg>
+                      </button>
+                      <button class="icon-btn" title="在 Android Studio 中打开">
+                        <svg class="ic ic-18"><use href="#i-code" /></svg>
+                      </button>
+                      <span class="proj-version"
+                        >3.41.9<span class="ic ic-14 ic-3"
+                          ><svg><use href="#i-chev-down" /></svg></span
+                      ></span>
+                    </div>
+                  </div>
+
+                  <div class="proj-card">
+                    <div class="proj-head">
+                      <span class="tile tile-40"
+                        ><svg class="ic ic-22"><use href="#i-flutter" /></svg
+                      ></span>
+                      <div class="grow">
+                        <div class="row gap-3">
+                          <span class="t-h2">ohos_demo</span
+                          ><span class="chip chip-ok"
+                            ><span class="ic"
+                              ><svg><use href="#i-phone" /></svg></span
+                            >OHOS</span
+                          >
+                        </div>
+                        <div class="t-cap">鸿蒙原生示例</div>
+                      </div>
+                      <button class="icon-btn">
+                        <svg class="ic ic-18"><use href="#i-more" /></svg>
+                      </button>
+                    </div>
+                    <p class="proj-desc">
+                      鸿蒙 DevEco Studio 工程，含 ArkTS 与 Flutter
+                      混合渲染的示例页面。
+                    </p>
+                    <div class="proj-path">
+                      <span class="ic ic-14 ic-3"
+                        ><svg><use href="#i-loc" /></svg></span
+                      >~/dev/ohos_demo
+                    </div>
+                    <div class="proj-foot">
+                      <button class="icon-btn" title="管理项目">
+                        <svg class="ic ic-18"><use href="#i-tune" /></svg>
+                      </button>
+                      <button class="icon-btn" title="打开 Terminal Playground">
+                        <svg class="ic ic-18"><use href="#i-terminal" /></svg>
+                      </button>
+                      <span class="proj-version"
+                        >oh-3.41.9<span class="ic ic-14 ic-3"
+                          ><svg><use href="#i-chev-down" /></svg></span
+                      ></span>
+                    </div>
+                  </div>
+
+                  <div
+                    class="proj-card"
+                    style="border-color: var(--danger-line)"
+                  >
+                    <div class="proj-head">
+                      <span
+                        class="tile tile-40"
+                        style="
+                          background: var(--danger-soft);
+                          border-color: var(--danger-line);
+                          color: var(--danger);
+                        "
+                        ><svg class="ic ic-22"><use href="#i-folder-off" /></svg
+                      ></span>
+                      <div class="grow">
+                        <div class="row gap-3">
+                          <span class="t-h2">legacy_app</span>
+                        </div>
+                        <div class="t-cap c-danger">未找到项目文件夹</div>
+                      </div>
+                      <button class="icon-btn danger" title="从列表移除">
+                        <svg class="ic ic-18"><use href="#i-trash" /></svg>
+                      </button>
+                    </div>
+                    <p class="proj-desc c-danger">
+                      目录已被移动或删除，pubspec.yaml
+                      无法读取。移除前请确认项目已备份。
+                    </p>
+                    <div class="proj-path">
+                      <span class="ic ic-14 ic-3"
+                        ><svg><use href="#i-loc" /></svg></span
+                      >~/dev/legacy_app
+                    </div>
+                    <div class="proj-foot">
+                      <span class="t-cap">最后扫描：2 天前</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- ==================== 发行版 ==================== -->
+            <div class="page" id="page-releases">
+              <div class="page-inner">
+                <div class="page-head">
+                  <div class="page-title-wrap">
+                    <h1 class="t-display">发行版</h1>
+                    <p class="page-desc">
+                      来自 Flutter 官方仓库的发行版本与渠道，以及全部历史版本。
+                    </p>
+                  </div>
+                  <div class="page-actions">
+                    <button class="icon-btn" title="刷新">
+                      <svg class="ic ic-18"><use href="#i-refresh" /></svg>
+                    </button>
+                  </div>
+                </div>
+
+                <div class="note-bar mb-6">
+                  <span class="ic ic-20"
+                    ><svg><use href="#i-cube" /></svg
+                  ></span>
+                  <div class="grow">
+                    <div class="t-h3">Master</div>
+                    <div class="t-sm">
+                      当前代码树的顶端，最新的版本。通常是功能性的，但有时会被砍掉。
+                    </div>
+                  </div>
+                  <button class="btn btn-secondary btn-sm shrink0">安装</button>
+                </div>
+
+                <div class="grid grid-3 mb-7">
+                  <div class="chan-card">
+                    <div class="chan-head">
+                      <span class="ic ic-18 ic-info"
+                        ><svg><use href="#i-check-circle" /></svg></span
+                      ><span class="t-h2">Stable</span>
+                    </div>
+                    <p class="chan-desc">
+                      我们推荐你使用这个渠道来发布所有的生产应用。大约每季度一次，一个已经稳定到
+                      beta 版的分支会成为下一个 stable。
+                    </p>
+                    <div class="chan-foot">
+                      <span class="t-mono">3.41.9</span
+                      ><button class="btn btn-secondary btn-sm">安装</button>
+                    </div>
+                  </div>
+                  <div class="chan-card">
+                    <div class="chan-head">
+                      <span class="ic ic-18 c-warn"
+                        ><svg><use href="#i-zap" /></svg></span
+                      ><span class="t-h2">Beta</span>
+                    </div>
+                    <p class="chan-desc">
+                      在月初，通常是第一个星期一，从 master 创建的新的 beta
+                      分支。包含一个 Dart、引擎和框架的分支。
+                    </p>
+                    <div class="chan-foot">
+                      <span class="t-mono">3.42.0-beta.4</span
+                      ><button class="btn btn-secondary btn-sm">安装</button>
+                    </div>
+                  </div>
+                  <div class="chan-card">
+                    <div class="chan-head">
+                      <span class="ic ic-18 c-accent"
+                        ><svg><use href="#i-cube" /></svg></span
+                      ><span class="t-h2">Master</span>
+                    </div>
+                    <p class="chan-desc">
+                      当前代码树的顶端，最新的版本。通常是功能性的，但有时会被砍掉。
+                    </p>
+                    <div class="chan-foot">
+                      <span class="t-mono">3.43.0-1.2.pre</span
+                      ><button class="btn btn-secondary btn-sm">安装</button>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="filter-bar mb-4">
+                  <div class="row gap-3">
+                    <span class="t-h2">版本库</span>
+                    <span class="chip">685</span>
+                  </div>
+                  <div class="row gap-3">
+                    <div class="segmented">
+                      <button aria-pressed="true">所有</button>
+                      <button aria-pressed="false">稳定</button>
+                      <button aria-pressed="false">Beta</button>
+                      <button aria-pressed="false">开发</button>
+                    </div>
+                    <div class="field" style="width: 170px; height: 28px">
+                      <span class="ic ic-14"
+                        ><svg><use href="#i-search" /></svg></span
+                      ><input placeholder="版本号" />
+                    </div>
+                  </div>
+                </div>
+
+                <div class="panel panel-flush">
+                  <div class="list">
+                    <div class="list-item compact">
+                      <span
+                        class="tile"
+                        style="
+                          width: 26px;
+                          height: 26px;
+                          border-radius: var(--r-sm);
+                        "
+                        ><svg class="ic ic-14"><use href="#i-flutter" /></svg
+                      ></span>
+                      <div class="li-main">
+                        <div class="li-title">
+                          <span class="t-mono">3.41.9</span
+                          ><span class="chip chip-outline">stable</span>
+                        </div>
+                      </div>
+                      <span class="t-cap mono shrink0" style="font-size: 11px"
+                        >2025-10-14</span
+                      >
+                      <button class="btn btn-secondary btn-sm shrink0">
+                        安装
+                      </button>
+                    </div>
+                    <div class="list-item compact">
+                      <span
+                        class="tile"
+                        style="
+                          width: 26px;
+                          height: 26px;
+                          border-radius: var(--r-sm);
+                        "
+                        ><svg class="ic ic-14"><use href="#i-flutter" /></svg
+                      ></span>
+                      <div class="li-main">
+                        <div class="li-title">
+                          <span class="t-mono">3.41.8</span
+                          ><span class="chip chip-outline">stable</span>
+                        </div>
+                      </div>
+                      <span class="t-cap mono shrink0" style="font-size: 11px"
+                        >2025-10-07</span
+                      >
+                      <button class="btn btn-secondary btn-sm shrink0">
+                        安装
+                      </button>
+                    </div>
+                    <div class="list-item compact">
+                      <span
+                        class="tile"
+                        style="
+                          width: 26px;
+                          height: 26px;
+                          border-radius: var(--r-sm);
+                        "
+                        ><svg class="ic ic-14"><use href="#i-flutter" /></svg
+                      ></span>
+                      <div class="li-main">
+                        <div class="li-title">
+                          <span class="t-mono">3.42.0-beta.4</span
+                          ><span class="chip chip-warn">beta</span>
+                        </div>
+                      </div>
+                      <span class="t-cap mono shrink0" style="font-size: 11px"
+                        >2025-10-11</span
+                      >
+                      <button class="btn btn-secondary btn-sm shrink0">
+                        安装
+                      </button>
+                    </div>
+                    <div class="list-item compact">
+                      <span
+                        class="tile"
+                        style="
+                          width: 26px;
+                          height: 26px;
+                          border-radius: var(--r-sm);
+                        "
+                        ><svg class="ic ic-14"><use href="#i-flutter" /></svg
+                      ></span>
+                      <div class="li-main">
+                        <div class="li-title">
+                          <span class="t-mono">3.35.7</span
+                          ><span class="chip chip-outline">stable</span>
+                        </div>
+                      </div>
+                      <span class="t-cap mono shrink0" style="font-size: 11px"
+                        >2025-08-19</span
+                      >
+                      <button class="btn btn-secondary btn-sm shrink0">
+                        安装
+                      </button>
+                    </div>
+                    <div class="list-item compact">
+                      <span
+                        class="tile"
+                        style="
+                          width: 26px;
+                          height: 26px;
+                          border-radius: var(--r-sm);
+                        "
+                        ><svg class="ic ic-14"><use href="#i-flutter" /></svg
+                      ></span>
+                      <div class="li-main">
+                        <div class="li-title">
+                          <span class="t-mono">3.43.0-1.2.pre</span
+                          ><span class="chip chip-accent">master</span>
+                        </div>
+                      </div>
+                      <span class="t-cap mono shrink0" style="font-size: 11px"
+                        >2025-10-19</span
+                      >
+                      <button class="btn btn-secondary btn-sm shrink0">
+                        安装
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- ==================== OHOS ==================== -->
+            <div class="page" id="page-ohos">
+              <div class="page-inner">
+                <div class="page-head">
+                  <div class="page-title-wrap">
+                    <h1 class="t-display">OHOS Flutter 版本</h1>
+                    <p class="page-desc">
+                      浏览并管理 OpenHarmony Flutter
+                      fork（CPF-Flutter）版本。安装对应 oh-* release / dev
+                      分支；更新即快进到分支最新提交。
+                    </p>
+                  </div>
+                  <div class="page-actions">
+                    <button class="btn btn-secondary">
+                      <span class="ic ic-14"
+                        ><svg><use href="#i-external" /></svg></span
+                      >打开仓库
+                    </button>
+                    <button class="icon-btn" title="刷新分支">
+                      <svg class="ic ic-18"><use href="#i-refresh" /></svg>
+                    </button>
+                  </div>
+                </div>
+
+                <div class="ohos-hero mb-6">
+                  <span
+                    class="tile tile-ok"
+                    style="
+                      width: 44px;
+                      height: 44px;
+                      border-radius: var(--r-lg);
+                    "
+                    ><svg class="ic ic-22"><use href="#i-phone" /></svg
+                  ></span>
+                  <div class="grow">
+                    <div class="row gap-3">
+                      <span class="t-h2">CPF-Flutter / flutter_flutter</span
+                      ><span class="chip chip-ok">OpenHarmony fork</span>
+                    </div>
+                    <div
+                      class="t-mono mt-2"
+                      style="font-size: 11px; color: var(--ink-3)"
+                    >
+                      https://gitcode.com/CPF-Flutter/flutter_flutter
+                    </div>
+                  </div>
+                  <div class="row gap-6 shrink0">
+                    <div class="col">
+                      <span class="t-mono" style="font-size: 16px">2</span
+                      ><span class="t-cap">已安装</span>
+                    </div>
+                    <div class="col">
+                      <span class="t-mono" style="font-size: 16px">12</span
+                      ><span class="t-cap">远端分支</span>
+                    </div>
+                    <div class="col">
+                      <span class="t-mono" style="font-size: 16px">1</span
+                      ><span class="t-cap">待更新</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="filter-bar mb-4">
+                  <div class="row gap-3">
+                    <span class="t-h2">分支</span>
+                    <span class="chip">12</span>
+                  </div>
+                  <div class="segmented">
+                    <button aria-pressed="true">全部</button>
+                    <button aria-pressed="false">Release</button>
+                    <button aria-pressed="false">Dev</button>
+                  </div>
+                </div>
+
+                <div class="panel panel-flush">
+                  <div class="list">
+                    <div class="list-item">
+                      <span class="tile tile-ok"
+                        ><svg class="ic ic-18"><use href="#i-phone" /></svg
+                      ></span>
+                      <div class="li-main">
+                        <div class="li-title">
+                          <span class="t-mono-lg">oh-3.41.9</span>
+                          <span class="chip chip-ok">Release</span>
+                          <span class="chip chip-info chip-btn"
+                            ><span class="ic"
+                              ><svg><use href="#i-star" /></svg></span
+                            >全局</span
+                          >
+                          <span class="chip chip-warn"
+                            ><span class="ic"
+                              ><svg><use href="#i-arrow-up" /></svg></span
+                            >有可用更新</span
+                          >
+                        </div>
+                        <div class="li-meta">
+                          <span class="mono">a1b2c3d</span
+                          ><span class="sep"></span
+                          ><span class="mono">3.41.9+ohos-1.0.2</span
+                          ><span class="sep"></span><span>1.51 GB</span>
+                        </div>
+                      </div>
+                      <div class="li-actions">
+                        <button
+                          class="icon-btn accent"
+                          title="更新到分支最新提交"
+                        >
+                          <svg class="ic ic-18"><use href="#i-refresh" /></svg>
+                        </button>
+                        <button class="icon-btn" title="更多操作">
+                          <svg class="ic ic-18"><use href="#i-more" /></svg>
+                        </button>
+                      </div>
+                    </div>
+                    <div class="list-item">
+                      <span class="tile tile-ok"
+                        ><svg class="ic ic-18"><use href="#i-phone" /></svg
+                      ></span>
+                      <div class="li-main">
+                        <div class="li-title">
+                          <span class="t-mono-lg">oh-3.41.10</span>
+                          <span class="chip chip-ok">Release</span>
+                        </div>
+                        <div class="li-meta">
+                          <span class="mono">f4e5d6c</span
+                          ><span class="sep"></span
+                          ><span class="mono">3.41.10+ohos-1.0.1</span
+                          ><span class="sep"></span><span>未安装</span>
+                        </div>
+                      </div>
+                      <div class="li-actions">
+                        <button class="icon-btn" title="安装此 OHOS 分支">
+                          <svg class="ic ic-18"><use href="#i-download" /></svg>
+                        </button>
+                      </div>
+                    </div>
+                    <div class="list-item">
+                      <span class="tile tile-ok"
+                        ><svg class="ic ic-18"><use href="#i-zap" /></svg
+                      ></span>
+                      <div class="li-main">
+                        <div class="li-title">
+                          <span class="t-mono-lg">oh-3.42.0-dev</span>
+                          <span class="chip chip-warn">Dev</span>
+                        </div>
+                        <div class="li-meta">
+                          <span class="mono">9c8b7a6</span
+                          ><span class="sep"></span
+                          ><span class="mono">3.42.0+ohos-1.1.0-dev</span
+                          ><span class="sep"></span><span>未安装</span>
+                        </div>
+                      </div>
+                      <div class="li-actions">
+                        <button class="icon-btn" title="安装此 OHOS 分支">
+                          <svg class="ic ic-18"><use href="#i-download" /></svg>
+                        </button>
+                      </div>
+                    </div>
+                    <div class="list-item">
+                      <span class="tile"
+                        ><svg class="ic ic-18"><use href="#i-git-branch" /></svg
+                      ></span>
+                      <div class="li-main">
+                        <div class="li-title">
+                          <span class="t-mono-lg">oh-3.40.0</span>
+                          <span class="chip">远端分支已不存在</span>
+                        </div>
+                        <div class="li-meta">
+                          <span class="mono">0d0c0b0</span
+                          ><span class="sep"></span
+                          ><span>本地已安装，但远端已删除该分支</span>
+                        </div>
+                      </div>
+                      <div class="li-actions">
+                        <button class="icon-btn" title="更多操作">
+                          <svg class="ic ic-18"><use href="#i-more" /></svg>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- ==================== 版本详情（抽屉） ==================== -->
+            <div class="page" id="page-detail">
+              <div
+                class="page-inner"
+                style="opacity: 0.45; filter: saturate(0.6)"
+              >
+                <div class="page-head">
+                  <div class="page-title-wrap">
+                    <h1 class="t-display">已安装的版本</h1>
+                    <p class="page-desc">本机 FVM 缓存中的全部 Flutter SDK。</p>
+                  </div>
+                </div>
+                <div class="panel panel-flush">
+                  <div class="list">
+                    <div class="list-item">
+                      <span class="tile tile-accent"
+                        ><svg class="ic ic-18"><use href="#i-flutter" /></svg
+                      ></span>
+                      <div class="li-main">
+                        <div class="li-title">
+                          <span class="t-mono-lg">3.41.9</span
+                          ><span class="chip chip-info">全局</span>
+                        </div>
+                        <div class="li-meta">
+                          <span>stable</span><span class="sep"></span
+                          ><span class="mono">Dart 3.11.5</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="list-item">
+                      <span class="tile tile-ok"
+                        ><svg class="ic ic-18"><use href="#i-phone" /></svg
+                      ></span>
+                      <div class="li-main">
+                        <div class="li-title">
+                          <span class="t-mono-lg">oh-3.41.9</span
+                          ><span class="chip chip-ok">OHOS</span>
+                        </div>
+                        <div class="li-meta">
+                          <span>release</span><span class="sep"></span
+                          ><span class="mono">3.41.9+ohos-1.0.2</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- ==================== 设置 ==================== -->
+            <div class="page" id="page-settings">
+              <div class="page-inner">
+                <div class="page-head">
+                  <div class="page-title-wrap">
+                    <h1 class="t-display">设置</h1>
+                    <p class="page-desc">
+                      Sidekick 的偏好设置、IDE 选择与 Flutter 全局配置。
+                    </p>
+                  </div>
+                </div>
+
+                <div class="row gap-6" style="align-items: flex-start">
+                  <div class="col gap-2" style="width: 180px; flex-shrink: 0">
+                    <button
+                      class="nav-item"
+                      data-settab="general"
+                      aria-pressed="true"
+                    >
+                      <span class="ic ic-18"
+                        ><svg><use href="#i-tune" /></svg></span
+                      >通用
+                    </button>
+                    <button
+                      class="nav-item"
+                      data-settab="fvm"
+                      aria-pressed="false"
+                    >
+                      <span class="ic ic-18"
+                        ><svg><use href="#i-layers" /></svg></span
+                      >FVM
+                    </button>
+                    <button
+                      class="nav-item"
+                      data-settab="flutter"
+                      aria-pressed="false"
+                    >
+                      <span class="ic ic-18"
+                        ><svg><use href="#i-terminal" /></svg></span
+                      >Flutter
+                    </button>
+                  </div>
+
+                  <div class="grow">
+                    <!-- 通用 -->
+                    <div data-setpane="general" class="panel">
+                      <div class="panel-head">
+                        <span class="t-h2">通用</span
+                        ><span class="t-cap">修改后立即保存</span>
+                      </div>
+                      <div class="panel-body" style="padding: 0">
+                        <div class="kv" style="padding: 16px 20px">
+                          <div>
+                            <div class="t-h3">主题</div>
+                            <div class="t-cap">
+                              选择一个主题或跟随系统设置。
+                            </div>
+                          </div>
+                          <div class="select select-sm">
+                            深色<span class="ic ic-14"
+                              ><svg><use href="#i-chev-down" /></svg
+                            ></span>
+                          </div>
+                        </div>
+                        <div class="divider"></div>
+                        <div class="kv" style="padding: 16px 20px">
+                          <div>
+                            <div class="t-h3">IDE</div>
+                            <div class="t-cap">选择打开项目时使用的 IDE。</div>
+                          </div>
+                          <div class="select select-sm">
+                            Visual Studio Code<span class="ic ic-14"
+                              ><svg><use href="#i-chev-down" /></svg
+                            ></span>
+                          </div>
+                        </div>
+                        <div class="divider"></div>
+                        <div class="kv" style="padding: 16px 20px">
+                          <div>
+                            <div class="t-h3">语言</div>
+                            <div class="t-cap">界面显示语言。</div>
+                          </div>
+                          <div class="select select-sm">
+                            简体中文<span class="ic ic-14"
+                              ><svg><use href="#i-chev-down" /></svg
+                            ></span>
+                          </div>
+                        </div>
+                        <div class="divider"></div>
+                        <div class="kv" style="padding: 16px 20px">
+                          <div><div class="t-h3">版本</div></div>
+                          <span class="t-mono">1.4.2</span>
+                        </div>
+                        <div class="divider"></div>
+                        <div class="kv" style="padding: 16px 20px">
+                          <div>
+                            <div class="t-h3">恢复默认设置</div>
+                            <div class="t-cap">
+                              这将只重置 Sidekick 的特定设置。
+                            </div>
+                          </div>
+                          <button class="btn btn-secondary btn-sm shrink0">
+                            重置
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- FVM -->
+                    <div data-setpane="fvm" class="panel" style="display: none">
+                      <div class="panel-head">
+                        <span class="t-h2">FVM</span>
+                      </div>
+                      <div class="panel-body" style="padding: 0">
+                        <div class="kv" style="padding: 16px 20px">
+                          <div>
+                            <div class="t-h3">安装时跳过 Flutter 的设置</div>
+                            <div class="t-cap">
+                              只克隆
+                              Flutter，不安装它的依赖，在安装新版本后生效。
+                            </div>
+                          </div>
+                          <span class="switch on"></span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Flutter -->
+                    <div
+                      data-setpane="flutter"
+                      class="panel"
+                      style="display: none"
+                    >
+                      <div class="panel-head">
+                        <span class="t-h2">Flutter</span>
+                      </div>
+                      <div class="panel-body" style="padding: 0">
+                        <div style="padding: 20px">
+                          <div class="note-bar">
+                            <span class="ic ic-20"
+                              ><svg><use href="#i-alert" /></svg
+                            ></span>
+                            <div class="grow">
+                              <div class="t-h3">
+                                必须将 Flutter SDK 版本设置为全局，才能访问
+                                Flutter 设置。
+                              </div>
+                              <div class="t-cap">当前全局版本为 3.41.9。</div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="divider"></div>
+                        <div class="kv" style="padding: 16px 20px">
+                          <div>
+                            <div class="t-h3">分析和崩溃报告</div>
+                            <div class="t-cap">
+                              当 Flutter 命令崩溃时，尝试将崩溃报告发送给
+                              Google。
+                            </div>
+                          </div>
+                          <span class="switch on"></span>
+                        </div>
+                        <div class="divider"></div>
+                        <div style="padding: 20px 20px 12px">
+                          <span class="t-over">平台</span>
+                        </div>
+                        <div class="divider"></div>
+                        <div class="kv" style="padding: 12px 20px">
+                          <div class="t-h3">Web</div>
+                          <span class="switch on"></span>
+                        </div>
+                        <div class="divider"></div>
+                        <div class="kv" style="padding: 12px 20px">
+                          <div class="t-h3">macOS</div>
+                          <span class="switch on"></span>
+                        </div>
+                        <div class="divider"></div>
+                        <div class="kv" style="padding: 12px 20px">
+                          <div class="t-h3">Windows</div>
+                          <span class="switch"></span>
+                        </div>
+                        <div class="divider"></div>
+                        <div class="kv" style="padding: 12px 20px">
+                          <div class="t-h3">Linux</div>
+                          <span class="switch"></span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- ==================== 搜索 ==================== -->
+            <div class="page" id="page-search">
+              <div class="page-inner" style="opacity: 0.35">
+                <div class="page-head">
+                  <div class="page-title-wrap">
+                    <h1 class="t-display">发行版</h1>
+                    <p class="page-desc">
+                      来自 Flutter 官方仓库的发行版本与渠道。
+                    </p>
+                  </div>
+                </div>
+                <div class="panel panel-flush">
+                  <div class="list">
+                    <div class="list-item compact">
+                      <div class="li-main">
+                        <div class="li-title">
+                          <span class="t-mono">3.41.9</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="list-item compact">
+                      <div class="li-main">
+                        <div class="li-title">
+                          <span class="t-mono">3.41.8</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- ==================== 状态与组件 ==================== -->
+            <div class="page" id="page-states">
+              <div class="page-inner">
+                <div class="page-head">
+                  <div class="page-title-wrap">
+                    <h1 class="t-display">状态与组件</h1>
+                    <p class="page-desc">
+                      空态、错误态、加载态与反馈提示的统一规范。
+                    </p>
+                  </div>
+                </div>
+
+                <div class="grid grid-2">
+                  <div class="panel">
+                    <div class="panel-head">
+                      <span class="t-h2">空态 · 未安装任何版本</span>
+                    </div>
+                    <div class="empty">
+                      <span class="tile"
+                        ><svg class="ic ic-28"><use href="#i-package" /></svg
+                      ></span>
+                      <div>
+                        <div class="empty-title">
+                          您目前没有安装任何 Flutter SDK 版本
+                        </div>
+                        <div class="empty-desc">
+                          已经安装的版本或渠道会显示在这里，您也可以从发行版页安装一个新的版本。
+                        </div>
+                      </div>
+                      <button class="btn btn-primary">
+                        <span class="ic ic-14"
+                          ><svg><use href="#i-chev-right" /></svg></span
+                        >浏览 Flutter 发行版
+                      </button>
+                    </div>
+                  </div>
+
+                  <div class="panel">
+                    <div class="panel-head">
+                      <span class="t-h2">错误态 · 拉取 OHOS 分支失败</span>
+                    </div>
+                    <div class="empty">
+                      <span
+                        class="tile"
+                        style="
+                          background: var(--danger-soft);
+                          border-color: var(--danger-line);
+                          color: var(--danger);
+                        "
+                        ><svg class="ic ic-28"><use href="#i-alert" /></svg
+                      ></span>
+                      <div>
+                        <div class="empty-title">无法获取 OHOS 分支</div>
+                        <div class="empty-desc">
+                          git ls-remote 执行失败，请检查网络连接后重试。
+                        </div>
+                      </div>
+                      <button class="btn btn-secondary">
+                        <span class="ic ic-14"
+                          ><svg><use href="#i-refresh" /></svg></span
+                        >重试
+                      </button>
+                    </div>
+                  </div>
+
+                  <div class="panel">
+                    <div class="panel-head">
+                      <span class="t-h2">徽章与状态</span>
+                    </div>
+                    <div class="panel-body">
+                      <div class="row wrap gap-3 mb-5">
+                        <span class="chip chip-ok"
+                          ><span class="ic"
+                            ><svg><use href="#i-phone" /></svg></span
+                          >OHOS</span
+                        >
+                        <span class="chip chip-info"
+                          ><span class="ic"
+                            ><svg><use href="#i-star" /></svg></span
+                          >全局</span
+                        >
+                        <span class="chip chip-ok"
+                          ><span class="ic"
+                            ><svg><use href="#i-check" /></svg></span
+                          >使用中</span
+                        >
+                        <span class="chip chip-warn"
+                          ><span class="ic"
+                            ><svg><use href="#i-arrow-up" /></svg></span
+                          >有可用更新</span
+                        >
+                        <span class="chip chip-danger">远端分支已不存在</span>
+                        <span class="chip chip-outline">stable</span>
+                        <span class="chip">未使用</span>
+                        <span class="chip chip-accent">Release</span>
+                      </div>
+                      <div class="row wrap gap-3">
+                        <span class="tile tile-accent"
+                          ><svg class="ic ic-18"><use href="#i-flutter" /></svg
+                        ></span>
+                        <span class="tile tile-ok"
+                          ><svg class="ic ic-18"><use href="#i-phone" /></svg
+                        ></span>
+                        <span class="tile tile-info"
+                          ><svg class="ic ic-18"><use href="#i-star" /></svg
+                        ></span>
+                        <span class="tile tile-warn"
+                          ><svg class="ic ic-18"><use href="#i-alert" /></svg
+                        ></span>
+                        <span class="tile"
+                          ><svg class="ic ic-18">
+                            <use href="#i-git-branch" /></svg
+                        ></span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="panel">
+                    <div class="panel-head">
+                      <span class="t-h2">按钮与表单</span>
+                    </div>
+                    <div class="panel-body">
+                      <div class="row wrap gap-3 mb-5">
+                        <button class="btn btn-primary">主要操作</button>
+                        <button class="btn btn-secondary">次要操作</button>
+                        <button class="btn btn-info">信息操作</button>
+                        <button class="btn btn-danger">危险操作</button>
+                        <button class="btn btn-ghost">幽灵操作</button>
+                        <button class="btn btn-secondary" disabled>禁用</button>
+                      </div>
+                      <div class="row wrap gap-4">
+                        <div class="field" style="width: 200px">
+                          <span class="ic ic-14"
+                            ><svg><use href="#i-search" /></svg></span
+                          ><input placeholder="搜索" />
+                        </div>
+                        <div class="select">
+                          深色<span class="ic ic-14"
+                            ><svg><use href="#i-chev-down" /></svg
+                          ></span>
+                        </div>
+                        <div class="segmented">
+                          <button aria-pressed="true">全部</button
+                          ><button aria-pressed="false">Release</button>
+                        </div>
+                        <span class="switch on"></span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="panel mt-6">
+                  <div class="panel-head">
+                    <span class="t-h2">反馈提示 · Toast</span
+                    ><span class="t-cap">底部居中 · 3.5s 自动消失</span>
+                  </div>
+                  <div class="panel-body row gap-4">
+                    <span
+                      class="toast"
+                      style="
+                        position: static;
+                        transform: none;
+                        box-shadow: none;
+                        display: inline-flex;
+                      "
+                      ><span class="ic ic-14"
+                        ><svg><use href="#i-check-circle" /></svg></span
+                      >3.41.9 已被设为全局</span
+                    >
+                    <span
+                      class="toast error"
+                      style="
+                        position: static;
+                        transform: none;
+                        box-shadow: none;
+                        display: inline-flex;
+                      "
+                      ><span class="ic ic-14"
+                        ><svg><use href="#i-alert" /></svg></span
+                      >无法升级 oh-3.41.9</span
+                    >
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- 详情抽屉 -->
+          <aside class="drawer" id="drawer">
+            <div class="drawer-head">
+              <div class="grow">
+                <div class="row gap-2 mb-2">
+                  <span class="t-mono-lg" style="font-size: 20px">3.41.9</span>
+                  <span class="chip chip-outline">stable</span>
+                </div>
+                <div class="t-cap">Flutter 3.41.9 · Dart 3.11.5</div>
+              </div>
+              <button class="icon-btn" title="关闭">
+                <span class="ic ic-18"
+                  ><svg><use href="#i-x" /></svg
+                ></span>
+              </button>
+            </div>
+
+            <div class="drawer-body">
+              <div class="drawer-section">
+                <div class="t-over mb-3">参考信息</div>
+                <div class="kv">
+                  <span class="kv-k">渠道</span><span class="kv-v">stable</span>
+                </div>
+                <div class="kv">
+                  <span class="kv-k">发布说明</span
+                  ><button
+                    class="btn btn-ghost btn-sm"
+                    style="padding-right: 0"
+                  >
+                    <span class="ic ic-14"
+                      ><svg><use href="#i-external" /></svg></span
+                    >打开
+                  </button>
+                </div>
+              </div>
+
+              <div class="drawer-section">
+                <div class="t-over mb-3">本地缓存信息</div>
+                <div class="kv">
+                  <span class="kv-k">创建日期</span
+                  ><span class="kv-v mono">2025-10-14</span>
+                </div>
+                <div class="kv">
+                  <span class="kv-k">缓存位置</span>
+                  <span class="row gap-2" style="min-width: 0">
+                    <span class="kv-v mono truncate"
+                      >~/fvm/versions/3.41.9</span
+                    >
+                    <button
+                      class="icon-btn"
+                      style="width: 22px; height: 22px"
+                      title="复制"
+                    >
+                      <span class="ic ic-14"
+                        ><svg><use href="#i-copy" /></svg
+                      ></span>
+                    </button>
+                  </span>
+                </div>
+                <div class="kv">
+                  <span class="kv-k">Hash</span
+                  ><span class="kv-v mono">a1b2c3d4e5f6</span>
+                </div>
+                <div class="kv">
+                  <span class="kv-k">Sha256</span
+                  ><span class="kv-v mono">7f3a…c921</span>
+                </div>
+              </div>
+
+              <div class="drawer-section">
+                <div class="t-over mb-3">发布详情</div>
+                <div class="kv">
+                  <span class="kv-k">发布日期</span
+                  ><span class="kv-v mono">2025-10-14</span>
+                </div>
+                <div class="kv">
+                  <span class="kv-k">高级</span
+                  ><span class="row gap-2"
+                    ><span class="kv-v">下载 zip</span
+                    ><span class="ic ic-14 ic-3"
+                      ><svg><use href="#i-chev-right" /></svg></span
+                  ></span>
+                </div>
+              </div>
+            </div>
+
+            <div class="drawer-foot">
+              <div class="row gap-3">
+                <button class="btn btn-primary grow">
+                  <span class="ic ic-14"
+                    ><svg><use href="#i-star" /></svg></span
+                  >设为全局
+                </button>
+                <button class="btn btn-secondary">
+                  <span class="ic ic-14"
+                    ><svg><use href="#i-refresh" /></svg></span
+                  >更新
+                </button>
+              </div>
+            </div>
+          </aside>
+        </div>
+
+        <!-- 底部队列条 -->
+        <div class="statusbar" id="statusbar">
+          <span class="ic ic-14 ic-accent"
+            ><svg><use href="#i-refresh" /></svg
+          ></span>
+          <span class="shrink0">正在安装 3.41.9</span>
+          <span class="progress"><i></i></span>
+          <span class="shrink0 mono" style="font-size: 10px">62%</span>
+          <button class="icon-btn" title="展开 Console">
+            <span class="ic ic-14"
+              ><svg><use href="#i-chev-down" /></svg
+            ></span>
+          </button>
+        </div>
+
+        <!-- 搜索模态 -->
+        <div class="scrim" id="scrim">
+          <div class="modal" id="searchModal">
+            <div class="modal-search">
+              <div class="field" style="height: 32px">
+                <span class="ic ic-14"
+                  ><svg><use href="#i-search" /></svg
+                ></span>
+                <input
+                  id="searchInput"
+                  type="text"
+                  placeholder="搜索版本、渠道或项目…"
+                  autocomplete="off"
+                />
+                <span class="kbd">⌘</span><span class="kbd">K</span>
+              </div>
+            </div>
+
+            <div class="modal-body">
+              <div class="modal-group-label">渠道</div>
+              <a class="modal-item" href="#">
+                <span class="tile tile-40 tile-accent"
+                  ><svg class="ic ic-18"><use href="#i-flutter" /></svg
+                ></span>
+                <span class="grow" style="min-width: 0">
+                  <span class="t-h3">stable</span>
+                  <span class="t-cap" style="display: block">稳定发行版</span>
+                </span>
+                <span class="chip chip-outline">已安装</span>
+              </a>
+              <a class="modal-item" href="#">
+                <span class="tile tile-40 tile-info"
+                  ><svg class="ic ic-18"><use href="#i-layers" /></svg
+                ></span>
+                <span class="grow" style="min-width: 0">
+                  <span class="t-h3">beta</span>
+                  <span class="t-cap" style="display: block">预发布通道</span>
+                </span>
+              </a>
+              <a class="modal-item" href="#">
+                <span class="tile tile-40 tile-ok"
+                  ><svg class="ic ic-18"><use href="#i-flutter" /></svg
+                ></span>
+                <span class="grow" style="min-width: 0">
+                  <span class="t-h3">OHOS</span>
+                  <span class="t-cap" style="display: block"
+                    >CPF-Flutter · 12 个分支</span
+                  >
+                </span>
+                <span class="chip chip-ok">可用</span>
+              </a>
+
+              <div class="modal-group-label">稳定发行版</div>
+              <a class="modal-item" href="#">
+                <span class="tile tile-40"
+                  ><svg class="ic ic-18"><use href="#i-package" /></svg
+                ></span>
+                <span class="grow" style="min-width: 0">
+                  <span class="t-h3 mono">3.41.9</span>
+                  <span class="t-cap" style="display: block"
+                    >2025-10-14 · Dart 3.11.5</span
+                  >
+                </span>
+                <span class="chip chip-accent">全局</span>
+              </a>
+              <a class="modal-item" href="#">
+                <span class="tile tile-40"
+                  ><svg class="ic ic-18"><use href="#i-package" /></svg
+                ></span>
+                <span class="grow" style="min-width: 0">
+                  <span class="t-h3 mono">3.35.7</span>
+                  <span class="t-cap" style="display: block"
+                    >2025-06-02 · Dart 3.9.2</span
+                  >
+                </span>
+              </a>
+
+              <div class="modal-group-label">项目</div>
+              <a class="modal-item" href="#">
+                <span class="tile tile-40 tile-info"
+                  ><svg class="ic ic-18"><use href="#i-folder" /></svg
+                ></span>
+                <span class="grow" style="min-width: 0">
+                  <span class="t-h3">sidekick</span>
+                  <span class="t-cap mono truncate" style="display: block"
+                    >~/Developer/sidekick</span
+                  >
+                </span>
+                <span class="chip chip-outline">3.41.9</span>
+              </a>
+              <a class="modal-item" href="#">
+                <span class="tile tile-40 tile-info"
+                  ><svg class="ic ic-18"><use href="#i-folder" /></svg
+                ></span>
+                <span class="grow" style="min-width: 0">
+                  <span class="t-h3">flutter_playground</span>
+                  <span class="t-cap mono truncate" style="display: block"
+                    >~/Developer/flutter_playground</span
+                  >
+                </span>
+              </a>
+            </div>
+
+            <div class="modal-foot">
+              <span class="row gap-2"
+                ><kbd class="kbd">↑</kbd><kbd class="kbd">↓</kbd> 选择</span
+              >
+              <span class="row gap-2"><kbd class="kbd">↵</kbd> 打开</span>
+              <span class="row gap-2"><kbd class="kbd">esc</kbd> 关闭</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Toast -->
+        <div class="toast" id="toast">
+          <span class="ic ic-14"
+            ><svg><use href="#i-check-circle" /></svg></span
+          >3.41.9 已被设为全局
+        </div>
+      </div>
+
+      <!-- 设计说明 -->
+      <div class="spec-note" id="specNote"></div>
+
+      <div class="stage-caption">
+        <span>Sidekick · UI 重设计稿 v2 · 1:1 还原 1240×812 桌面窗口</span>
+        <span
+          >设计说明见
+          <a href="foundation.html" style="color: var(--info)"
+            >foundation.html</a
+          ></span
+        >
+      </div>
+    </main>
+
+    <script>
+      /* ------------------------------------------------------------------
+   页面切换
+   ------------------------------------------------------------------ */
+      const PAGES = {
+        installed: {
+          note: [
+            [
+              "本次改了什么",
+              "把 <b>NavigationRail</b> 换成可扩展的<b>自定义侧边栏</b>：图标 + 文字 + 计数徽标，底部常驻 FVM 路径与就绪状态。窗口标题栏从「居中标题」改为「左品牌 / 中搜索 / 右操作」三段式。",
+            ],
+            [
+              "信息架构",
+              "全局版本从「一列普通行里的 Chip」升级为<b>独立提示卡</b>，因为它是全局 PATH 的唯一来源、也是最高频操作入口。列表行改为 <b>64px 双行</b>：首行版本号 + 徽章，次行元信息（渠道 / Dart 版本 / 占用空间）。",
+            ],
+            [
+              "交互约定",
+              "行尾操作按钮默认<b>透明</b>，hover 行才淡入 —— 保持列表安静，同时让可操作性可发现。全局 Chip 可点击，弹出 PATH 指向说明（原 App 已有该能力，只是没有视觉入口）。",
+            ],
+          ],
+        },
+        projects: {
+          note: [
+            [
+              "本次改了什么",
+              "项目卡从 170px 固定高度、内外三层 ListTile 改为<b>自适应内容卡</b>，描述文本最多两行后省略，底部操作条固定贴底。卡头用 <b>48px 图标瓦片</b> 承载项目图标。",
+            ],
+            [
+              "信息架构",
+              "项目路径用等宽字体展示在描述下方，这是「我到底加的是哪个目录」的唯一确认信息，当前版本把它完全藏起来了。",
+            ],
+            [
+              "交互约定",
+              "「只显示已钉版本」从顶部一行文字开关改为<b>右侧开关控件</b>；IDE 打开、Terminal、管理入口收拢为图标组，版本选择器保留在右下角并显示当前钉住的版本号。",
+            ],
+          ],
+        },
+        releases: {
+          note: [
+            [
+              "本次改了什么",
+              "Master 提示条从「橙色描边大矩形」改为<b>左竖条 + 图标的提示卡</b>；三个 Flutter 渠道（stable / beta / master）改为<b>等宽卡片</b>。原先放在这里的 OHOS 渠道卡已删除 —— OHOS 有独立的侧边栏入口，发行版页只承载 Flutter 官方发行内容。",
+            ],
+            [
+              "信息架构",
+              "「版本库」区改成<b>吸顶工具条</b>：左侧标题 + 数量，右侧分段筛选（所有 / 稳定 / Beta / 开发）取代原生 DropdownButton。原版下拉里混着渠道项和版本项，语义不清。",
+            ],
+            [
+              "交互约定",
+              "版本行改用 44px 紧凑行：等宽版本号 + 渠道 Chip + 发布日期，右侧安装按钮。发布版日期来自 releases 元数据，不再是空白。",
+            ],
+          ],
+        },
+        ohos: {
+          note: [
+            [
+              "本次改了什么",
+              "新增<b>仓库 Hero 卡</b>：把 CPF-Flutter 仓库地址、已安装数量、「打开仓库」入口集中在一张卡里，替代原来标题栏右侧一个孤立的外链图标。",
+            ],
+            [
+              "信息架构",
+              "分支行沿用「短名 + 类型 Chip + 全局 Chip + SHA」结构，但把 SHA 降级为次行信息（等宽小字），更新可用状态用<b>上箭头 + 文案</b>而不是颜色单独表达。",
+            ],
+            [
+              "交互约定",
+              "筛选从 DropdownButton 改为 <b>全部 / Release / Dev</b> 分段控件，与发行版页保持一致。孤儿安装（远端分支已删）用中性灰 Chip 明确标注，不伪装成可更新。",
+            ],
+          ],
+        },
+        detail: {
+          note: [
+            [
+              "本次改了什么",
+              "右侧详情抽屉从「标题 + 一堆 ListTile」改为<b>信息分组</b>：参考信息 / 本地缓存信息 / 发布详情三段，每段用 overline 小标签分隔，键值左右对齐。",
+            ],
+            [
+              "信息架构",
+              "缓存位置、Hash、Sha256 全部用<b>等宽字体</b>，并给复制按钮 —— 这些是要直接粘到终端里的字符串。",
+            ],
+            [
+              "交互约定",
+              "底部主操作固定吸底：未安装显示「安装此版本」，已安装显示「设为全局 / 更新」。抽屉宽度 372px，比 Material 默认的 320 宽，容纳等宽路径不折行。",
+            ],
+          ],
+        },
+        settings: {
+          note: [
+            [
+              "本次改了什么",
+              "设置页从「左 ListTile + 右 PageView」改为<b>左分段导航 + 右表单</b>，每个设置项改为「标题 + 说明 + 右侧控件」的表单行，行间用细分隔线。",
+            ],
+            [
+              "信息架构",
+              "通用 / FVM / Flutter 三段保持原有划分，但新增分组标题与说明文字，Flutter 段的「未设置全局版本」提示改为橙色提示卡。",
+            ],
+            [
+              "交互约定",
+              "主题、IDE、语言三个下拉统一为同一种 select 控件（32px 高、带 chevron），不再是原生 DropdownButton 的默认外观。",
+            ],
+          ],
+        },
+        search: {
+          note: [
+            [
+              "本次改了什么",
+              "搜索从「全屏跳转路由」改为<b>居中模态</b>，可随时关闭回到原页面，位置感不会丢失。",
+            ],
+            [
+              "信息架构",
+              "结果按 <b>渠道 / 稳定发行版 / 项目</b> 分组，组间用 overline 标签；选中项高亮为强调色底。",
+            ],
+            [
+              "交互约定",
+              "模态顶部是带 ⌘K 提示的搜索框，下方结果区滚动；快捷键 ⌘K 打开，Esc 关闭。",
+            ],
+          ],
+        },
+        states: {
+          note: [
+            [
+              "空态",
+              "空态不再是一行小灰字。用 <b>52px 图标瓦片 + 标题 + 说明 + 主操作按钮</b>，告诉用户下一步该做什么（例如「添加项目」）。",
+            ],
+            [
+              "错误态",
+              "拉取失败给出<b>可执行</b>的提示：说明失败原因 + 重试按钮，而不是只显示「获取失败」。",
+            ],
+            [
+              "反馈",
+              "Toast 从底部居中改为带图标的药丸，成功为中性反色、错误为砖红；队列进度条固定在窗口底部，含 Console 展开。",
+            ],
+          ],
+        },
+      };
+
+      function showPage(key, updateHash = true) {
+        document
+          .querySelectorAll(".page")
+          .forEach((p) => p.classList.remove("active"));
+        const el = document.getElementById("page-" + key);
+        if (el) el.classList.add("active");
+        document
+          .querySelectorAll(".review-tab")
+          .forEach((t) => t.classList.toggle("active", t.dataset.page === key));
+        document
+          .querySelectorAll(".nav-item")
+          .forEach((n) =>
+            n.classList.toggle(
+              "active",
+              n.dataset.nav === key ||
+                (n.dataset.nav === "installed" && key === "detail"),
+            ),
+          );
+        document
+          .getElementById("drawer")
+          .classList.toggle("open", key === "detail");
+        document
+          .getElementById("scrim")
+          .classList.toggle("on", key === "search");
+        document
+          .getElementById("statusbar")
+          .classList.toggle("on", key === "states");
+        document
+          .getElementById("toast")
+          .classList.toggle("on", key === "states");
+        const n = PAGES[key] ? PAGES[key].note : [];
+        document.getElementById("specNote").innerHTML = n
+          .map(([h, p]) => `<div><h4>${h}</h4><p>${p}</p></div>`)
+          .join("");
+        if (updateHash && location.hash.slice(1) !== key) {
+          history.replaceState(null, "", "#" + key);
+        }
+      }
+
+      document.getElementById("reviewTabs").addEventListener("click", (e) => {
+        const b = e.target.closest(".review-tab");
+        if (b) showPage(b.dataset.page);
+      });
+      document.querySelectorAll(".nav-item").forEach((n) => {
+        n.addEventListener("click", () => showPage(n.dataset.nav));
+      });
+
+      /* 主题 */
+      const root = document.documentElement;
+      document
+        .getElementById("btnDark")
+        .addEventListener("click", () => setTheme("dark"));
+      document
+        .getElementById("btnLight")
+        .addEventListener("click", () => setTheme("light"));
+      function setTheme(t) {
+        root.setAttribute("data-theme", t);
+        document
+          .getElementById("btnDark")
+          .setAttribute("aria-pressed", String(t === "dark"));
+        document
+          .getElementById("btnLight")
+          .setAttribute("aria-pressed", String(t === "light"));
+      }
+
+      /* 设置页分段 */
+      document.addEventListener("click", (e) => {
+        const b = e.target.closest("[data-settab]");
+        if (!b) return;
+        document
+          .querySelectorAll("[data-settab]")
+          .forEach((x) => x.setAttribute("aria-pressed", String(x === b)));
+        document
+          .querySelectorAll("[data-setpane]")
+          .forEach(
+            (p) =>
+              (p.style.display =
+                p.dataset.setpane === b.dataset.settab ? "block" : "none"),
+          );
+      });
+
+      /* 开关 */
+      document.addEventListener("click", (e) => {
+        const s = e.target.closest(".switch");
+        if (s) s.classList.toggle("on");
+      });
+
+      /* Toast */
+      document.addEventListener("click", (e) => {
+        const t = e.target.closest(".toast");
+        if (t) t.classList.remove("on");
+      });
+
+      /* 首屏 / hash 路由 */
+      const initial = location.hash.slice(1);
+      showPage(PAGES[initial] ? initial : "installed", false);
+      if (new URLSearchParams(location.search).get("theme") === "light") {
+        setTheme("light");
+      }
+      window.addEventListener("hashchange", () => {
+        const k = location.hash.slice(1);
+        if (PAGES[k]) showPage(k, false);
+      });
+    </script>
+  </body>
+</html>

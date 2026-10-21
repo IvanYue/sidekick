@@ -2,7 +2,6 @@
   "common": {
     "navButtonDashboard": "डैशबोर्ड",
     "navButtonProjects": "प्रोजेक्ट",
-    "navButtonExplore": "खोजें",
     "navButtonPackages": "पैकेज",
     "stableChannelDescription": "हम आपको इस चैनल का उपयोग करने के लिए सिफारिश करना अनुशंसित करते हैं। हम किसी ब्रेक को बीटा करने के बाद हम अगले स्थिर ब्रेक के रूप में बनाते हैं और हम उनके स्थिर अवतरण बनाते हैं।",
     "betaChannelDescription": "महीने के प्रारंभ में एक नया बीटा प्रस्ताव के लिए ब्रेक बनाया गया है। यह में डार्ट के लिए एक ब्रेक, इंजिनर और फ्रेमवर्ड के लिए एक ब्रेक होगा।",
@@ -10,7 +9,14 @@
     "masterChannelDescription": "नवीनतम टिप-ऑफ-ट्री, बिल्कुल नवीनतम अत्याधुनिक बिल्ड। आमतौर पर कार्यात्मक, हालांकि कभी-कभी हम गलती से चीजों को तोड़ देते हैं।",
     "utils": {
       "couldNotLaunchUrl": "{{url}} खोलने में असमर्थ"
-    }
+    },
+    "navGroupWorkspace": "कार्यक्षेत्र",
+    "navButtonInstalled": "स्थापित",
+    "navButtonReleases": "रिलीज़",
+    "navButtonSettings": "सेटिंग्स",
+    "sidebarReady": "तैयार",
+    "sidebarChecking": "जाँच हो रही है",
+    "sidebarMissingComponents": "घटक अनुपस्थित"
   },
   "fvm": {
     "installedVersions": "इंस्टॉल किए गए संस्करण",
@@ -52,7 +58,17 @@
       "couldNotUpgradeVersionname": "{{versionName}} को अपग्रेड नहीं किया जा सका",
       "forceUpgradeDiscardsChanges": "फ़ोर्स अपग्रेड इस SDK के सभी स्थानीय बदलाव हटा देता है और फिर इसे अपग्रेड करता है। आपके प्रोजेक्ट प्रभावित नहीं होंगे।",
       "forceUpgrade": "फ़ोर्स अपग्रेड"
-    }
+    },
+    "allInstalledVersions": "All installed versions · {{count}}",
+    "globalVersion": "Global version",
+    "globalVersionPathHint": "The flutter command currently points to {{path}}",
+    "installedVersionsDescription": "Every Flutter SDK in your local FVM cache. Click any row to see version details.",
+    "sortedByInstallTime": "Sorted by install time",
+    "statsCacheSize": "Disk usage",
+    "statsInstalled": "Installed versions",
+    "statsOutdated": "Outdated",
+    "statsUnused": "Unused",
+    "viewPath": "View path"
   },
   "projects": {
     "projectsRefreshed": "ताज़ा प्रोजेक्ट",
@@ -129,7 +145,8 @@
       "setVersion": "संस्करण सेट करें",
       "save": "सहेजें",
       "versionUpdated": "संस्करण {{version}} में बदला गया"
-    }
+    },
+    "flutterProject": "Flutter project"
   },
   "pubPackages": {
     "trending": "लोकप्रिय",
@@ -153,7 +170,11 @@
     "all": "सभी",
     "releases": "रिलीज",
     "versions": "संस्करण",
-    "theCurrentTipoftreeAbsoluteLatestCuttingEdgeBuildUsuallyFunctional": "वर्तमान टिप-ओ-टी, अंतिम स्थिति के बिल्ड के ब्लॉड. सामान्य रूप से कस्टम हो जाता है, पर किसी भी समय हम अनदेखी बदलाव को हटाने में होते हैं."
+    "theCurrentTipoftreeAbsoluteLatestCuttingEdgeBuildUsuallyFunctional": "वर्तमान टिप-ओ-टी, अंतिम स्थिति के बिल्ड के ब्लॉड. सामान्य रूप से कस्टम हो जाता है, पर किसी भी समय हम अनदेखी बदलाव को हटाने में होते हैं.",
+    "releasesDescription": "Browse the official Flutter channels and every past release.",
+    "loading": "Loading releases…",
+    "empty": "No releases available",
+    "emptyMessage": "Could not fetch the release list from Flutter. Check your connection and retry."
   },
   "sandbox": {
     "playground": "प्लेगरेंड",
@@ -184,7 +205,10 @@
       "channel": "चैनल",
       "releaseNotes": "रिलीज नोट्स",
       "version": "संस्करण",
-      "releaseDate": "रिलीज दिनांक"
+      "releaseDate": "रिलीज दिनांक",
+      "close": "Close",
+      "referenceInformation": "Reference information",
+      "releaseDetails": "Release details"
     }
   },
   "settings": {
@@ -218,7 +242,10 @@
       "ideNotFound": "{{ideName}} (नहीं मिला)",
       "ideNotFoundDescription": "इस कंप्यूटर पर {{ideName}} नहीं मिला। कोई दूसरा IDE चुनें।",
       "detectIdesAgain": "इंस्टॉल किए गए IDE फिर से खोजें",
-      "detectingIdes": "इंस्टॉल किए गए IDE खोजे जा रहे हैं..."
+      "detectingIdes": "इंस्टॉल किए गए IDE खोजे जा रहे हैं...",
+      "changesAreSavedImmediately": "Changes are saved immediately.",
+      "languageDescription": "Choose the interface language.",
+      "settingsDescription": "Manage Sidekick's general, Flutter and FVM preferences."
     }
   },
   "updater": {
@@ -228,7 +255,8 @@
       "later": "बाद में",
       "updateNow": "अभी अद्यतन करें",
       "clickHereToDownload": "डाउनलोड करने के लिए यहां क्लिक करें",
-      "aNewVersionOfSidekickIsAvailableUpdateinfolatest": "एक नया संस्करण साइडकिक के लिए उपलब्ध है ({{updateInfoLatest}})."
+      "aNewVersionOfSidekickIsAvailableUpdateinfolatest": "एक नया संस्करण साइडकिक के लिए उपलब्ध है ({{updateInfoLatest}}).",
+      "checkForUpdates": "अपडेट की जाँच करें"
     }
   },
   "compatibility": {
@@ -271,6 +299,10 @@
     "orphanBranch": "Remote branch no longer exists",
     "ohosTag": "OHOS",
     "openOhosRepo": "Open the OHOS Flutter repository",
-    "openOhosRelease": "Open this version's OHOS release page"
+    "openOhosRelease": "Open this version's OHOS release page",
+    "openRepo": "Open repo",
+    "statInstalled": "Installed",
+    "statRemoteBranches": "Remote branches",
+    "statUpdatePending": "Update available"
   }
 }

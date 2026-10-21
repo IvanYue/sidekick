@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:sidekick/src/design/kit/kit.dart';
+import 'package:sidekick/src/design/tokens.dart';
 
-import '../../../components/atoms/typography.dart';
-import '../../../components/molecules/list_tile.dart';
 import '../../common/constants.dart';
 import '../../common/dto/channel.dto.dart';
 import '../../common/dto/release.dto.dart';
@@ -10,40 +10,48 @@ import '../../common/utils/open_link.dart';
 import '../../fvm/components/fvm_setup_button.dart';
 import '../../ohos/ohos.constants.dart';
 import '../../ohos/ohos.service.dart';
+import 'detail_section.dart';
 
+/// 版本详情抽屉的「参考信息」分区。
+///
+/// 对应 design/index.html 的 `.drawer-section`（参考信息）。
 class ReferenceInfoTile extends StatelessWidget {
-  final ReleaseDto version;
+  /// 构造函数
   const ReferenceInfoTile(
     this.version, {
     super.key,
   });
 
+  /// 版本
+  final ReleaseDto version;
+
   @override
   Widget build(BuildContext context) {
     // Display channell reference if it's a release
     if (!version.isChannel) {
-      return Column(
+      return DetailSection(
+        title: context.i18n(
+          'modules:selectedDetail.components.referenceInformation',
+        ),
         children: [
-          SkListTile(
-            title:
-                Text(context.i18n('modules:selectedDetail.components.channel')),
-            trailing: Chip(
-              label: Text(
-                version.isOhosSdk
-                    ? kOhosForkName
-                    : version.release?.channelName ?? '',
-              ),
+          DetailKvRow(
+            label: context.i18n('modules:selectedDetail.components.channel'),
+            trailing: SkChip(
+              label: version.isOhosSdk
+                  ? kOhosForkName
+                  : version.release?.channelName ?? '',
+              outline: true,
             ),
           ),
-          const Divider(),
-          SkListTile(
-            title: Text(
-                context.i18n('modules:selectedDetail.components.releaseNotes')),
-            trailing: IconButton(
-              icon: const Icon(
-                Icons.open_in_new,
-                size: 20,
-              ),
+          DetailKvRow(
+            label: context.i18n(
+              'modules:selectedDetail.components.releaseNotes',
+            ),
+            trailing: SkButton(
+              label: context.i18n('modules:projects.components.open'),
+              icon: Icons.open_in_new,
+              variant: SkButtonVariant.ghost,
+              size: SkButtonSize.sm,
               onPressed: () async {
                 // OHOS SDKs are published as releases on the CPF-Flutter fork,
                 // under the tag the installed SDK reports
@@ -59,20 +67,22 @@ class ReferenceInfoTile extends StatelessWidget {
     }
 
     final channel = version as ChannelDto;
-    return Column(
+    return DetailSection(
+      title: context.i18n(
+        'modules:selectedDetail.components.referenceInformation',
+      ),
       children: [
-        Padding(
-          padding: const EdgeInsets.fromLTRB(20, 10, 20, 20),
-          child: Paragraph(channelDescriptions(context)[version.name] ?? ''),
+        Text(
+          channelDescriptions(context)[version.name] ?? '',
+          style: Theme.of(context).textTheme.bodySmall,
         ),
-        const Divider(height: 0),
-        SkListTile(
-          title:
-              Text(context.i18n('modules:selectedDetail.components.version')),
+        const SizedBox(height: SkTokens.sp3),
+        DetailKvRow(
+          label: context.i18n('modules:selectedDetail.components.version'),
           trailing: channel.sdkVersion != null
-              ? Chip(label: Text(channel.sdkVersion ?? ''))
+              ? SkChip(label: channel.sdkVersion ?? '', outline: true)
               : SetupButton(release: channel),
-        )
+        ),
       ],
     );
   }

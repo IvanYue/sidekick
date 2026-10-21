@@ -3,7 +3,9 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:sidekick/src/components/atoms/typography.dart';
+import 'package:sidekick/src/design/colors.dart';
+import 'package:sidekick/src/design/kit/kit.dart';
+import 'package:sidekick/src/design/tokens.dart';
 import 'package:sidekick/src/modules/common/utils/helpers.dart';
 import 'package:sidekick/src/modules/common/utils/notify.dart';
 import 'package:sidekick/src/modules/compatibility_checks/compat.dto.dart';
@@ -11,35 +13,44 @@ import 'package:sidekick/src/modules/compatibility_checks/compat.provider.dart';
 
 import 'compat.utils.dart';
 
+/// 缺少系统组件时的安装指引对话框。
+///
+/// 对应 design/tokens.css 的 `.modal`：标题 + 说明 + 可复制的命令块 + 底部操作。
 class CompatDialog extends ConsumerWidget {
+  /// 构造函数
   const CompatDialog({
     super.key,
   });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final check = ref.watch(compatProvider);
-    final command = _genCommand(check);
+    final theme = Theme.of(context);
+    final command = _genCommand(ref.watch(compatProvider));
 
     return AlertDialog(
       title: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Heading(context.i18n('modules:compatibility.dialog.dialogTitle')),
-          const SizedBox(
-            width: 15,
+          Text(
+            context.i18n('modules:compatibility.dialog.dialogTitle'),
+            style: theme.textTheme.titleLarge,
           ),
-          Subheading(context.i18n(Platform.isWindows
-              ? 'modules:compatibility.dialog.dialogDescriptionWindows'
-              : 'modules:compatibility.dialog.dialogDescriptionMacLinux'))
+          const SizedBox(height: SkTokens.sp2),
+          Text(
+            context.i18n(Platform.isWindows
+                ? 'modules:compatibility.dialog.dialogDescriptionWindows'
+                : 'modules:compatibility.dialog.dialogDescriptionMacLinux'),
+            style: theme.textTheme.bodySmall,
+          ),
         ],
       ),
       content: Container(
-        padding: const EdgeInsets.all(8),
+        padding: const EdgeInsets.all(SkTokens.sp3),
         decoration: BoxDecoration(
-            color: Theme.of(context).canvasColor,
-            borderRadius: BorderRadius.circular(12)),
+          color: SkColors.of(context).bgInset,
+          borderRadius: SkTokens.radiusMd,
+        ),
         child: SingleChildScrollView(
           child: Row(
             mainAxisSize: MainAxisSize.min,
@@ -47,41 +58,37 @@ class CompatDialog extends ConsumerWidget {
               Expanded(
                 child: SelectableText(
                   command,
-                  //maxLines: 1,
-                  //textAlign: TextAlign.center,
+                  style: SkText.mono(context, fontSize: 11),
                 ),
               ),
-              IconButton(
-                  splashRadius: 2,
-                  onPressed: () {
-                    Clipboard.setData(
-                      ClipboardData(text: command),
-                    );
-                    notify(context.i18n('components:atoms.copiedToClipboard'));
-                  },
-                  icon: const Icon(
-                    Icons.copy,
-                    size: 15,
-                  ))
+              SkIconButton(
+                icon: Icons.content_copy_outlined,
+                size: 22,
+                iconSize: 14,
+                tooltip: context.i18n('components:atoms.copiedToClipboard'),
+                onPressed: () {
+                  Clipboard.setData(ClipboardData(text: command));
+                  notify(context.i18n('components:atoms.copiedToClipboard'));
+                },
+              ),
             ],
           ),
         ),
       ),
       actions: [
-        OutlinedButton(
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-          child: Text(context.i18n('modules:fvm.dialogs.cancel')),
+        SkButton(
+          label: context.i18n('modules:fvm.dialogs.cancel'),
+          onPressed: () => Navigator.of(context).pop(),
         ),
-        ElevatedButton(
+        SkButton(
+          label: context.i18n('modules:compatibility.dialog.done'),
+          variant: SkButtonVariant.primary,
           onPressed: () {
             notify(context
                 .i18n('modules:compatibility.dialog.dialogRestartNotication'));
             Future.delayed(const Duration(seconds: 3)).then((_) => exit(0));
           },
-          child: Text(context.i18n('modules:compatibility.dialog.done')),
-        )
+        ),
       ],
     );
   }

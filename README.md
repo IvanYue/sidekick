@@ -85,6 +85,8 @@ Manage Flutter versions
 
 Explore releases
 
+Manage OHOS (OpenHarmony) Flutter fork branches
+
 Search versions across apps
 
 Version sandboxing (playground)
@@ -92,6 +94,52 @@ Version sandboxing (playground)
 more...
 
 </div>
+
+## 🎨 Design system
+
+The whole UI was rebuilt on a small design system that mirrors the CSS
+variables in [`design/tokens.css`](design/tokens.css). The reference designs
+live in [`design/`](design) — open [`design/index.html`](design/index.html)
+in a browser to browse every screen (`?theme=light` for the light theme).
+
+Flutter side:
+
+| Path | What it holds |
+| --- | --- |
+| [`lib/src/design/tokens.dart`](lib/src/design/tokens.dart) | Spacing scale, radii, structural sizes, motion curves |
+| [`lib/src/design/colors.dart`](lib/src/design/colors.dart) | `SkColors` theme extension (dark default, light override) |
+| [`lib/src/design/theme.dart`](lib/src/design/theme.dart) | `ThemeData` built from the tokens above |
+| [`lib/src/design/kit/`](lib/src/design/kit) | Reusable widgets: buttons, chips, panels, list rows, sidebar, page shell |
+
+Recoloring the app means editing the three accent variables in
+`design/tokens.css` and the matching constants in `lib/src/design/colors.dart`
+— no page-level changes needed.
+
+## 🧭 Navigation
+
+The sidebar has four destinations plus settings:
+
+- **Installed** — every Flutter SDK in your local FVM cache
+- **Projects** — Flutter projects tracked by Sidekick
+- **Releases** — official Flutter channels and past releases
+- **OHOS** — OpenHarmony Flutter fork branches (`oh-*`)
+- **Settings** — general, Flutter and FVM preferences
+
+## 🛠 Development
+
+```sh
+flutter pub get
+flutter run -d macos     # or windows / linux
+flutter analyze
+flutter test
+```
+
+Widget tests can dump screenshots for visual review by setting
+`SCREENSHOT_DIR`:
+
+```sh
+SCREENSHOT_DIR=/tmp/sidekick-shots flutter test
+```
 
 ## Contributors 🎉
 

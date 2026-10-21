@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import '../../../components/mdi_icons.dart';
+import 'package:sidekick/src/design/colors.dart';
+import 'package:sidekick/src/design/kit/kit.dart';
+import 'package:sidekick/src/design/tokens.dart';
 import 'package:sidekick/src/modules/common/utils/helpers.dart';
 
-import '../../../components/atoms/typography.dart';
+import '../../../components/mdi_icons.dart';
 import '../updater.provider.dart';
 
-/// Sidekick update button
+/// Sidekick 更新按钮。
+///
+/// 标题栏里的「检查更新」图标：有可用更新时高亮并弹出更新对话框，
+/// 否则点击一次重新检查最新版本。
 class SkUpdateButton extends HookConsumerWidget {
-  /// Constructor
+  /// 构造函数
   const SkUpdateButton({
     super.key,
   });
@@ -17,11 +22,8 @@ class SkUpdateButton extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final updater = ref.watch(updaterProvider.notifier);
     final updateInfo = ref.watch(updaterProvider);
-
-    /// Return empty if its not installed or does not need update
-    if (!updateInfo.ready) {
-      return const SizedBox(height: 0, width: 0);
-    }
+    final c = SkColors.of(context);
+    final theme = Theme.of(context);
 
     final isMounted = context.mounted;
 
@@ -32,40 +34,41 @@ class SkUpdateButton extends HookConsumerWidget {
         builder: (context) {
           // return object of type Dialog
           return AlertDialog(
-            contentPadding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
-            buttonPadding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
             title: Row(
               children: [
-                Icon(MdiIcons.alertDecagram),
-                const SizedBox(width: 10),
-                Heading(
-                    context.i18n('modules:updater.components.updateAvailable')),
+                Icon(MdiIcons.alertDecagram, color: c.accent),
+                const SizedBox(width: SkTokens.sp3),
+                Text(
+                  context.i18n('modules:updater.components.updateAvailable'),
+                  style: theme.textTheme.titleLarge,
+                ),
               ],
             ),
-            content: Paragraph(
+            content: Text(
               context.i18n(
                 'modules:updater.components.sidekickVersionUpdateinfolatestIsNowAvailable',
                 variables: {
                   'updateInfoLatest': updateInfo.latest,
                 },
               ),
+              style: theme.textTheme.bodyMedium,
             ),
             actions: <Widget>[
-              // usually buttons at the bottom of the dialog
-              TextButton(
+              SkButton(
+                label: context.i18n('modules:updater.components.later'),
+                variant: SkButtonVariant.ghost,
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
-                child: Text(context.i18n('modules:updater.components.later')),
               ),
-              ElevatedButton(
+              SkButton(
+                label: context.i18n('modules:updater.components.updateNow'),
+                variant: SkButtonVariant.primary,
                 onPressed: () async {
                   await updater.openInstaller(context);
                   // ignore: use_build_context_synchronously
                   if (isMounted) Navigator.of(context).pop();
                 },
-                child:
-                    Text(context.i18n('modules:updater.components.updateNow')),
               ),
             ],
           );
@@ -73,17 +76,19 @@ class SkUpdateButton extends HookConsumerWidget {
       );
     }
 
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        ActionChip(
-          onPressed: showUpdateDialog,
-          label: Text(
-            context.i18n('modules:updater.components.updateAvailable'),
-            style: const TextStyle(fontSize: 12),
-          ),
-        ),
-      ],
+    return SkIconButton(
+      icon: Icons.refresh_rounded,
+      color: updateInfo.ready ? c.accent : null,
+      tooltip: updateInfo.ready
+          ? context.i18n('modules:updater.components.updateAvailable')
+          : context.i18n('modules:updater.components.checkForUpdates'),
+      onPressed: () {
+        if (updateInfo.ready) {
+          showUpdateDialog();
+        } else {
+          updater.checkLatest();
+        }
+      },
     );
   }
 }

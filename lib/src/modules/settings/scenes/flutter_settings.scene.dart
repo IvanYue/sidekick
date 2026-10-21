@@ -1,66 +1,99 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:sidekick/src/design/colors.dart';
+import 'package:sidekick/src/design/kit/kit.dart';
+import 'package:sidekick/src/design/tokens.dart';
 import 'package:sidekick/src/modules/common/utils/helpers.dart';
 
-import '../../../components/atoms/typography.dart';
 import '../../releases/releases.provider.dart';
 import '../settings.dto.dart';
 
-/// Flutter settings section
+/// Flutter 设置面板。
+///
+/// 对应 design/index.html 的「Flutter」面板：每项是「标题 + 说明」一行，
+/// 右侧跟一个 [SkSwitch]。
 class SettingsSectionFlutter extends ConsumerWidget {
-  /// Constructor
+  /// 构造函数
   const SettingsSectionFlutter(
     this.settings,
     this.onSave, {
     super.key,
   });
 
-  /// Settings
+  /// 设置
   final AllSettings settings;
 
-  /// On save handler
+  /// 保存回调
   final Function() onSave;
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+
     final releases = ref.watch(releasesStateProvider);
 
     final deactivate = !releases.hasGlobal;
 
-    return Container(
-      padding: const EdgeInsets.only(top: 20),
-      child: ListView(
+    /// 一行开关设置项。
+    Widget row({
+      required String title,
+      String? description,
+      required bool value,
+      required ValueChanged<bool>? onChanged,
+    }) {
+      return SkListRow(
+        title: Text(
+          title,
+          style: theme.textTheme.titleSmall?.copyWith(
+            color: onChanged == null ? SkColors.of(context).ink3 : null,
+          ),
+        ),
+        subtitle: description == null
+            ? null
+            : Text(
+                description,
+                style: theme.textTheme.labelSmall,
+              ),
+        trailing: SkSwitch(
+          value: value,
+          onChanged: onChanged,
+        ),
+      );
+    }
+
+    return SkPanel(
+      padding: EdgeInsets.zero,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Text('Flutter', style: Theme.of(context).textTheme.titleLarge),
-          const SizedBox(height: 20),
-          releases.hasGlobal
-              ? Container()
-              : Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    // TODO: Move this into a separate component
-                    Container(
-                      padding: const EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        color: Colors.deepOrange.withAlpha((255 * 0.1).round()),
-                        border: Border.all(
-                          color: Colors.deepOrange,
-                          width: 0.5,
-                        ),
-                      ),
-                      child: Text(
-                        context.i18n(
-                            'modules:settings.scenes.flutterSDKGlobalDescription'),
-                      ),
-                    ),
-                    const SizedBox(height: 20)
-                  ],
+          SkPanelHeader(
+            title: 'Flutter',
+            subtitle: context
+                .i18n('modules:settings.scenes.changesAreSavedImmediately'),
+          ),
+          if (!releases.hasGlobal) ...[
+            Padding(
+              padding: const EdgeInsets.fromLTRB(
+                SkTokens.sp5,
+                SkTokens.sp4,
+                SkTokens.sp5,
+                0,
+              ),
+              child: SkNoteBar(
+                icon: Icons.info_outline,
+                tone: SkChipTone.warn,
+                description: context.i18n(
+                  'modules:settings.scenes.flutterSDKGlobalDescription',
                 ),
-          SwitchListTile(
-            title: Text(context
-                .i18n('modules:settings.scenes.analyticsCrashReporting')),
-            subtitle: Text(
-              context
-                  .i18n('modules:settings.scenes.analyticsCrashReportSubtitle'),
+              ),
+            ),
+          ],
+          row(
+            title: context.i18n(
+              'modules:settings.scenes.analyticsCrashReporting',
+            ),
+            description: context.i18n(
+              'modules:settings.scenes.analyticsCrashReportSubtitle',
             ),
             value: settings.flutter.analytics,
             onChanged: deactivate
@@ -70,11 +103,23 @@ class SettingsSectionFlutter extends ConsumerWidget {
                     onSave();
                   },
           ),
-          const SizedBox(height: 20),
-          Subheading(context.i18n('modules:settings.scenes.platforms')),
-          const SizedBox(height: 20),
-          SwitchListTile(
-            title: Text(context.i18n('modules:settings.scenes.web')),
+          const SkDivider(),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(
+              SkTokens.sp6,
+              SkTokens.sp5,
+              SkTokens.sp6,
+              SkTokens.sp2,
+            ),
+            child: Text(
+              context
+                  .i18n('modules:settings.scenes.platforms')
+                  .toUpperCase(),
+              style: SkText.overline(context),
+            ),
+          ),
+          row(
+            title: context.i18n('modules:settings.scenes.web'),
             value: settings.flutter.web,
             onChanged: deactivate
                 ? null
@@ -83,9 +128,9 @@ class SettingsSectionFlutter extends ConsumerWidget {
                     onSave();
                   },
           ),
-          const Divider(),
-          SwitchListTile(
-            title: const Text('MacOS'),
+          const SkDivider(),
+          row(
+            title: 'macOS',
             value: settings.flutter.macos,
             onChanged: deactivate
                 ? null
@@ -94,9 +139,9 @@ class SettingsSectionFlutter extends ConsumerWidget {
                     onSave();
                   },
           ),
-          const Divider(),
-          SwitchListTile(
-            title: const Text('Windows'),
+          const SkDivider(),
+          row(
+            title: 'Windows',
             value: settings.flutter.windows,
             onChanged: deactivate
                 ? null
@@ -105,9 +150,9 @@ class SettingsSectionFlutter extends ConsumerWidget {
                     onSave();
                   },
           ),
-          const Divider(),
-          SwitchListTile(
-            title: const Text('Linux'),
+          const SkDivider(),
+          row(
+            title: 'Linux',
             value: settings.flutter.linux,
             onChanged: deactivate
                 ? null

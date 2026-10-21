@@ -2,7 +2,6 @@
   "common": {
     "navButtonDashboard": "대시보드",
     "navButtonProjects": "프로젝트",
-    "navButtonExplore": "탐색",
     "navButtonPackages": "패키지",
     "stableChannelDescription": "프로덕션 앱을 출시하려는 경우 이 채널의 버전 사용이 권장됩니다. 베타 버전이 안정화 작업을 거치고 매 분기마다 이 stable 채널로 업데이트 됩니다. ",
     "betaChannelDescription": "다트, 엔진 및 프레임워크에서 새로운 베타 버전이 출시되면 매월 첫번째 월요일에 이 beta 채널로 업데이트 됩니다.",
@@ -10,7 +9,14 @@
     "masterChannelDescription": "현존하는 개발자 버전 중 가장 최신 버전입니다. 대부분 문제 없이 작동하지만, 간혹 예상치 못한 오류가 발생할 수 있습니다.",
     "utils": {
       "couldNotLaunchUrl": "{{url}} 을 열 수 없습니다."
-    }
+    },
+    "navGroupWorkspace": "작업 공간",
+    "navButtonInstalled": "설치됨",
+    "navButtonReleases": "릴리스",
+    "navButtonSettings": "설정",
+    "sidebarReady": "준비됨",
+    "sidebarChecking": "확인 중",
+    "sidebarMissingComponents": "구성 요소 누락"
   },
   "fvm": {
     "installedVersions": "설치된 버전",
@@ -52,7 +58,17 @@
       "couldNotUpgradeVersionname": "{{versionName}}을(를) 업그레이드할 수 없습니다",
       "forceUpgradeDiscardsChanges": "강제 업그레이드는 이 SDK의 로컬 변경 사항을 모두 버린 후 업그레이드합니다. 프로젝트에는 영향을 주지 않습니다.",
       "forceUpgrade": "강제 업그레이드"
-    }
+    },
+    "allInstalledVersions": "All installed versions · {{count}}",
+    "globalVersion": "Global version",
+    "globalVersionPathHint": "The flutter command currently points to {{path}}",
+    "installedVersionsDescription": "Every Flutter SDK in your local FVM cache. Click any row to see version details.",
+    "sortedByInstallTime": "Sorted by install time",
+    "statsCacheSize": "Disk usage",
+    "statsInstalled": "Installed versions",
+    "statsOutdated": "Outdated",
+    "statsUnused": "Unused",
+    "viewPath": "View path"
   },
   "projects": {
     "projectsRefreshed": "새로고침 완료",
@@ -129,7 +145,8 @@
       "setVersion": "버전 설정",
       "save": "저장",
       "versionUpdated": "버전이 {{version}}(으)로 변경되었습니다"
-    }
+    },
+    "flutterProject": "Flutter project"
   },
   "pubPackages": {
     "trending": "인기",
@@ -153,7 +170,11 @@
     "all": "전체",
     "releases": "릴리즈",
     "versions": "버전",
-    "theCurrentTipoftreeAbsoluteLatestCuttingEdgeBuildUsuallyFunctional": "현존하는 개발자 버전 중 가장 최신 버전입니다. 대부분 문제 없이 작동하지만, 간혹 예상치 못한 오류가 발생할 수 있습니다."
+    "theCurrentTipoftreeAbsoluteLatestCuttingEdgeBuildUsuallyFunctional": "현존하는 개발자 버전 중 가장 최신 버전입니다. 대부분 문제 없이 작동하지만, 간혹 예상치 못한 오류가 발생할 수 있습니다.",
+    "releasesDescription": "Browse the official Flutter channels and every past release.",
+    "loading": "Loading releases…",
+    "empty": "No releases available",
+    "emptyMessage": "Could not fetch the release list from Flutter. Check your connection and retry."
   },
   "sandbox": {
     "playground": "터미널",
@@ -184,7 +205,10 @@
       "channel": "채널",
       "releaseNotes": "릴리즈 노트",
       "version": "버전",
-      "releaseDate": "릴리즈 날짜"
+      "releaseDate": "릴리즈 날짜",
+      "close": "Close",
+      "referenceInformation": "Reference information",
+      "releaseDetails": "Release details"
     }
   },
   "settings": {
@@ -218,7 +242,10 @@
       "ideNotFound": "{{ideName}} (찾을 수 없음)",
       "ideNotFoundDescription": "이 컴퓨터에서 {{ideName}}을(를) 찾을 수 없습니다. 다른 IDE를 선택하세요.",
       "detectIdesAgain": "설치된 IDE 다시 감지",
-      "detectingIdes": "설치된 IDE를 감지하는 중..."
+      "detectingIdes": "설치된 IDE를 감지하는 중...",
+      "changesAreSavedImmediately": "Changes are saved immediately.",
+      "languageDescription": "Choose the interface language.",
+      "settingsDescription": "Manage Sidekick's general, Flutter and FVM preferences."
     }
   },
   "updater": {
@@ -228,7 +255,8 @@
       "later": "나중에",
       "updateNow": "지금 업데이트",
       "clickHereToDownload": "클릭하여 다운로드",
-      "aNewVersionOfSidekickIsAvailableUpdateinfolatest": "새로운 사이드킥 버전이 존재합니다. ({{updateInfoLatest}}) ."
+      "aNewVersionOfSidekickIsAvailableUpdateinfolatest": "새로운 사이드킥 버전이 존재합니다. ({{updateInfoLatest}}) .",
+      "checkForUpdates": "업데이트 확인"
     }
   },
   "compatibility": {
@@ -271,6 +299,10 @@
     "orphanBranch": "Remote branch no longer exists",
     "ohosTag": "OHOS",
     "openOhosRepo": "Open the OHOS Flutter repository",
-    "openOhosRelease": "Open this version's OHOS release page"
+    "openOhosRelease": "Open this version's OHOS release page",
+    "openRepo": "Open repo",
+    "statInstalled": "Installed",
+    "statRemoteBranches": "Remote branches",
+    "statUpdatePending": "Update available"
   }
 }

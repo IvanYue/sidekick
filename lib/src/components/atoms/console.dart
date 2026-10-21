@@ -2,10 +2,42 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../mdi_icons.dart';
 
 import '../../modules/fvm/fvm.provider.dart';
-import 'typography.dart';
+
+/// Stdout 等宽文本
+class ConsoleText extends StatelessWidget {
+  /// 构造函数
+  const ConsoleText(
+    this.text, {
+    super.key,
+    this.maxLines = 1,
+    this.color,
+  });
+
+  /// 内容
+  final String text;
+
+  /// 最大行数
+  final int maxLines;
+
+  /// 颜色
+  final Color? color;
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      text,
+      maxLines: maxLines,
+      style: GoogleFonts.ibmPlexMono().copyWith(
+        fontSize: 12,
+        color: color ?? Theme.of(context).colorScheme.secondary,
+      ),
+    );
+  }
+}
 
 class Console extends HookWidget {
   final bool expand;
