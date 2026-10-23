@@ -20,8 +20,6 @@
   },
   "fvm": {
     "installedVersions": "Installed Versions",
-    "cleanUp": "Cleanup",
-    "cleanUpTooltip": "Clean unused versions",
     "numberOfCachedVersions": "{{cachedVersions}} versions",
     "versionItemversionnameHasBeenInstalled": "Version {{itemVersionName}} har installerats.",
     "versionItemversionnameHasFinishedSetup": "Version {{itemVersionName}} har färdigställt installationen.",
@@ -41,14 +39,10 @@
       "sdkHasNotFinishedSetup": "Installationen av SDK:n har inte färdigställts"
     },
     "dialogs": {
-      "noUnusedFlutterSdkVersionsInstalled": "Inga oanvända Flutter SDK versioner installerade",
-      "cleanUpUnusedVersions": "Rensa bort oanvända versioner",
       "cancel": "Avbryt",
       "confirm": "Godkänn",
       "ok": "Ok",
       "globalConfiguration": "Global konfiguration",
-      "theseVersionAreNotPinnedToAProject": "Dessa versioner är inte fästa på några projekt ",
-      "doYouWantToRemoveThemToFreeUpSpace": "Vill du ta bort detta för att frigöra utrymme?",
       "areYouSureYouWantToRemove": "Är du säker att du vill ta bort?",
       "thisWillRemoveItemnameCacheFromYourSystem": "Detta kommer ta bort {{itemname}} från cachen från ditt system.",
       "flutterPathIsPointingOn": "Flutter sökvägen (PATH) pekar på\n ",
@@ -174,7 +168,9 @@
     "releasesDescription": "Browse the official Flutter channels and every past release.",
     "loading": "Loading releases…",
     "empty": "No releases available",
-    "emptyMessage": "Could not fetch the release list from Flutter. Check your connection and retry."
+    "emptyMessage": "Could not fetch the release list from Flutter. Check your connection and retry.",
+    "unavailable": "Utgivningslistan är inte tillgänglig",
+    "unavailableMessage": "Kunde inte nå Flutters utgivningslista och det finns ingen cachelagrad kopia än. Installerade versioner och kanaler visas fortfarande; försök igen när nätverket är tillbaka."
   },
   "sandbox": {
     "playground": "Sandlåda",

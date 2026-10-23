@@ -44,8 +44,11 @@ class ReleasesScreen extends ConsumerWidget {
       actions: SkIconButton(
         icon: Icons.refresh,
         tooltip: context.i18n('components:atoms.refresh'),
-        // 重新扫描本地缓存（远程发行版列表由 provider 自行拉取）
-        onPressed: () => ref.read(fvmCacheProvider.notifier).reloadState(),
+        // 远端列表与本地缓存一起重取：远端失败时会回落到磁盘缓存
+        onPressed: () {
+          ref.invalidate(flutterReleasesProvider);
+          ref.read(fvmCacheProvider.notifier).reloadState();
+        },
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -110,13 +113,22 @@ class ReleasesScreen extends ConsumerWidget {
               child: SkEmptyState(
                 icon: releases.fetching
                     ? Icons.downloading_outlined
-                    : Icons.inbox_outlined,
+                    : releases.remoteUnavailable
+                        ? Icons.cloud_off_outlined
+                        : Icons.inbox_outlined,
+                tone: releases.remoteUnavailable
+                    ? SkChipTone.warn
+                    : SkChipTone.neutral,
                 title: releases.fetching
                     ? context.i18n('modules:releases.loading')
-                    : context.i18n('modules:releases.empty'),
+                    : releases.remoteUnavailable
+                        ? context.i18n('modules:releases.unavailable')
+                        : context.i18n('modules:releases.empty'),
                 description: releases.fetching
                     ? null
-                    : context.i18n('modules:releases.emptyMessage'),
+                    : releases.remoteUnavailable
+                        ? context.i18n('modules:releases.unavailableMessage')
+                        : context.i18n('modules:releases.emptyMessage'),
               ),
             )
           else

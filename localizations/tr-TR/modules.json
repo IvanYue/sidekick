@@ -20,8 +20,6 @@
   },
   "fvm": {
     "installedVersions": "Yüklü Sürümler",
-    "cleanUp": "Temizle",
-    "cleanUpTooltip": "Kullanılmayan sürümleri temizle",
     "numberOfCachedVersions": "{{cachedVersions}} sürümler",
     "versionItemversionnameHasBeenInstalled": "{{itemVersionName}} sürümü yüklendi.",
     "versionItemversionnameHasFinishedSetup": "{{itemVersionName}} sürümün kurulumu tamamlandı.",
@@ -41,14 +39,10 @@
       "sdkHasNotFinishedSetup": "SDK kurulumu tamamlanmadı"
     },
     "dialogs": {
-      "noUnusedFlutterSdkVersionsInstalled": "Kullanılmayan hiçbir Flutter SDK sürümü yüklü değil",
-      "cleanUpUnusedVersions": "Kullanılmayan sürümleri temizle",
       "cancel": "İptal",
       "confirm": "Onayla",
       "ok": "Tamam",
       "globalConfiguration": "Genel Ayar",
-      "theseVersionAreNotPinnedToAProject": "Bu sürümler bir projeye sabitlenmemiş",
-      "doYouWantToRemoveThemToFreeUpSpace": "Boş alan açmak için kaldırmak istiyor musunuz?",
       "areYouSureYouWantToRemove": "Kaldırmak istediğinize emin misiniz?",
       "thisWillRemoveItemnameCacheFromYourSystem": "Bu işlem {{itemname}}'i sisteminizin ön belleğinden kaldıracaktır.",
       "flutterPathIsPointingOn": "Flutter PATH şuraya gösteriyor\n ",
@@ -174,7 +168,9 @@
     "releasesDescription": "Browse the official Flutter channels and every past release.",
     "loading": "Loading releases…",
     "empty": "No releases available",
-    "emptyMessage": "Could not fetch the release list from Flutter. Check your connection and retry."
+    "emptyMessage": "Could not fetch the release list from Flutter. Check your connection and retry.",
+    "unavailable": "Sürüm listesi kullanılamıyor",
+    "unavailableMessage": "Flutter sürüm akışına ulaşılamadı ve henüz önbellek kopyası yok. Yüklü sürümler ve kanallar görünmeye devam eder; ağ döndüğünde yeniden deneyin."
   },
   "sandbox": {
     "playground": "Oyun alanı",

@@ -20,8 +20,6 @@
   },
   "fvm": {
     "installedVersions": "Встановлені версії",
-    "cleanUp": "Прибрати",
-    "cleanUpTooltip": "Очистити невикористані версії",
     "numberOfCachedVersions": "{{cachedVersions}} версія (-ії/-й)",
     "versionItemversionnameHasBeenInstalled": "Версію {{itemVersionName}} встановлено.",
     "versionItemversionnameHasFinishedSetup": "Налаштування версії {{itemVersionName}} завершено.",
@@ -41,14 +39,10 @@
       "sdkHasNotFinishedSetup": "Не завершено налаштування SDK"
     },
     "dialogs": {
-      "noUnusedFlutterSdkVersionsInstalled": "Немає невикористаних версій Flutter SDK",
-      "cleanUpUnusedVersions": "Очистити невикористані версії",
       "cancel": "Скасувати",
       "confirm": "Підтвердити",
       "ok": "OK",
       "globalConfiguration": "Глобальна конфігурація",
-      "theseVersionAreNotPinnedToAProject": "Ці версії не прикріплені до проекту ",
-      "doYouWantToRemoveThemToFreeUpSpace": "Ви хочете видалити це, щоб звільнити місце?",
       "areYouSureYouWantToRemove": "Ви впевнені, що хочете видалити?",
       "thisWillRemoveItemnameCacheFromYourSystem": "Це видалить {{itemname}} з кешу вашої системи.",
       "flutterPathIsPointingOn": "Flutter PATH вказує на\n",
@@ -174,7 +168,9 @@
     "releasesDescription": "Browse the official Flutter channels and every past release.",
     "loading": "Loading releases…",
     "empty": "No releases available",
-    "emptyMessage": "Could not fetch the release list from Flutter. Check your connection and retry."
+    "emptyMessage": "Could not fetch the release list from Flutter. Check your connection and retry.",
+    "unavailable": "Список версій недоступний",
+    "unavailableMessage": "Не вдалося отримати список версій Flutter, і кешу ще немає. Встановлені версії та канали й далі доступні; повторіть спробу, коли мережа відновиться."
   },
   "sandbox": {
     "playground": "Playground",

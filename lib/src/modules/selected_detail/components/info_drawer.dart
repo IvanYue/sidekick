@@ -117,8 +117,9 @@ class _DrawerHeader extends StatelessWidget {
             ? kOhosForkName
             : release.release?.channelName ?? '';
 
-    final flutterVersion = release.release?.version ?? release.name;
-    final dartVersion = release.release?.dartSdkVersion;
+    // 和列表行用同一套取值路径：本地缓存优先，未安装回落远端元数据
+    final flutterVersion = release.sdkFlutterVersion ?? release.name;
+    final dartVersion = release.sdkDartVersion;
 
     return Container(
       padding: const EdgeInsets.fromLTRB(

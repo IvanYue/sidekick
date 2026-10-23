@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
@@ -6,9 +7,13 @@ import 'package:fvm/fvm.dart';
 import 'package:fvm/src/services/process_service.dart';
 import 'package:path/path.dart' as p;
 
+import '../common/utils/remote_cache.dart';
 import '../fvm/fvm.provider.dart';
 import 'ohos.constants.dart';
 import 'ohos.dto.dart';
+
+/// 远端 OHOS 分支列表的磁盘缓存键
+const kOhosBranchesCacheKey = 'ohos_branches';
 
 /// Registers the OHOS fork in FVM's app config (idempotent).
 ///
@@ -151,16 +156,43 @@ Future<String> promoteOhosInstallToTopLevel(String directory) async {
 
 /// Lists OHOS release/dev branches from the remote repository.
 ///
-/// Throws [ProcessException] on network failures; the provider layer turns
-/// that into an error state with a retry button.
+/// 网络可达时把 `git ls-remote` 的原始输出落盘，网络失败时回落到它 —— 断网或
+/// 镜像站被墙时，版本列表至少还能显示上一次的分支，而不是整页报错。
+///
+/// 只有「网络失败且从未成功过」才抛出（[ProcessException]），让 provider 显示
+/// 失败态与重试入口。
 Future<List<OhosBranchDto>> fetchOhosBranches() async {
-  final result = await fvmContext.get<ProcessService>().run('git', args: [
-    'ls-remote',
-    '--heads',
-    kOhosRepoUrl
-  ]).timeout(const Duration(minutes: 1));
+  try {
+    final result = await fvmContext.get<ProcessService>().run('git', args: [
+      'ls-remote',
+      '--heads',
+      kOhosRepoUrl
+    ]).timeout(const Duration(minutes: 1));
 
-  return parseOhosLsRemote(result.stdout.toString());
+    final raw = result.stdout.toString();
+    await RemoteCache.write(kOhosBranchesCacheKey, jsonEncode({'raw': raw}));
+
+    return parseOhosLsRemote(raw);
+  } on Exception {
+    final cached = await _readCachedOhosBranches();
+    if (cached != null) return cached;
+
+    rethrow;
+  }
+}
+
+/// 读取磁盘上的 ls-remote 输出并解析；没有缓存或解析失败返回 null
+Future<List<OhosBranchDto>?> _readCachedOhosBranches() async {
+  final cached = await RemoteCache.read(kOhosBranchesCacheKey);
+  if (cached == null) return null;
+
+  try {
+    final raw = (jsonDecode(cached) as Map<String, dynamic>)['raw'];
+
+    return raw is String ? parseOhosLsRemote(raw) : null;
+  } on Exception {
+    return null;
+  }
 }
 
 /// Parses `git ls-remote --heads` output into OHOS branches.

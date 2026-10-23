@@ -39,6 +39,15 @@ class OhosChannelCard extends ConsumerWidget {
         .where((item) => item.isInstalled)
         .length;
 
+    // 最新分支若已装在本地，就显示本地的 Flutter / Dart 版本；否则只有远端
+    // 分支名解析出的 Flutter 版本，Dart 版本无从得知。
+    final installedLatest = (mergedAsync.value ?? const [])
+        .where((item) => item.isInstalled && item.branch?.name == latest?.name)
+        .firstOrNull;
+    final flutterVersion = installedLatest?.cache?.flutterSdkVersion ??
+        (latest == null ? null : ohosDisplayName(latest.name));
+    final dartVersion = installedLatest?.cache?.dartSdkVersion;
+
     return SkPanel(
       padding: const EdgeInsets.all(SkTokens.sp4),
       child: Material(
@@ -48,7 +57,7 @@ class OhosChannelCard extends ConsumerWidget {
               .read(navigationProvider.notifier)
               .goTo(NavigationRoutes.ohosScreen),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               // 渠道名 + OHOS 徽章
               Row(
@@ -64,25 +73,47 @@ class OhosChannelCard extends ConsumerWidget {
                 ],
               ),
               const SizedBox(height: SkTokens.sp3),
-              Text(
-                context.i18n('modules:ohos.ohosDescription'),
-                maxLines: 3,
-                overflow: TextOverflow.ellipsis,
-                style: theme.textTheme.labelSmall,
+              // 说明固定三行高度，和相邻渠道卡保持同一基线
+              SizedBox(
+                height: 54,
+                child: Text(
+                  context.i18n('modules:ohos.ohosDescription'),
+                  maxLines: 3,
+                  overflow: TextOverflow.ellipsis,
+                  style: theme.textTheme.labelSmall,
+                ),
               ),
-              const SizedBox(height: SkTokens.sp4),
-              // 最新分支 + 已安装计数
+              // 撑开中间空白，把底部操作区顶到卡片下沿
+              const Spacer(),
+              // 最新分支版本 + 已安装计数。渠道卡窄，两个版本号上下两行放，
+              // 同一行卡片的下沿因此仍然对齐。
               Row(
+                crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  Flexible(
-                    child: Text(
-                      latest != null ? ohosDisplayName(latest.name) : '—',
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: SkText.mono(context, fontSize: 12, color: c.ink1),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          flutterVersion ?? '—',
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style:
+                              SkText.mono(context, fontSize: 12, color: c.ink1),
+                        ),
+                        const SizedBox(height: 2),
+                        Text(
+                          'Dart ${dartVersion ?? '—'}',
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style:
+                              SkText.mono(context, fontSize: 11, color: c.ink3),
+                        ),
+                      ],
                     ),
                   ),
-                  const Spacer(),
+                  const SizedBox(width: SkTokens.sp3),
                   SkChip(
                     label: context.i18n(
                       'modules:ohos.installedCount',

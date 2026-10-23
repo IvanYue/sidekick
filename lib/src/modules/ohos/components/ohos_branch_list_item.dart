@@ -7,6 +7,8 @@ import 'package:sidekick/src/design/tokens.dart';
 import 'package:sidekick/src/modules/common/utils/helpers.dart';
 
 import '../../../components/mdi_icons.dart';
+import '../../../components/molecules/sdk_version_meta.dart';
+import '../../common/dto/release.dto.dart';
 import '../../fvm/components/fvm_release_actions.dart';
 import '../../fvm/components/fvm_setup_button.dart';
 import '../../fvm/dialogs/fvm_global_dialog.dart';
@@ -18,7 +20,8 @@ import '../ohos.service.dart';
 /// OHOS 分支列表行：安装、更新与后续管理。
 ///
 /// 对应 design/index.html `#page-ohos` 的 `.list-item`：等宽分支名 +
-/// 类型 chip + 已安装 / 待更新状态 + 右侧操作按钮。
+/// 类型 chip + 已安装 / 待更新状态 + 右侧操作按钮。行尾自带一条 [SkDivider]，
+/// 与发行版列表的写法保持一致。
 class OhosBranchListItem extends ConsumerWidget {
   /// 构造函数
   const OhosBranchListItem(
@@ -48,121 +51,133 @@ class OhosBranchListItem extends ConsumerWidget {
     final branch = item.branch;
     final isDev = branch?.type == OhosBranchType.dev;
 
-    return SkListRow(
-      leading: Container(
-        width: SkTokens.tileSize,
-        height: SkTokens.tileSize,
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-          color: isDev ? c.infoSoft : c.okSoft,
-          borderRadius: SkTokens.radiusLg,
-          border: Border.all(color: isDev ? c.infoLine : c.okLine),
-        ),
-        child: Icon(
-          isDev ? Icons.bolt : Icons.phone_android,
-          size: 18,
-          color: isDev ? c.info : c.ok,
-        ),
-      ),
-      title: Row(
-        children: [
-          Flexible(
-            child: Text(
-              ohosDisplayName(branch?.name ?? item.cache!.name),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: SkText.monoLg(context, color: c.ink1),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        SkListRow(
+          leading: Container(
+            width: SkTokens.tileSize,
+            height: SkTokens.tileSize,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: isDev ? c.infoSoft : c.okSoft,
+              borderRadius: SkTokens.radiusLg,
+              border: Border.all(color: isDev ? c.infoLine : c.okLine),
+            ),
+            child: Icon(
+              isDev ? Icons.bolt : Icons.phone_android,
+              size: 18,
+              color: isDev ? c.info : c.ok,
             ),
           ),
-          const SizedBox(width: SkTokens.sp3),
-          // 类型徽章：远端分支才有；孤立安装没有类型可标
-          if (branch != null)
-            SkChip(
-              label: branch.type == OhosBranchType.release
-                  ? context.i18n('modules:ohos.release')
-                  : context.i18n('modules:ohos.dev'),
-              tone: isDev ? SkChipTone.info : SkChipTone.ok,
-              mono: true,
-            ),
-          const SizedBox(width: SkTokens.sp3),
-          if (item.isGlobal)
-            Tooltip(
-              message: context.i18n('modules:fvm.components.global'),
-              child: Material(
-                color: Colors.transparent,
-                child: InkWell(
-                  onTap: () => showGlobalInfoDialog(context),
-                  borderRadius: SkTokens.radiusSm,
-                  child: SkChip(
-                    label: context.i18n('modules:fvm.components.global'),
-                    tone: SkChipTone.accent,
-                    icon: MdiIcons.earth,
-                  ),
+          title: Row(
+            children: [
+              Flexible(
+                child: Text(
+                  ohosDisplayName(branch?.name ?? item.cache!.name),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: SkText.monoLg(context, color: c.ink1),
                 ),
               ),
-            ),
-        ],
-      ),
-      subtitle: Row(
-        children: [
-          Flexible(
-            child: Text(
-              branch != null
-                  ? '${branch.sha.substring(0, 7)}'
-                      '${branch.extra != null ? ' · ${branch.extra}' : ''}'
-                  : context.i18n('modules:ohos.orphanBranch'),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: theme.textTheme.labelSmall,
-            ),
+              const SizedBox(width: SkTokens.sp3),
+              // 类型徽章：远端分支才有；孤立安装没有类型可标
+              if (branch != null)
+                SkChip(
+                  label: branch.type == OhosBranchType.release
+                      ? context.i18n('modules:ohos.release')
+                      : context.i18n('modules:ohos.dev'),
+                  tone: isDev ? SkChipTone.info : SkChipTone.ok,
+                  mono: true,
+                ),
+              const SizedBox(width: SkTokens.sp3),
+              if (item.isGlobal)
+                Tooltip(
+                  message: context.i18n('modules:fvm.components.global'),
+                  child: Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                      onTap: () => showGlobalInfoDialog(context),
+                      borderRadius: SkTokens.radiusSm,
+                      child: SkChip(
+                        label: context.i18n('modules:fvm.components.global'),
+                        tone: SkChipTone.accent,
+                        icon: MdiIcons.earth,
+                      ),
+                    ),
+                  ),
+                ),
+            ],
           ),
-          if (item.updateAvailable) ...[
-            const SizedBox(width: SkTokens.sp4),
-            Text(
-              context.i18n('modules:ohos.updateAvailable'),
-              style: theme.textTheme.labelSmall?.copyWith(color: c.warn),
-            ),
-          ],
-        ],
-      ),
-      trailing: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          if (item.isInstalled) ...[
-            if (item.cache!.isNotSetup) SetupButton(release: dto),
-            SkIconButton(
-              icon: MdiIcons.update,
-              tooltip: branch != null
-                  ? context.i18n('modules:ohos.updateOhosVersion')
-                  : context.i18n('modules:ohos.orphanBranch'),
-              // 孤立安装没有可拉取的远端分支
-              onPressed: branch == null
-                  ? null
-                  : () => ref
-                      .read(fvmQueueProvider.notifier)
-                      .ohosUpdate(context, dto),
-            ),
-            FvmReleaseActions(dto),
-          ] else if (isQueued)
-            SizedBox(
-              width: 20,
-              height: 20,
-              child: SpinKitFadingFour(size: 15, color: c.accent),
-            )
-          else
-            SkIconButton(
-              icon: Icons.arrow_downward,
-              tooltip: context.i18n('modules:ohos.installOhosVersion'),
-              onPressed: () =>
-                  ref.read(fvmQueueProvider.notifier).install(context, dto),
-            ),
-        ],
-      ),
-      onTap: () {
-        ref.read(selectedDetailProvider.notifier).state = SelectedDetail(
-          release: dto,
-        );
-      },
+          // 次行：commit sha · Flutter 版本 · Dart 版本（+ 待更新提示）
+          // 远端分支只有分支名和 SHA，拿不到 Dart 版本，未安装时显示占位符
+          subtitle: SdkVersionMeta(
+            // 已安装读本地 fork tag（如 3.41.9+ohos-1.0.2），未安装或读不到时
+            // 回落分支名解析出的 Flutter 版本
+            flutterVersion: dto.sdkFlutterVersion ?? branch?.version,
+            dartVersion: dto.sdkDartVersion,
+            leading: [
+              Flexible(
+                child: Text(
+                  branch != null
+                      ? '${branch.sha.substring(0, 7)}'
+                          '${branch.extra != null ? ' · ${branch.extra}' : ''}'
+                      : context.i18n('modules:ohos.orphanBranch'),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: theme.textTheme.labelSmall,
+                ),
+              ),
+            ],
+            extra: [
+              if (item.updateAvailable)
+                Text(
+                  context.i18n('modules:ohos.updateAvailable'),
+                  style: theme.textTheme.labelSmall?.copyWith(color: c.warn),
+                ),
+            ],
+          ),
+          trailing: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (item.isInstalled) ...[
+                if (item.cache!.isNotSetup) SetupButton(release: dto),
+                SkIconButton(
+                  icon: MdiIcons.update,
+                  tooltip: branch != null
+                      ? context.i18n('modules:ohos.updateOhosVersion')
+                      : context.i18n('modules:ohos.orphanBranch'),
+                  // 孤立安装没有可拉取的远端分支
+                  onPressed: branch == null
+                      ? null
+                      : () => ref
+                          .read(fvmQueueProvider.notifier)
+                          .ohosUpdate(context, dto),
+                ),
+                FvmReleaseActions(dto),
+              ] else if (isQueued)
+                SizedBox(
+                  width: 20,
+                  height: 20,
+                  child: SpinKitFadingFour(size: 15, color: c.accent),
+                )
+              else
+                SkIconButton(
+                  icon: Icons.arrow_downward,
+                  tooltip: context.i18n('modules:ohos.installOhosVersion'),
+                  onPressed: () =>
+                      ref.read(fvmQueueProvider.notifier).install(context, dto),
+                ),
+            ],
+          ),
+          onTap: () {
+            ref.read(selectedDetailProvider.notifier).state = SelectedDetail(
+              release: dto,
+            );
+          },
+        ),
+        const SkDivider(),
+      ],
     );
   }
 }

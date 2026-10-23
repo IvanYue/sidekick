@@ -6,7 +6,6 @@ import 'package:sidekick/src/design/colors.dart';
 import 'package:sidekick/src/design/kit/kit.dart';
 import 'package:sidekick/src/design/tokens.dart';
 import 'package:sidekick/src/modules/common/utils/helpers.dart';
-import 'package:sidekick/src/modules/settings/settings.provider.dart';
 
 import '../../../components/mdi_icons.dart';
 import '../../../components/molecules/version_install_button.dart';
@@ -15,15 +14,22 @@ import '../../navigation/navigation.provider.dart';
 import '../../ohos/ohos.constants.dart';
 import '../../releases/releases.provider.dart';
 import '../../sandbox/sandbox.screen.dart';
+import '../../settings/settings.provider.dart';
 import '../detail/project_detail.provider.dart';
 import '../project.dto.dart';
 import 'project_actions.dart';
 import 'project_release_select.dart';
 
+/// 项目卡片的高度。
+///
+/// 固定高度让网格里所有卡片对齐，配合卡片内部的 Spacer 保证底部操作栏
+/// 永远贴住卡片下沿，不会随中间内容的多少上下浮动。
+const double _kProjCardHeight = 208;
+
 /// 项目卡片。
 ///
 /// 对应 design/index.html 的 `.proj-card`：图标瓦片 + 名称（含 OHOS 徽章）
-/// + 描述 + 路径 + 底部操作行（管理 / Playground / IDE / 版本选择器）。
+/// + 描述 + 路径 + 贴底的底部操作行（管理 / Playground / IDE / 版本选择器）。
 class ProjectListItem extends ConsumerWidget {
   /// 构造函数
   const ProjectListItem(
@@ -50,9 +56,11 @@ class ProjectListItem extends ConsumerWidget {
     final version =
         ref.watch(getVersionProvider(project.pinnedVersion?.nameWithAlias));
 
-    final needInstall = version != null && project.pinnedVersion != null;
-
     final sidekickSettings = ref.watch(settingsProvider).sidekick;
+
+    // 只有「已钉定但本地还没装」时才需要在卡片上给安装入口；
+    // 已安装的情况不再显示状态对号，避免和版本选择器挤在一起。
+    final needInstall = version != null && !version.isCached;
 
     // 钉定在 OHOS SDK 上：显示 OHOS 徽章（fork 安装与手动克隆的顶层检出都覆盖）
     final isOhos = project.pinnedVersion?.fork == kOhosForkName ||
@@ -78,7 +86,7 @@ class ProjectListItem extends ConsumerWidget {
     }
 
     return SizedBox(
-      height: 208,
+      height: _kProjCardHeight,
       child: _ProjCard(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -126,12 +134,15 @@ class ProjectListItem extends ConsumerWidget {
               ],
             ),
             const SizedBox(height: SkTokens.sp4),
-            // 描述
-            Text(
-              project.description,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-              style: theme.textTheme.bodySmall?.copyWith(color: c.ink2),
+            // 描述：固定占两行高度，卡片之间不会因为描述长短而错位
+            SizedBox(
+              height: 36,
+              child: Text(
+                project.description,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: theme.textTheme.bodySmall?.copyWith(color: c.ink2),
+              ),
             ),
             const SizedBox(height: SkTokens.sp3),
             // 路径
@@ -149,7 +160,8 @@ class ProjectListItem extends ConsumerWidget {
                 ),
               ],
             ),
-            const SizedBox(height: SkTokens.sp4),
+            // 撑开中间空白，把下面的操作栏顶到卡片底部
+            const Spacer(),
             const SkDivider(),
             const SizedBox(height: SkTokens.sp3),
             // 底部操作行
@@ -170,26 +182,20 @@ class ProjectListItem extends ConsumerWidget {
                 OpenInSelectedIdeButton(project.path, sidekickSettings),
                 OpenInIdeMenu(project.path, sidekickSettings),
                 const SizedBox(width: SkTokens.sp3),
-                // 版本区右对齐，用 Expanded 吸收剩余宽度以避免窄卡片溢出
+                // 只有已钉定但本地还没装的版本才需要安装入口；
+                // 已安装的版本不再显示绿色对号，选择器前面保持干净
+                if (needInstall) ...[
+                  VersionInstallButton(version),
+                  const SizedBox(width: SkTokens.sp2),
+                ],
+                // 版本选择器右对齐，并吸收剩余宽度避免窄卡片溢出
                 if (versionSelect)
                   Expanded(
                     child: Align(
                       alignment: Alignment.centerRight,
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          if (needInstall) VersionInstallButton(version),
-                          // 版本选择器（`.proj-version` 胶囊）
-                          ConstrainedBox(
-                            constraints: const BoxConstraints(maxWidth: 190),
-                            child: _VersionPill(
-                              child: ProjectReleaseSelect(
-                                project: project,
-                                releases: cachedVersions,
-                              ),
-                            ),
-                          ),
-                        ],
+                      child: ProjectReleaseSelect(
+                        project: project,
+                        releases: cachedVersions,
                       ),
                     ),
                   ),
@@ -265,31 +271,6 @@ class _ProjectIconTile extends StatelessWidget {
   }
 }
 
-/// 版本选择器胶囊（`.proj-version`）。
-class _VersionPill extends StatelessWidget {
-  /// 构造函数
-  const _VersionPill({required this.child});
-
-  /// 内容（版本选择器）
-  final Widget child;
-
-  @override
-  Widget build(BuildContext context) {
-    final c = SkColors.of(context);
-
-    return Container(
-      height: SkTokens.controlHeightSm,
-      padding: const EdgeInsets.only(left: SkTokens.sp3),
-      decoration: BoxDecoration(
-        color: c.bgRaised,
-        borderRadius: SkTokens.radiusSm,
-        border: Border.all(color: c.line),
-      ),
-      child: child,
-    );
-  }
-}
-
 /// 项目加载失败的原因文案。
 String projectLoadErrorMessage(BuildContext context, FlutterProject project) {
   switch (project.loadError) {
@@ -323,77 +304,82 @@ class UnavailableProjectItem extends ConsumerWidget {
     final c = SkColors.of(context);
     final theme = Theme.of(context);
 
-    return _ProjCard(
-      dangerBorder: true,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                width: SkTokens.tileSize,
-                height: SkTokens.tileSize,
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  color: c.dangerSoft,
-                  borderRadius: SkTokens.radiusLg,
-                  border: Border.all(color: c.dangerLine),
-                ),
-                child: Icon(
-                  Icons.folder_off_outlined,
-                  size: 20,
-                  color: c.danger,
-                ),
-              ),
-              const SizedBox(width: SkTokens.sp3),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      project.name,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: theme.textTheme.titleMedium,
-                    ),
-                    const SizedBox(height: 2),
-                    // 失败原因（如「未找到项目文件夹」），只渲染一次
-                    Text(
-                      projectLoadErrorMessage(context, project),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: theme.textTheme.labelSmall?.copyWith(
-                        color: c.danger,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              ProjectActions(project),
-            ],
-          ),
-          const SizedBox(height: SkTokens.sp4),
-          Row(
-            children: [
-              Icon(Icons.location_on_outlined, size: 14, color: c.ink3),
-              const SizedBox(width: SkTokens.sp2),
-              Expanded(
-                child: Tooltip(
-                  message: project.path,
-                  child: Text(
-                    project.path,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: SkText.mono(context, fontSize: 11, color: c.ink3),
+    return SizedBox(
+      height: _kProjCardHeight,
+      child: _ProjCard(
+        dangerBorder: true,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  width: SkTokens.tileSize,
+                  height: SkTokens.tileSize,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    color: c.dangerSoft,
+                    borderRadius: SkTokens.radiusLg,
+                    border: Border.all(color: c.dangerLine),
+                  ),
+                  child: Icon(
+                    Icons.folder_off_outlined,
+                    size: 20,
+                    color: c.danger,
                   ),
                 ),
-              ),
-            ],
-          ),
-        ],
+                const SizedBox(width: SkTokens.sp3),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        project.name,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: theme.textTheme.titleMedium,
+                      ),
+                      const SizedBox(height: 2),
+                      // 失败原因（如「未找到项目文件夹」），只渲染一次
+                      Text(
+                        projectLoadErrorMessage(context, project),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: theme.textTheme.labelSmall?.copyWith(
+                          color: c.danger,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                ProjectActions(project),
+              ],
+            ),
+            // 撑开中间空白，和正常卡片一样把路径贴到卡片底部
+            const Spacer(),
+            const SkDivider(),
+            const SizedBox(height: SkTokens.sp3),
+            Row(
+              children: [
+                Icon(Icons.location_on_outlined, size: 14, color: c.ink3),
+                const SizedBox(width: SkTokens.sp2),
+                Expanded(
+                  child: Tooltip(
+                    message: project.path,
+                    child: Text(
+                      project.path,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: SkText.mono(context, fontSize: 11, color: c.ink3),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

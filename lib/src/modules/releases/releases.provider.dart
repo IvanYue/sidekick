@@ -12,9 +12,17 @@ import '../../modules/common/dto/version.dto.dart';
 import '../common/constants.dart';
 import '../fvm/fvm.provider.dart';
 import '../ohos/ohos.service.dart';
+import 'releases.service.dart';
 
 class AppReleasesState {
+  /// 远端发行版列表是否还在加载
   bool fetching;
+
+  /// 远端发行版列表是否不可用（网络失败且磁盘上也没有上一次成功的结果）。
+  ///
+  /// 渠道卡、master 卡与已安装版本列表只依赖本地缓存，这种情况下照常渲染；
+  /// 只有「版本库」列表为空，页面据此换一句更准确的空态说明。
+  bool remoteUnavailable = false;
 
   MasterDto? _master;
   final List<ChannelDto> _channels = [];
@@ -145,30 +153,41 @@ class AppReleasesState {
   }
 }
 
-final _fetchFlutterReleases = FutureProvider<FlutterReleasesResponse>(
-  (_) => fvmContext.get<FlutterReleaseClient>().fetchReleases(),
+/// 远端发行版列表。
+///
+/// 永不抛错：网络不可用时返回 null（可能来自磁盘缓存，也可能彻底没有），
+/// 由 [releasesStateProvider] 决定如何降级。抛错会让整个 provider 进入 error
+/// 状态，渠道卡与已安装版本会跟着一起消失，而这部分数据本来就只依赖本地缓存。
+///
+/// 页面刷新按钮 invalidate 它来强制重取，绕过 FVM client 的内部缓存。
+final flutterReleasesProvider = FutureProvider<FlutterReleasesResponse?>(
+  (_) => loadFlutterReleases(),
 );
 
 final releasesStateProvider = Provider<AppReleasesState>((ref) {
-  // Filter only version that are valid releases
-  FlutterReleasesResponse? payload;
-  ref.watch(_fetchFlutterReleases).whenData((value) => payload = value);
-
   // Watch this state change for refresh
   ref.watch(fvmCacheProvider);
   final installedVersions = ref.read(fvmCacheProvider.notifier);
 
-//Creates empty releases state
+  // 远端数据：未就绪 / 失败都不阻塞本地数据的渲染
+  var loadingRemote = true;
+  FlutterReleasesResponse? payload;
+  ref.watch(flutterReleasesProvider).when(
+        data: (value) {
+          payload = value;
+          loadingRemote = false;
+        },
+        error: (_, __) => loadingRemote = false,
+        loading: () {},
+      );
+
+  //Creates empty releases state
   final releasesState = AppReleasesState();
-  // Return empty state if not loaded
-  if (payload == null) {
-    return releasesState;
-  }
+  releasesState.fetching = loadingRemote;
+  releasesState.remoteUnavailable = !loadingRemote && payload == null;
 
-  final flutterReleases = payload!.versions;
-  final flutterChannels = payload!.channels;
-
-  releasesState.fetching = false;
+  final flutterReleases = payload?.versions ?? const <FlutterSdkRelease>[];
+  final flutterChannels = payload?.channels;
 
   final globalVersion = fvmContext.get<CacheService>().getGlobalVersion();
   releasesState.hasGlobal = globalVersion != null;
@@ -192,13 +211,14 @@ final releasesStateProvider = Provider<AppReleasesState>((ref) {
 
   // CHANNELS: Loop through available channels NOT including master
   for (var name in kReleaseChannels) {
-    final latestRelease = flutterChannels[name];
+    final latestRelease = flutterChannels?[name];
     final channelCache = installedVersions.getChannel(name);
 
     // Get sdk version
     final sdkVersion = channelCache?.flutterSdkVersion;
-    final currentRelease =
-        sdkVersion != null ? payload!.fromVersion(sdkVersion) : null;
+    final currentRelease = sdkVersion != null && payload != null
+        ? payload!.fromVersion(sdkVersion)
+        : null;
 
     final channelDto = ChannelDto(
       name: name,
@@ -215,7 +235,7 @@ final releasesStateProvider = Provider<AppReleasesState>((ref) {
     releasesState.addChannel(channelDto);
   }
 
-  // VERSIONS loop to create versions
+  // VERSIONS loop to create versions（只有远端数据可用时才有内容可列）
   for (final item in flutterReleases) {
     // Check if version is found in installed versions
     final cacheVersion = installedVersions.getVersion(item.version);
@@ -233,6 +253,7 @@ final releasesStateProvider = Provider<AppReleasesState>((ref) {
     releasesState.addVersion(version);
   }
 
+  // 版本选择器的选项：已安装的版本永远可选，不受远端可用性影响
   releasesState.generateMap();
 
   // Merge locally cached versions that are not in the official releases list

@@ -20,8 +20,6 @@
   },
   "fvm": {
     "installedVersions": "Ўрнатилган версиялар",
-    "cleanUp": "Тозалаш",
-    "cleanUpTooltip": "Фойдаланилмаётган версияларни тозалаш",
     "numberOfCachedVersions": "{{cachedVersions}} ta versiyalar",
     "versionItemversionnameHasBeenInstalled": "{{itemVersionName}} версия ўрнатилди.",
     "versionItemversionnameHasFinishedSetup": "{{itemVersionName}} версиясини созлаш якунланди.",
@@ -41,14 +39,10 @@
       "sdkHasNotFinishedSetup": "СДК ни созлаш тугалланмаган"
     },
     "dialogs": {
-      "noUnusedFlutterSdkVersionsInstalled": "Фойдаланилмаган Флуттер СДК версиялари ўрнатилмаган",
-      "cleanUpUnusedVersions": "Foydalanilmagan versiyalarni tozalash",
       "cancel": "Бекор қилиш",
       "confirm": "Тасдиқлаш",
       "ok": "Ха",
       "globalConfiguration": "Глобал созламалар",
-      "theseVersionAreNotPinnedToAProject": "Ушбу версиялар лойихага бириктирилмаган ",
-      "doYouWantToRemoveThemToFreeUpSpace": "Жой бўшатиш учун уни олиб ташламоқчимисиз?",
       "areYouSureYouWantToRemove": "Олиб ташлашга ишончингиз комилми?",
       "thisWillRemoveItemnameCacheFromYourSystem": "Бу орқали {{itemname}} версия операция тизимингизнинг кеш хотирасидан ўчирилади.",
       "flutterPathIsPointingOn": "Flutter PATH муҳити кўрсатувчи манзил \n ",
@@ -174,7 +168,9 @@
     "releasesDescription": "Browse the official Flutter channels and every past release.",
     "loading": "Loading releases…",
     "empty": "No releases available",
-    "emptyMessage": "Could not fetch the release list from Flutter. Check your connection and retry."
+    "emptyMessage": "Could not fetch the release list from Flutter. Check your connection and retry.",
+    "unavailable": "Relizlar roʻyxati mavjud emas",
+    "unavailableMessage": "Flutter relizlar roʻyxatiga ulanib boʻlmadi va keshlangan nusxa ham yoʻq. Oʻrnatilgan versiyalar va kanallar koʻrinadi; tarmoq tiklangach qayta urinib koʻring."
   },
   "sandbox": {
     "playground": "Майдонча",

@@ -20,8 +20,6 @@
   },
   "fvm": {
     "installedVersions": "Zainstalowane wersje",
-    "cleanUp": "Zwolnij",
-    "cleanUpTooltip": "Usuń nieużywane wersje",
     "numberOfCachedVersions": "{{cachedVersions}} wersji",
     "versionItemversionnameHasBeenInstalled": "Wersja {{itemVersionName}} została zainstalowana.",
     "versionItemversionnameHasFinishedSetup": "Wersja {{itemVersionName}} została skonfigurowana.",
@@ -41,14 +39,10 @@
       "sdkHasNotFinishedSetup": "SDK nie zakończyło konfiguracji"
     },
     "dialogs": {
-      "noUnusedFlutterSdkVersionsInstalled": "Nie znaleziono nieużywanych wersji Flutter SDK",
-      "cleanUpUnusedVersions": "Usuń nieużywane wersje",
       "cancel": "Anuluj",
       "confirm": "Potwierdź",
       "ok": "OK",
       "globalConfiguration": "Konfiguracja globalna",
-      "theseVersionAreNotPinnedToAProject": "Te wersje nie są wykorzystywane przez żaden projekt ",
-      "doYouWantToRemoveThemToFreeUpSpace": "Chcesz je usunąć, by zwolnić miejsce na dysku?",
       "areYouSureYouWantToRemove": "Czy na pewno chcesz usunąć?",
       "thisWillRemoveItemnameCacheFromYourSystem": "Ta akcja usunie {{itemname}} z cache'a w twoim komputerze.",
       "flutterPathIsPointingOn": "Obecny ścieżka Flutter PATH to\n ",
@@ -174,7 +168,9 @@
     "releasesDescription": "Browse the official Flutter channels and every past release.",
     "loading": "Loading releases…",
     "empty": "No releases available",
-    "emptyMessage": "Could not fetch the release list from Flutter. Check your connection and retry."
+    "emptyMessage": "Could not fetch the release list from Flutter. Check your connection and retry.",
+    "unavailable": "Lista wydań niedostępna",
+    "unavailableMessage": "Nie udało się pobrać listy wydań Fluttera, a kopii w pamięci podręcznej jeszcze nie ma. Zainstalowane wersje i kanały nadal są widoczne; spróbuj ponownie, gdy sieć wróci."
   },
   "sandbox": {
     "playground": "Piaskownica",

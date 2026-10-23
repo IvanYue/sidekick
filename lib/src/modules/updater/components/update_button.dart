@@ -8,13 +8,13 @@ import 'package:sidekick/src/modules/common/utils/helpers.dart';
 import '../../../components/mdi_icons.dart';
 import '../updater.provider.dart';
 
-/// Sidekick 更新按钮。
+/// Sidekick 自身版本的「检查更新」按钮。
 ///
-/// 标题栏里的「检查更新」图标：有可用更新时高亮并弹出更新对话框，
-/// 否则点击一次重新检查最新版本。
-class SkUpdateButton extends HookConsumerWidget {
+/// 放在设置页「通用」面板的版本号那一行，不再占用标题栏。有可用更新时按钮
+/// 高亮并弹出更新对话框，否则点击一次重新向 GitHub 查询最新版本。
+class UpdateCheckButton extends HookConsumerWidget {
   /// 构造函数
-  const SkUpdateButton({
+  const UpdateCheckButton({
     super.key,
   });
 
@@ -28,11 +28,9 @@ class SkUpdateButton extends HookConsumerWidget {
     final isMounted = context.mounted;
 
     void showUpdateDialog() {
-      // flutter defined function
       showDialog(
         context: context,
         builder: (context) {
-          // return object of type Dialog
           return AlertDialog(
             title: Row(
               children: [
@@ -76,19 +74,23 @@ class SkUpdateButton extends HookConsumerWidget {
       );
     }
 
-    return SkIconButton(
-      icon: Icons.refresh_rounded,
-      color: updateInfo.ready ? c.accent : null,
-      tooltip: updateInfo.ready
-          ? context.i18n('modules:updater.components.updateAvailable')
-          : context.i18n('modules:updater.components.checkForUpdates'),
-      onPressed: () {
-        if (updateInfo.ready) {
-          showUpdateDialog();
-        } else {
-          updater.checkLatest();
-        }
-      },
+    // 有可用更新 → 走更新安装流程；否则重新检查一次
+    if (updateInfo.ready) {
+      return SkButton(
+        label: context.i18n('modules:updater.components.updateNow'),
+        icon: Icons.file_download_outlined,
+        variant: SkButtonVariant.primary,
+        size: SkButtonSize.sm,
+        onPressed: showUpdateDialog,
+      );
+    }
+
+    return SkButton(
+      label: context.i18n('modules:updater.components.checkForUpdates'),
+      icon: Icons.refresh,
+      variant: SkButtonVariant.secondary,
+      size: SkButtonSize.sm,
+      onPressed: updater.checkLatest,
     );
   }
 }

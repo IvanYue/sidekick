@@ -12,7 +12,6 @@ import '../releases/releases.provider.dart';
 import 'components/fvm_cache_size.dart';
 import 'components/fvm_empty_releases.dart';
 import 'components/fvm_release_list_item.dart';
-import 'dialogs/cleanup_unused_dialog.dart';
 import 'dialogs/fvm_global_dialog.dart';
 import 'fvm.provider.dart';
 import 'fvm_queue.provider.dart';
@@ -59,20 +58,14 @@ class FVMScreen extends ConsumerWidget {
       title: context.i18n('modules:fvm.installedVersions'),
       description: context.i18n('modules:fvm.installedVersionsDescription'),
       processing: processing,
-      actions: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Tooltip(
-            message: context.i18n('modules:fvm.cleanUpTooltip'),
-            child: SkButton(
-              label: context.i18n('modules:fvm.cleanUp'),
-              icon: MdiIcons.delete,
-              onPressed: () async {
-                await cleanupUnusedDialog(context, ref);
-              },
-            ),
-          ),
-        ],
+      actions: SkIconButton(
+        icon: Icons.refresh,
+        tooltip: context.i18n('components:atoms.refresh'),
+        // 整页刷新：重取远端发行版列表（用于判断渠道是否待更新）、重扫本地缓存
+        onPressed: () {
+          ref.invalidate(flutterReleasesProvider);
+          ref.read(fvmCacheProvider.notifier).reloadState();
+        },
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,

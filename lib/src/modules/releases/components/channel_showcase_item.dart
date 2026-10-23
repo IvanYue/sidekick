@@ -6,6 +6,7 @@ import 'package:sidekick/src/design/tokens.dart';
 
 import '../../../components/molecules/version_install_button.dart';
 import '../../../modules/common/dto/channel.dto.dart';
+import '../../../modules/common/dto/release.dto.dart';
 import '../../common/constants.dart';
 import '../../common/utils/helpers.dart';
 import '../../selected_detail/selected_detail.provider.dart';
@@ -13,7 +14,8 @@ import '../../selected_detail/selected_detail.provider.dart';
 /// 渠道展示卡。
 ///
 /// 对应 design/index.html `#page-releases` 的 `.chan-card`：图标 + 渠道名、
-/// 渠道说明、底部是当前版本号（等宽）与安装按钮。整卡可点，打开版本详情抽屉。
+/// 渠道说明，底部操作区（`.chan-foot`）用 Spacer 顶到卡片下沿，因此同一行
+/// 的卡片不论说明长短，版本号与安装按钮都在同一水平线上。
 class ChannelShowcaseItem extends ConsumerWidget {
   /// 构造函数
   const ChannelShowcaseItem(
@@ -30,8 +32,6 @@ class ChannelShowcaseItem extends ConsumerWidget {
     final theme = Theme.of(context);
 
     final description = channelDescriptions(context)[channel.name];
-    // 优先展示已安装的 SDK 版本，未安装时回落官方最新版本
-    final version = channel.sdkVersion ?? channel.release?.version;
     final tone = _channelTone(channel.name);
     final accent = _toneColor(c, tone);
 
@@ -46,38 +46,68 @@ class ChannelShowcaseItem extends ConsumerWidget {
             );
           },
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               // 渠道名
               Row(
                 children: [
                   Icon(_channelIcon(channel.name), size: 18, color: accent),
                   const SizedBox(width: SkTokens.sp3),
-                  Text(channel.name.capitalize(), style: theme.textTheme.titleMedium),
+                  Flexible(
+                    child: Text(
+                      channel.name.capitalize(),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: theme.textTheme.titleMedium,
+                    ),
+                  ),
                 ],
               ),
               const SizedBox(height: SkTokens.sp3),
-              // 渠道说明
-              if (description != null)
-                Text(
-                  description,
-                  maxLines: 3,
-                  overflow: TextOverflow.ellipsis,
-                  style: theme.textTheme.labelSmall,
-                ),
-              const SizedBox(height: SkTokens.sp4),
-              // 当前版本 + 安装按钮
+              // 渠道说明：固定三行高度，卡片之间的说明区一样高
+              SizedBox(
+                height: 54,
+                child: description == null
+                    ? null
+                    : Text(
+                        description,
+                        maxLines: 3,
+                        overflow: TextOverflow.ellipsis,
+                        style: theme.textTheme.labelSmall,
+                      ),
+              ),
+              // 撑开中间空白，把底部操作区顶到卡片下沿
+              const Spacer(),
+              // 当前版本 + 安装按钮。渠道卡窄，Flutter / Dart 版本上下两行放，
+              // 同一行卡片的下沿因此仍然对齐。
               Row(
+                crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  Flexible(
-                    child: Text(
-                      version ?? '—',
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: SkText.mono(context, fontSize: 12, color: c.ink1),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          // 已安装读本地版本，未安装回落该渠道的最新官方版
+                          channel.sdkFlutterVersion ?? '—',
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style:
+                              SkText.mono(context, fontSize: 12, color: c.ink1),
+                        ),
+                        const SizedBox(height: 2),
+                        Text(
+                          'Dart ${channel.sdkDartVersion ?? '—'}',
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style:
+                              SkText.mono(context, fontSize: 11, color: c.ink3),
+                        ),
+                      ],
                     ),
                   ),
-                  const Spacer(),
+                  const SizedBox(width: SkTokens.sp3),
                   VersionInstallButton(channel, showLabel: true),
                 ],
               ),

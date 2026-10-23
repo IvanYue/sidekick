@@ -304,14 +304,11 @@ class SkNoteBar extends StatelessWidget {
             ),
             if (trailing != null) ...[
               const SizedBox(width: SkTokens.sp4),
-              // 缩放兜底：窄窗口下宁可把右侧内容整体缩小，也不要撑破提示条
-              Flexible(
-                child: FittedBox(
-                  fit: BoxFit.scaleDown,
-                  alignment: Alignment.centerRight,
-                  child: trailing!,
-                ),
-              ),
+              // 右对齐的靠山：说明区是 Expanded，会吸收全部剩余宽度，trailing
+              // 作为固定宽度收尾贴在提示条右边缘。这里不能改成 Flexible ——
+              // 那会让 trailing 参与弹性分配，剩余空间被 mainAxisAlignment 摊到
+              // 各段之间，窗口越宽 trailing 离右边缘越远。
+              trailing!,
               const SizedBox(width: SkTokens.sp4),
             ],
           ],

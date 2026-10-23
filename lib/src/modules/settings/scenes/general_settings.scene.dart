@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:sidekick/src/design/colors.dart';
 import 'package:sidekick/src/design/kit/kit.dart';
-import 'package:sidekick/src/design/tokens.dart';
 import 'package:sidekick/i18n/language_manager.dart';
 import 'package:sidekick/src/modules/common/utils/helpers.dart';
 
 import '../../../modules/common/utils/notify.dart';
 import '../../ide/components/ide_selection_tile.dart';
+import '../../updater/components/update_button.dart';
 import '../../../version.dart';
 import '../settings.dto.dart';
 import '../settings.utils.dart';
@@ -43,7 +42,6 @@ class SettingsSectionGeneral extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final c = SkColors.of(context);
     final theme = Theme.of(context);
 
     void handleReset() async {
@@ -135,8 +133,8 @@ class SettingsSectionGeneral extends StatelessWidget {
         children: [
           SkPanelHeader(
             title: context.i18n('modules:settings.scenes.general'),
-            subtitle:
-                context.i18n('modules:settings.scenes.changesAreSavedImmediately'),
+            subtitle: context
+                .i18n('modules:settings.scenes.changesAreSavedImmediately'),
           ),
           row(
             title: context.i18n('modules:settings.scenes.theme'),
@@ -175,12 +173,11 @@ class SettingsSectionGeneral extends StatelessWidget {
             ),
           ),
           const SkDivider(),
+          // 版本号 + 检查更新：「检查」原本在标题栏，改到设置里更合适
           row(
             title: context.i18n('modules:selectedDetail.components.version'),
-            trailing: Text(
-              packageVersion,
-              style: SkText.mono(context, color: c.ink1),
-            ),
+            description: packageVersion,
+            trailing: const UpdateCheckButton(),
           ),
           const SkDivider(),
           row(

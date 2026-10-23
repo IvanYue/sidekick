@@ -20,8 +20,6 @@
   },
   "fvm": {
     "installedVersions": "ইনস্টল করা ভার্সনসমূহ",
-    "cleanUp": "পরিষ্কার করুন",
-    "cleanUpTooltip": "অব্যবহৃত ভার্সনসমূহ পরিষ্কার করুন",
     "numberOfCachedVersions": "{{cachedVersions}} ভার্সনসমূহ",
     "versionItemversionnameHasBeenInstalled": "ভার্সন {{itemVersionName}} ইনস্টল করা হয়েছে।",
     "versionItemversionnameHasFinishedSetup": "ভার্সন {{itemVersionName}} সেটআপ সম্পন্ন হয়েছে।",
@@ -41,14 +39,10 @@
       "sdkHasNotFinishedSetup": "SDK সেটআপ সম্পূর্ণ হয়নি"
     },
     "dialogs": {
-      "noUnusedFlutterSdkVersionsInstalled": "কোন অব্যবহৃত Flutter SDK ভার্সন ইনস্টল করা নেই",
-      "cleanUpUnusedVersions": "অব্যবহৃত ভার্সনসমূহ পরিষ্কার করুন",
       "cancel": "বাতিল করুন",
       "confirm": "নিশ্চিত করুন",
       "ok": "ঠিক আছে",
       "globalConfiguration": "গ্লোবাল কনফিগারেশন",
-      "theseVersionAreNotPinnedToAProject": "এই ভার্সনগুলো প্রজেক্টে পিন করা নেই ",
-      "doYouWantToRemoveThemToFreeUpSpace": "আপনি কি জায়গা খালি করতে এটি মুছে ফেলতে চান?",
       "areYouSureYouWantToRemove": "আপনি কি নিশ্চিত আপনি মুছে ফেলতে চান?",
       "thisWillRemoveItemnameCacheFromYourSystem": "এটি আপনার সিস্টেমের ক্যাশ থেকে {{itemname}} মুছে ফেলবে৷",
       "flutterPathIsPointingOn": "Flutter PATH নির্দেশ করে\n ",
@@ -174,7 +168,9 @@
     "releasesDescription": "Browse the official Flutter channels and every past release.",
     "loading": "Loading releases…",
     "empty": "No releases available",
-    "emptyMessage": "Could not fetch the release list from Flutter. Check your connection and retry."
+    "emptyMessage": "Could not fetch the release list from Flutter. Check your connection and retry.",
+    "unavailable": "রিলিজ তালিকা পাওয়া যাচ্ছে না",
+    "unavailableMessage": "Flutter-এর রিলিজ তালিকায় পৌঁছানো যায়নি এবং এখনও কোনো ক্যাশ কপি নেই। ইনস্টল করা ভার্সন ও চ্যানেল দেখা যাবে; নেটওয়ার্ক ফিরলে আবার চেষ্টা করুন।"
   },
   "sandbox": {
     "playground": "প্লেগ্রাউন্ড",

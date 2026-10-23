@@ -6,6 +6,7 @@ import 'package:sidekick/src/design/kit/kit.dart';
 import 'package:sidekick/src/design/tokens.dart';
 
 import '../../../components/mdi_icons.dart';
+import '../../../components/molecules/sdk_version_meta.dart';
 import '../../../components/molecules/version_install_button.dart';
 import '../../../modules/common/dto/release.dto.dart';
 import '../../common/utils/helpers.dart';
@@ -14,8 +15,8 @@ import '../../selected_detail/selected_detail.provider.dart';
 /// 版本列表行。
 ///
 /// 对应 design/index.html `#page-releases` 的列表（`.list-item.compact`）：
-/// 左侧版本类型瓦片 + 等宽版本号 + 渠道 / 全局徽章，次行是发布日期，
-/// 右侧是安装按钮。
+/// 左侧版本类型瓦片 + 等宽版本号 + 渠道 / 全局徽章，次行是 Flutter / Dart
+/// 版本与发布日期，右侧是安装按钮。
 class ReleaseListItem extends ConsumerWidget {
   /// 构造函数
   const ReleaseListItem(
@@ -74,12 +75,18 @@ class ReleaseListItem extends ConsumerWidget {
               ],
             ],
           ),
-          subtitle: releaseDate == null
-              ? null
-              : Text(
+          // 次行：Flutter / Dart 版本 + 发布日期
+          subtitle: SdkVersionMeta(
+            flutterVersion: release.sdkFlutterVersion,
+            dartVersion: release.sdkDartVersion,
+            extra: [
+              if (releaseDate != null)
+                Text(
                   DateTimeFormat.format(releaseDate, format: 'Y-m-d'),
                   style: SkText.mono(context, fontSize: 11, color: c.ink3),
                 ),
+            ],
+          ),
           trailing: VersionInstallButton(release),
         ),
         const SkDivider(),

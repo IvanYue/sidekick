@@ -3,7 +3,7 @@ description: Flutter Version Manager.
 
 publish_to: "none"
 
-version: 1.1.2
+version: 2.0.0
 
 environment:
   sdk: '>=3.4.3 <4.0.0'
@@ -103,19 +103,3 @@ dependency_overrides:
 sidekick:
   banner: ""
   icon: "assets/promo-windows/icon.png"
-
-# Use this as a fallback
-flutter_launcher_icons:
-  image_path: "assets/promo-windows/icon.png"
-  # web:
-  #   generate: false
-  #   image_path: "assets/svgs/3D-icon.svg"
-  #   background_color: "#hexcode"
-  #   theme_color: "#hexcode"
-  # windows:
-  #   generate: true
-  #   image_path: "path/to/image.png"
-  #   icon_size: 48 # min:48, max:256, default: 48
-  # macos:
-  #   generate: true
-  #   image_path: "path/to/image.png"

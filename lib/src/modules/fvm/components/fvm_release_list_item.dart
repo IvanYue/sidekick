@@ -6,6 +6,7 @@ import 'package:sidekick/src/design/tokens.dart';
 import 'package:sidekick/src/modules/common/utils/helpers.dart';
 
 import '../../../components/mdi_icons.dart';
+import '../../../components/molecules/sdk_version_meta.dart';
 import '../../../modules/common/dto/release.dto.dart';
 import '../../common/utils/open_link.dart';
 import '../../ohos/components/ohos_badge.dart';
@@ -47,28 +48,14 @@ class FvmReleaseListItem extends ConsumerWidget {
     // 渠道名：频道自身就是渠道，其它从发行元数据或缓存元数据取
     final channelName =
         release.release?.channelName ?? release.cache?.releaseChannel?.name;
-    final dartVersion =
-        release.release?.dartSdkVersion ?? release.cache?.dartSdkVersion;
-    final ohosSdkVersion = release.cache?.flutterSdkVersion;
 
-    // 元信息片段：渠道 · Dart 版本（OHOS 显示其 SDK 版本）
-    final meta = <Widget>[
-      if (channelName != null)
-        Text(
-          channelName,
-          style: theme.textTheme.labelSmall?.copyWith(color: c.ink3),
-        ),
-      if (isOhos && ohosSdkVersion != null)
-        Text(
-          ohosSdkVersion,
-          style: SkText.mono(context, fontSize: 11, color: c.ink3),
-        )
-      else if (dartVersion != null)
-        Text(
-          'Dart $dartVersion',
-          style: SkText.mono(context, fontSize: 11, color: c.ink3),
-        ),
-    ];
+    // 渠道名片段：非等宽字体的普通说明文字，排在版本号之前
+    final channelLabel = channelName == null
+        ? null
+        : Text(
+            channelName,
+            style: theme.textTheme.labelSmall?.copyWith(color: c.ink3),
+          );
 
     // 图标瓦片语义：OHOS > 全局 > 普通
     final (tileTone, tileIcon) = isOhos
@@ -123,17 +110,11 @@ class FvmReleaseListItem extends ConsumerWidget {
           ),
         ],
       ),
-      subtitle: Row(
-        children: [
-          for (var i = 0; i < meta.length; i++) ...[
-            if (i > 0) ...[
-              const SizedBox(width: SkTokens.sp3),
-              const _MetaSeparator(),
-              const SizedBox(width: SkTokens.sp3),
-            ],
-            meta[i],
-          ],
-        ],
+      // 次行：渠道 · Flutter 版本 · Dart 版本
+      subtitle: SdkVersionMeta(
+        flutterVersion: release.sdkFlutterVersion ?? release.name,
+        dartVersion: release.sdkDartVersion,
+        leading: [if (channelLabel != null) channelLabel],
       ),
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
@@ -144,8 +125,9 @@ class FvmReleaseListItem extends ConsumerWidget {
             SkIconButton(
               icon: Icons.refresh,
               tooltip: context.i18n('modules:ohos.updateOhosVersion'),
-              onPressed: () =>
-                  ref.read(fvmQueueProvider.notifier).ohosUpdate(context, release),
+              onPressed: () => ref
+                  .read(fvmQueueProvider.notifier)
+                  .ohosUpdate(context, release),
             )
           else if (release.isChannel && release.isCached)
             SkIconButton(
@@ -205,22 +187,6 @@ class _ReleaseTile extends StatelessWidget {
         border: Border.all(color: palette.border),
       ),
       child: Icon(icon, size: 18, color: palette.fg),
-    );
-  }
-}
-
-/// 元信息之间的细点分隔（`.li-meta .sep`）。
-class _MetaSeparator extends StatelessWidget {
-  /// 构造函数
-  const _MetaSeparator();
-
-  @override
-  Widget build(BuildContext context) {
-    final c = SkColors.of(context);
-    return Container(
-      width: 3,
-      height: 3,
-      decoration: BoxDecoration(color: c.lineStrong, shape: BoxShape.circle),
     );
   }
 }

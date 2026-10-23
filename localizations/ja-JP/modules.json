@@ -20,8 +20,6 @@
   },
   "fvm": {
     "installedVersions": "インストール済みのバージョン",
-    "cleanUp": "クリーンアップ",
-    "cleanUpTooltip": "使用していないバージョンを削除",
     "numberOfCachedVersions": "{{cachedVersions}}バージョン",
     "versionItemversionnameHasBeenInstalled": "バージョン{{itemVersionName}}がインストールされました",
     "versionItemversionnameHasFinishedSetup": "バージョン{{itemVersionName}}のセットアップが終了しました",
@@ -41,14 +39,10 @@
       "sdkHasNotFinishedSetup": "SDKのセットアップが完了していません"
     },
     "dialogs": {
-      "noUnusedFlutterSdkVersionsInstalled": "未使用のFlutter SDKバージョンはインストールされていません",
-      "cleanUpUnusedVersions": "未使用のバージョンを削除します。",
       "cancel": "キャンセル",
       "confirm": "確認",
       "ok": "OK",
       "globalConfiguration": "グローバル設定",
-      "theseVersionAreNotPinnedToAProject": "これらのバージョンは、プロジェクトに設定されていません。 ",
-      "doYouWantToRemoveThemToFreeUpSpace": "容量を空けるために削除しますか？",
       "areYouSureYouWantToRemove": "本当に削除しますか？",
       "thisWillRemoveItemnameCacheFromYourSystem": "システムのキャッシュから{{itemname}}を削除します。",
       "flutterPathIsPointingOn": "FlutterのPATH\n ",
@@ -174,7 +168,9 @@
     "releasesDescription": "Browse the official Flutter channels and every past release.",
     "loading": "Loading releases…",
     "empty": "No releases available",
-    "emptyMessage": "Could not fetch the release list from Flutter. Check your connection and retry."
+    "emptyMessage": "Could not fetch the release list from Flutter. Check your connection and retry.",
+    "unavailable": "リリース一覧を取得できません",
+    "unavailableMessage": "Flutter のリリース情報に接続できず、キャッシュもありません。インストール済みのバージョンとチャンネルは引き続き利用できます。ネットワーク復旧後に再試行してください。"
   },
   "sandbox": {
     "playground": "Playground",

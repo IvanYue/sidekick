@@ -10,6 +10,10 @@ import 'ohos.service.dart';
 /// Remote OHOS branches (network layer).
 ///
 /// Only this provider hits the network; refresh by invalidating it.
+///
+/// 网络不可用时回落到磁盘上最后一次成功的结果（见 [fetchOhosBranches]）。
+/// 抛错会让整个列表进入 error 态，而已安装的 OHOS 版本本来就只依赖本地缓存，
+/// 不该被网络问题一起带走。
 final ohosRemoteBranchesProvider =
     FutureProvider<List<OhosBranchDto>>((ref) => fetchOhosBranches());
 

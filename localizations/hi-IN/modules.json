@@ -20,8 +20,6 @@
   },
   "fvm": {
     "installedVersions": "इंस्टॉल किए गए संस्करण",
-    "cleanUp": "साफ करें",
-    "cleanUpTooltip": "अप्रयुक्त संस्करण को साफ करें",
     "numberOfCachedVersions": "{{cachedVersions}} संस्करण",
     "versionItemversionnameHasBeenInstalled": "{{itemVersionName}} संस्करण इंस्टॉल किया गया है।",
     "versionItemversionnameHasFinishedSetup": "{{itemVersionName}} संस्करण सेटअप किया गया है।",
@@ -41,14 +39,10 @@
       "sdkHasNotFinishedSetup": "SDK सेटअप किया गया है"
     },
     "dialogs": {
-      "noUnusedFlutterSdkVersionsInstalled": "इंस्टॉल नहीं किए गए कोई Flutter SDK संस्करण नहीं है",
-      "cleanUpUnusedVersions": "अप्रयुक्त संस्करण को साफ करें",
       "cancel": "रद्द करें",
       "confirm": "पुष्टि करें",
       "ok": "ठीक है",
       "globalConfiguration": "वैश्विक समायोजन",
-      "theseVersionAreNotPinnedToAProject": "इन संस्करण को कोई प्रोजेक्ट पर पहचान नहीं किया गया है",
-      "doYouWantToRemoveThemToFreeUpSpace": "आप इन संस्करण को स्पेस को उपलब्ध करने के लिए हटाना चाहते हैं?",
       "areYouSureYouWantToRemove": "क्या आप निश्चित हैं कि आप इस संस्करण को हटाना चाहते हैं?",
       "thisWillRemoveItemnameCacheFromYourSystem": "यह आपके सिस्टम से {{itemname}} कैश से हटाया जाएगा।",
       "flutterPathIsPointingOn": "Flutter PATH निम्नलिखित स्थान पर स्थानांतरित है\n ",
@@ -174,7 +168,9 @@
     "releasesDescription": "Browse the official Flutter channels and every past release.",
     "loading": "Loading releases…",
     "empty": "No releases available",
-    "emptyMessage": "Could not fetch the release list from Flutter. Check your connection and retry."
+    "emptyMessage": "Could not fetch the release list from Flutter. Check your connection and retry.",
+    "unavailable": "रिलीज़ सूची उपलब्ध नहीं है",
+    "unavailableMessage": "Flutter की रिलीज़ सूची तक नहीं पहुँच सके और अभी कोई कैश कॉपी भी नहीं है। इंस्टॉल किए गए वर्शन और चैनल अभी भी दिखेंगे; नेटवर्क लौटने पर फिर कोशिश करें।"
   },
   "sandbox": {
     "playground": "प्लेगरेंड",

@@ -20,8 +20,6 @@
   },
   "fvm": {
     "installedVersions": "Versi yang terpasang",
-    "cleanUp": "Bersihkan",
-    "cleanUpTooltip": "Hapus semua versi yang tidak terpakai dari sistem Anda",
     "numberOfCachedVersions": "{{cachedVersions}} versi",
     "versionItemversionnameHasBeenInstalled": "Versi {{itemVersionName}} telah terpasang.",
     "versionItemversionnameHasFinishedSetup": "Versi {{itemVersionName}} telah selesai diatur.",
@@ -41,14 +39,10 @@
       "sdkHasNotFinishedSetup": "SDK belum selesai diatur."
     },
     "dialogs": {
-      "noUnusedFlutterSdkVersionsInstalled": "Tidak ada versi Flutter SDK yang tidak terpakai yang terinstall.",
-      "cleanUpUnusedVersions": "Bersihkan versi yang tidak terpakai",
       "cancel": "Batal",
       "confirm": "Konfirmasi",
       "ok": "OK",
       "globalConfiguration": "Konfigurasi Global",
-      "theseVersionAreNotPinnedToAProject": "Versi ini tidak ditetapkan ke proyek.",
-      "doYouWantToRemoveThemToFreeUpSpace": "Apakah Anda ingin menghapusnya untuk membebaskan ruang?",
       "areYouSureYouWantToRemove": "Apakah Anda yakin ingin menghapus?",
       "thisWillRemoveItemnameCacheFromYourSystem": "Ini akan menghapus cache {{itemName}} dari sistem Anda.",
       "flutterPathIsPointingOn": "Flutter path menunjukkan ke \n",
@@ -174,7 +168,9 @@
     "releasesDescription": "Browse the official Flutter channels and every past release.",
     "loading": "Loading releases…",
     "empty": "No releases available",
-    "emptyMessage": "Could not fetch the release list from Flutter. Check your connection and retry."
+    "emptyMessage": "Could not fetch the release list from Flutter. Check your connection and retry.",
+    "unavailable": "Daftar rilis tidak tersedia",
+    "unavailableMessage": "Tidak dapat menjangkau daftar rilis Flutter dan belum ada salinan cache. Versi dan kanal yang terpasang tetap ditampilkan; coba lagi setelah jaringan pulih."
   },
   "sandbox": {
     "playground": "Playground",

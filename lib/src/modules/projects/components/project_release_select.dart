@@ -13,8 +13,9 @@ import '../project.dto.dart';
 
 /// 项目卡片里的 Flutter 版本选择器。
 ///
-/// 对应 design/tokens.css 的 `.field`：等宽字体显示当前锁定版本 +
-/// 下拉箭头，点开是带 OHOS 标记的版本列表。
+/// 对应 design/tokens.css 的 `.proj-version`：单个 26px 高的胶囊（不是
+/// 套在另一个方框里），等宽字体显示当前锁定版本 + 下拉箭头，点开是带
+/// OHOS 标记的版本列表。
 class ProjectReleaseSelect extends ConsumerWidget {
   /// 构造函数
   const ProjectReleaseSelect({
@@ -103,10 +104,10 @@ class ProjectReleaseSelect extends ConsumerWidget {
                 _pinnedLabel(context),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: theme.textTheme.labelSmall?.copyWith(color: c.ink2),
+                style: SkText.mono(context, fontSize: 11, color: c.ink1),
               ),
             ),
-            const SizedBox(width: SkTokens.sp1),
+            const SizedBox(width: SkTokens.sp2),
             Icon(MdiIcons.menuDown, size: 14, color: c.ink3),
           ],
         ),

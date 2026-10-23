@@ -20,8 +20,6 @@
   },
   "fvm": {
     "installedVersions": "Installierte Versionen",
-    "cleanUp": "Säubern",
-    "cleanUpTooltip": "Nicht verwendete Versionen bereinigen.",
     "numberOfCachedVersions": "{{cachedVersions}} Versionen",
     "versionItemversionnameHasBeenInstalled": "Die Version {{itemVersionName}} wurde installiert.",
     "versionItemversionnameHasFinishedSetup": "Version {{itemVersionName}} hat das Setup beendet.",
@@ -41,14 +39,10 @@
       "sdkHasNotFinishedSetup": "SDK hat das Setup nicht abgeschlossen"
     },
     "dialogs": {
-      "noUnusedFlutterSdkVersionsInstalled": "Keine unbenutzten Flutter SDK Versionen installiert",
-      "cleanUpUnusedVersions": "Nicht verwendete Versionen bereinigen",
       "cancel": "Abbrechen",
       "confirm": "Bestätigen",
       "ok": "OK",
       "globalConfiguration": "Globale Konfiguration",
-      "theseVersionAreNotPinnedToAProject": "Diese Versionen sind nicht an ein Projekt angeheftet ",
-      "doYouWantToRemoveThemToFreeUpSpace": "Möchten Sie es entfernen, um Speicherplatz freizugeben?",
       "areYouSureYouWantToRemove": "Sind Sie sicher, dass Sie entfernen möchten?",
       "thisWillRemoveItemnameCacheFromYourSystem": "Dadurch wird {{itemname}} aus dem Cache von Ihrem System entfernt.",
       "flutterPathIsPointingOn": "Flutter PATH verweist auf\n ",
@@ -174,7 +168,9 @@
     "releasesDescription": "Browse the official Flutter channels and every past release.",
     "loading": "Loading releases…",
     "empty": "No releases available",
-    "emptyMessage": "Could not fetch the release list from Flutter. Check your connection and retry."
+    "emptyMessage": "Could not fetch the release list from Flutter. Check your connection and retry.",
+    "unavailable": "Release-Liste nicht verfügbar",
+    "unavailableMessage": "Die Flutter-Release-Quelle ist nicht erreichbar und es gibt noch keinen zwischengespeicherten Stand. Installierte Versionen und Kanäle werden weiterhin angezeigt; später erneut versuchen."
   },
   "sandbox": {
     "playground": "Playground",

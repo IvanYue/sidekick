@@ -20,8 +20,6 @@
   },
   "fvm": {
     "installedVersions": "已安装的版本",
-    "cleanUp": "清理",
-    "cleanUpTooltip": "清理未使用的版本",
     "numberOfCachedVersions": "{{cachedVersions}} 个版本",
     "versionItemversionnameHasBeenInstalled": "{{itemVersionName}} 版本已安装.",
     "versionItemversionnameHasFinishedSetup": "{{itemVersionName}} 版本已完成设置.",
@@ -41,14 +39,10 @@
       "sdkHasNotFinishedSetup": "SDK未完成设置"
     },
     "dialogs": {
-      "noUnusedFlutterSdkVersionsInstalled": "没有安装未使用的 Flutter SDK版本",
-      "cleanUpUnusedVersions": "清理未使用的版本",
       "cancel": "取消",
       "confirm": "确认",
       "ok": "好的",
       "globalConfiguration": "全局配置",
-      "theseVersionAreNotPinnedToAProject": "这些版本没有被钉在项目中 ",
-      "doYouWantToRemoveThemToFreeUpSpace": "你想删除它来释放空间吗？",
       "areYouSureYouWantToRemove": "你确定要删除?",
       "thisWillRemoveItemnameCacheFromYourSystem": "这将从你的系统的缓存中删除 {{itemname}}。",
       "flutterPathIsPointingOn": "Flutter PATH 指向\n ",
@@ -174,7 +168,9 @@
     "releasesDescription": "浏览 Flutter 官方渠道与全部历史发行版。",
     "loading": "正在加载发行版…",
     "empty": "没有可用的发行版",
-    "emptyMessage": "无法从 Flutter 官方获取发行列表。检查网络后重试。"
+    "emptyMessage": "无法从 Flutter 官方获取发行列表。检查网络后重试。",
+    "unavailable": "发行版列表暂不可用",
+    "unavailableMessage": "无法连接 Flutter 发行列表，本地也还没有缓存。已安装版本与渠道仍可正常使用，网络恢复后重试即可。"
   },
   "sandbox": {
     "playground": "Playground",
