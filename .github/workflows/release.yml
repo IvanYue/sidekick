@@ -245,7 +245,7 @@ jobs:
           name: windows
           path: |
             sidekick-windows-*.zip
-            build/windows/x64/runner/Release/sidekick.msix
+            build/windows/**/*.msix
           if-no-files-found: warn
 
   publish:
