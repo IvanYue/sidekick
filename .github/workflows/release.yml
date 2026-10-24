@@ -104,7 +104,9 @@ jobs:
           chmod +x appimage-builder
           sudo mv appimage-builder /usr/local/bin/
           appimage-builder --recipe AppImageBuilder.yml
-          mv Sidekick-latest-x86_64.AppImage \
+          # 产物名跟着 recipe 里的 app_info.version 走，用通配符兜住命名差异
+          ls -l ./*.AppImage
+          mv ./Sidekick-*-x86_64.AppImage \
             "sidekick-linux-${{ needs.prepare.outputs.version }}-x86_64.AppImage"
 
       - uses: actions/upload-artifact@v4
@@ -238,14 +240,21 @@ jobs:
             -DestinationPath "sidekick-windows-${{ needs.prepare.outputs.version }}-x64.zip" -Force
 
       - name: Build MSIX
-        run: dart run msix:create
+        run: |
+          dart run msix:create
+          # msix:create 默认把包丢在 build 子目录里；复制到仓库根并带上版本号，
+          # 免得 publish 阶段的 `dist/*` 通配符匹配不到。
+          $msix = Get-ChildItem -Recurse -Path build\windows -Filter *.msix | Select-Object -First 1
+          if (-not $msix) { throw "没找到 .msix 产物" }
+          Write-Host "msix: $($msix.FullName)"
+          Copy-Item $msix.FullName "sidekick-windows-${{ needs.prepare.outputs.version }}-x64.msix"
 
       - uses: actions/upload-artifact@v4
         with:
           name: windows
           path: |
             sidekick-windows-*.zip
-            build/windows/**/*.msix
+            sidekick-windows-*.msix
           if-no-files-found: warn
 
   publish:
