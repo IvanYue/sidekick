@@ -46,6 +46,17 @@
 - 删除已被设计系统取代的旧原子组件：`components/atoms/typography.dart`、`components/molecules/list_tile.dart`、`components/organisms/screen.dart`。
 - 删除「清理未使用版本」对话框（`fvm/dialogs/cleanup_unused_dialog.dart`）与它的 6 个 i18n key；未使用版本仍可在列表行里通过删除按钮单独移除。
 
+**构建与发布**
+
+- 重写 `.github/workflows/release.yml`：推一个 `v*` tag 即自动出齐三平台产物并创建 Release，不再依赖上游的 `cider` / `svenstaro/upload-release-action` / 上游证书 secret。
+  - Linux：`sidekick-linux-<ver>-x86_64.tar.gz`（解压即用）+ AppImage
+  - macOS：`sidekick-macos-<ver>.zip`（含 .app）+ DMG
+  - Windows：`sidekick-windows-<ver>-x64.zip`（免安装 exe）+ MSIX
+- 新增 `tool/ci_stamp.dart`：打包前把 tag 版本号写进 `pubspec.yaml` 与 `lib/src/version.dart`，避免手工改版本号漏改一处。
+- 三平台统一锁定 Flutter `3.47.7`（workflow 里的 `FLUTTER_VERSION`）。
+- `appimage-builder` / `create-dmg` 两步设为 `continue-on-error`：这两个工具偶发失败时不再让整个 release 挂掉，tar.gz 与 zip 已覆盖同一平台。
+- Windows 签名改为每次生成一次性自签名证书（上游 `SIDEKICK-CERT.pfx` 的密码在别人的 secret 里）：产物可装可跑，但用户首次安装需手动信任，或改成自有 `.pfx`。
+
 ## 0.1.1 - 2021-06-19
 
 ### Added
